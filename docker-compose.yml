@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  auth:
+    build:
+      context: ./apps/auth
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - JWT_SECRET=your_jwt_secret
+    depends_on:
+      - user
+
+  user:
+    build:
+      context: ./apps/user
+      dockerfile: Dockerfile
+    ports:
+      - '5001:5001'
