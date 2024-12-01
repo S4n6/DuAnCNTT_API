@@ -12,7 +12,14 @@ const grpcOptions: ClientOptions = {
 };
 
 async function bootstrap() {
-  const app =  await NestFactory.createMicroservice(UserModule, grpcOptions);
-  await app.listen();
+  const app = await NestFactory.create(UserModule);
+  app.setGlobalPrefix('/api/users/');
+  await app.listen(3001);
+
+  const microservice = await NestFactory.createMicroservice(
+    UserModule,
+    grpcOptions,
+  );
+  await microservice.listen();
 }
 bootstrap();

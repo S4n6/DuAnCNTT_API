@@ -2,18 +2,27 @@ version: '3.8'
 services:
   auth:
     build:
-      context: ./apps/auth
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: apps/auth/Dockerfile
+      target: development
+    command: npm run start:dev auth
+    env_file:
+      - .env
     ports:
       - '3000:3000'
-    environment:
-      - JWT_SECRET=your_jwt_secret
-    depends_on:
-      - user
+    volumes:
+      - .:/usr/src/app
 
   user:
     build:
-      context: ./apps/user
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: apps/user/Dockerfile
+      target: development
+    command: npm run start:dev user
+    env_file:
+      - .env
     ports:
+      - '3001:3001'
       - '5001:5001'
+    volumes:
+      - .:/usr/src/app

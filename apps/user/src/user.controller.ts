@@ -1,28 +1,44 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { GrpcMethod } from '@nestjs/microservices';
 import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
 import { UserDto } from './user.dto';
+import { User } from './user.schema';
+import { UserResponseDto } from './user.response';
 
 @Controller()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @GrpcMethod('UserService', 'getUserById')
-  getUserById(
-    data: { userId: string },
-    metadata: Metadata,
-    call: ServerUnaryCall<any, any>,
-  ): object {
-    return this.userService.getUserById(data.userId);
+  @Get(':id')
+  getUserById(id: string): Promise<UserResponseDto> {
+    return this.userService.getUserById(id);
   }
 
-  @GrpcMethod('UserService', 'createUserByEmail')
-  createUserByEmail(
-    data: { user: UserDto },
+  @Post('createUserByEmail')
+  async createUserByEmail(@Body() user: UserDto): Promise<UserResponseDto> {
+    console.log('user', user);
+    const userCreated = await this.userService.createUserByEmail(user);
+    return userCreated;
+  }
+
+  @GrpcMethod('UserService', 'ValidateUserByEmail')
+  async validateUserByEmail(
+    data: { email: string; password: string },
     metadata: Metadata,
-    call: ServerUnaryCall<any, any>,
-  ): object {
-    return this.userService.createUserByEmail(data.user);
+    call: ServerUnaryCall<UserDto>,
+  ): Promise<User> {
+    const user = { username: data.email, password: data.password };
+    return this.userService.validateUserByEmail(user);
+  }
+
+  @GrpcMethod('UserService', 'ValidateUserByPhoneNumber')
+  async validateUserByPhoneNumber(
+    data: { phoneNumber: string; password: string },
+    metadata: Metadata,
+    call: ServerUnaryCall<UserDto>,
+  ): Promise<User> {
+    const user = { username: data.phoneNumber, password: data.password };
+    return this.userService.validateUserByPhoneNumber(user);
   }
 }

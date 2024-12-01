@@ -1,13 +1,18 @@
-// src/user/user.dto.ts
+// src/user/user.response.ts
 import {
   IsEmail,
-  IsString,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
+  IsString,
 } from 'class-validator';
+import { User } from './user.schema';
 
-export class UserDto {
+export class UserResponseType {
+  @IsString()
+  @IsNotEmpty()
+  _id: string;
+
   @IsString()
   @IsNotEmpty()
   firstName: string;
@@ -26,9 +31,14 @@ export class UserDto {
 
   @IsString()
   @IsNotEmpty()
-  password: string;
-
-  @IsString()
-  @IsNotEmpty()
   role: string;
+
+  @IsOptional()
+  avatar?: string;
+}
+
+export class UserResponseDto {
+  success: boolean;
+  message: string;
+  data?: User | User[];
 }

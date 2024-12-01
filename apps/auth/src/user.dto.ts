@@ -10,7 +10,7 @@ import {
 export class UserDto {
   @IsString()
   @IsNotEmpty()
-  id: string;
+  _id: string;
 
   @IsString()
   @IsNotEmpty()

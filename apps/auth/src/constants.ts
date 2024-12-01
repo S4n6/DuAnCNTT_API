@@ -1,3 +1,11 @@
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 export const jwtConstants = {
-  secret: process.env.jwt_secret,
+  JWT_SECRET: process.env.JWT_SECRET,
+  JWT_EXPIRES_IN_REFRESH_TOKEN: process.env.JWT_EXPIRES_IN_REFRESH_TOKEN,
+  JWT_EXPIRES_IN_ACCESS_TOKEN: process.env.JWT_EXPIRES_IN_ACCESS_TOKEN,
+  JWT_REFRESH_TOKEN_HASH_SECRET: process.env.JWT_REFRESH_TOKEN_HASH_SECRET,
+  
 };

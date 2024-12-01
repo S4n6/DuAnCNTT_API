@@ -1,3 +1,7 @@
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 export const ROLE = {
   ADMIN: 'admin',
   USER: 'user',
@@ -5,3 +9,5 @@ export const ROLE = {
   STUDENT: 'student',
   TEACHER: 'teacher',
 };
+
+export const SECRET_HASH_PASSWORD = process.env.SECRET_HASH_PASSWORD;
