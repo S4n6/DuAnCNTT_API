@@ -16,7 +16,7 @@ export const grpcClientOptions: ClientOptions = {
   options: {
     package: 'user',
     protoPath: 'lib/common/user.proto',
-    url: 'localhost:5001',
+    url: '0.0.0.0:5001',
   },
 };
 

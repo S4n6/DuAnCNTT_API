@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Token } from './token.schema';
 import { Model } from 'mongoose';
 import { UserDto } from './user.dto';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { jwtConstants } from './constants';
 
 @Injectable()

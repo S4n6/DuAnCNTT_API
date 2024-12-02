@@ -6,7 +6,7 @@ import { LoginRequestDto } from './auth.requestLogin';
 import { UserDto } from './user.dto';
 import { jwtConstants } from './constants';
 
-@Controller()
+@Controller('/api/auth/')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -58,7 +58,10 @@ export class AuthController {
   }
 
   @Post('/createRefreshToken')
-  async createRefreshToken(@Res() res: Response, @Body() user: object) {
+  async createRefreshToken(
+    @Res() res: Response,
+    @Body() user: { userId: string },
+  ) {
     const refresh_token = await this.authService.createRefreshToken(
       user?.userId,
       jwtConstants.JWT_EXPIRES_IN_REFRESH_TOKEN,

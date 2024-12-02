@@ -24,6 +24,11 @@ export class User extends Document {
 
   @Prop()
   avatar?: string;
+
+  toJSON() {
+    const { __v, password, ...rest } = this.toObject();
+    return rest;
+  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

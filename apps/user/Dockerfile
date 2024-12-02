@@ -1,25 +1,26 @@
-FROM node:16 as development
+# Use the official Node.js image as the base image
+FROM node:16-alpine as development
 
-WORKDIR usr/src/app
+# Set the working directory
+WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY package-lock.json ./
+# Copy the root package.json and package-lock.json
+COPY package*.json ./
 
+# Install dependencies
 RUN npm install
+
 COPY . .
+
+# Set the working directory to the user service
+WORKDIR /usr/src/app/apps/user
+
+# Build the NestJS application
 RUN npm run build
 
-FROM node:16 as production
-ARG NODE_ENV=production
+# Expose the ports the app runs on
+EXPOSE 3001
+EXPOSE 5001
 
-ENV NODE_ENV=${NODE_ENV}
-WORKDIR usr/src/app
-
-
-COPY package.json ./
-COPY package-lock.json ./
-
-RUN npm install --prod
-COPY --from=development /usr/src/app/dist ./dist
-#CMD ["node","dist/apps/user/main"]
-CMD ["npm", "run", "start:dev user"]
+# Define the command to run the application
+CMD ["npm", "run", "start:dev"]

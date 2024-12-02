@@ -7,13 +7,12 @@ const grpcOptions: ClientOptions = {
   options: {
     package: 'user',
     protoPath: 'lib/common/user.proto',
-    url: 'localhost:5001',
+    url: '0.0.0.0:5001',
   },
 };
 
 async function bootstrap() {
   const app = await NestFactory.create(UserModule);
-  app.setGlobalPrefix('/api/users/');
   await app.listen(3001);
 
   const microservice = await NestFactory.createMicroservice(
