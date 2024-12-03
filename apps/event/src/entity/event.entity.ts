@@ -23,6 +23,9 @@ export class Event {
   description: string;
 
   @Column()
+  slots: number;
+
+  @Column()
   typeId: string;
 
   @ManyToOne(() => Location, (location) => location.events)
