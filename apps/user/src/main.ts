@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { UserModule } from './user.module';
 import { Transport, ClientOptions } from '@nestjs/microservices';
+import { ValidationPipe } from '@nestjs/common';
 
 const grpcOptions: ClientOptions = {
   transport: Transport.GRPC,
@@ -13,12 +14,14 @@ const grpcOptions: ClientOptions = {
 
 async function bootstrap() {
   const app = await NestFactory.create(UserModule);
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(3001);
 
   const microservice = await NestFactory.createMicroservice(
     UserModule,
     grpcOptions,
   );
+  microservice.useGlobalPipes(new ValidationPipe());
   await microservice.listen();
 }
 bootstrap();

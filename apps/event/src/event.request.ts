@@ -1,4 +1,5 @@
 import { IsString, IsDate, IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class RequestCreateEventDto {
   @IsString()
@@ -6,11 +7,11 @@ export class RequestCreateEventDto {
   name: string;
 
   @IsDate()
-  @IsNotEmpty()
+  @Type(() => Date)
   startDate: Date;
 
   @IsDate()
-  @IsNotEmpty()
+  @Type(() => Date)
   endDate: Date;
 
   @IsString()

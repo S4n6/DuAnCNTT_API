@@ -30,6 +30,60 @@
       "compilerOptions": {
         "tsConfigPath": "apps/event/tsconfig.app.json"
       }
+    },
+    "registration": {
+      "type": "application",
+      "root": "apps/registration",
+      "entryFile": "main",
+      "sourceRoot": "apps/registration/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/registration/tsconfig.app.json"
+      }
+    },
+    "feedback-and-rating": {
+      "type": "application",
+      "root": "apps/feedback-and-rating",
+      "entryFile": "main",
+      "sourceRoot": "apps/feedback-and-rating/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/feedback-and-rating/tsconfig.app.json"
+      }
+    },
+    "notification": {
+      "type": "application",
+      "root": "apps/notification",
+      "entryFile": "main",
+      "sourceRoot": "apps/notification/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/notification/tsconfig.app.json"
+      }
+    },
+    "check-in-out": {
+      "type": "application",
+      "root": "apps/check-in-out",
+      "entryFile": "main",
+      "sourceRoot": "apps/check-in-out/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/check-in-out/tsconfig.app.json"
+      }
+    },
+    "participants": {
+      "type": "application",
+      "root": "apps/participants",
+      "entryFile": "main",
+      "sourceRoot": "apps/participants/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/participants/tsconfig.app.json"
+      }
+    },
+    "schedule": {
+      "type": "application",
+      "root": "apps/schedule",
+      "entryFile": "main",
+      "sourceRoot": "apps/schedule/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/schedule/tsconfig.app.json"
+      }
     }
   }
 }
