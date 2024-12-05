@@ -8,6 +8,7 @@ admin.initializeApp({
 });
 
 const firestore = admin.firestore();
-export { firestore };
+const messaging = admin.messaging();
+export { firestore, messaging };
 
 export default admin;

@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Registration } from './registration.entity';
 
 @Entity()
 export class Ticket {

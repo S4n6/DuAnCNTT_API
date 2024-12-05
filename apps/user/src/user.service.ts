@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { UserDto } from './user.dto';
-import { ROLE, SECRET_HASH_PASSWORD, USER_CONSTANTS } from './constant';
+import { ROLE, USER_CONSTANTS } from './constant';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
 import { Model, ObjectId } from 'mongoose';
-import { UserResponseDto, UserResponseType } from './user.response';
+import { UserResponseDto } from './user.response';
 import * as bcrypt from 'bcryptjs';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
+import { TokenDevice } from './tokenDevice.schema';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private readonly httpService: HttpService,
+    @InjectModel(TokenDevice.name) private tokenDeviceModel: Model<TokenDevice>,
   ) {}
 
   async getAllUsers(): Promise<UserResponseDto> {
@@ -30,6 +32,41 @@ export class UserService {
       data: users,
     };
   }
+
+  async getAllTokenDevices(): Promise<object> {
+    try {
+      const tokenDevices = await this.tokenDeviceModel.find();
+      return {
+        success: true,
+        message: 'Token devices found',
+        data: tokenDevices,
+      };
+    } catch (error) {
+      console.error('Error fetching token devices:', error);
+      return {
+        success: false,
+        message: 'Failed to fetch token devices',
+      };
+    }
+  }
+
+  async getTokenDevicesByUserId(userId: ObjectId): Promise<object> {
+    try {
+      const tokenDevices = await this.tokenDeviceModel.find({ user: userId }).exec();
+      return {
+        success: true,
+        message: 'Token devices found',
+        data: tokenDevices,
+      };
+    } catch (error) {
+      console.error('Error fetching token devices by user ID:', error);
+      return {
+        success: false,
+        message: 'Failed to fetch token devices by user ID',
+      };
+    }
+  }
+
 
   async getUserById(id: ObjectId): Promise<UserResponseDto> {
     const user = await this.userModel.findById(id);
@@ -97,6 +134,30 @@ export class UserService {
       return {
         success: false,
         message: 'User creation failed',
+      };
+    }
+  }
+
+  async createTokenDevice(
+    userId: ObjectId,
+    tokenDeviceData: string,
+  ): Promise<UserResponseDto> {
+    try {
+      const tokenDevice = new this.tokenDeviceModel({
+        user: userId,
+        token: tokenDeviceData,
+      });
+      await tokenDevice.save();
+      return {
+        success: true,
+        message: 'Token device created successfully',
+        data: null,
+      };
+    } catch (error) {
+      console.error('Error creating token device:', error);
+      return {
+        success: false,
+        message: 'Token device creation failed',
       };
     }
   }

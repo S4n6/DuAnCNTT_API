@@ -31,4 +31,8 @@ export class UserDto {
   @IsString()
   @IsNotEmpty()
   role: string;
+
+  @IsString()
+  @IsOptional()
+  avatar?: string;
 }

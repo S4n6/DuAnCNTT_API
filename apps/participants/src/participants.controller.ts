@@ -1,12 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ParticipantsService } from './participants.service';
 
-@Controller()
+@Controller('/api/participants/')
 export class ParticipantsController {
   constructor(private readonly participantsService: ParticipantsService) {}
-
-  @Get()
-  getHello(): string {
-    return this.participantsService.getHello();
-  }
 }

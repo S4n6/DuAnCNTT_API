@@ -25,19 +25,29 @@ export class UserController {
     return this.userService.getAllUsers();
   }
 
-  @Get(':id')
-  getUserById(id: ObjectId): Promise<UserResponseDto> {
-    return this.userService.getUserById(id);
+  @Get('tokenDevice')
+  getAllTokenDevices(): Promise<object> {
+    return this.userService.getAllTokenDevices();
   }
 
-  @Get('getUserByEmail')
+  @Get('tokenDevice/:userId')
+  getTokenDevicesByUserId(@Param('userId') userId: ObjectId): Promise<object> {
+    return this.userService.getTokenDevicesByUserId(userId);
+  }
+
+  @Get('email')
   getUserByEmail(email: string): Promise<UserResponseDto> {
     return this.userService.getUserByEmail(email);
   }
 
-  @Get('getUserByPhoneNumber')
+  @Get('phoneNumber')
   getUserByPhoneNumber(phoneNumber: string): Promise<UserResponseDto> {
     return this.userService.getUserByPhoneNumber(phoneNumber);
+  }
+
+  @Get(':id')
+  getUserById(id: ObjectId): Promise<UserResponseDto> {
+    return this.userService.getUserById(id);
   }
 
   @Post('createUserByEmail')
@@ -55,6 +65,17 @@ export class UserController {
     return userCreated;
   }
 
+  @Post('tokenDevice')
+  async createTokenDevice(
+    @Body() payload: { userId: ObjectId; tokenDevice: string },
+  ): Promise<UserResponseDto> {
+    const userCreated = await this.userService.createTokenDevice(
+      payload.userId,
+      payload.tokenDevice,
+    );
+    return userCreated;
+  }
+
   @Patch(':id')
   async updateUser(
     @Body() user: UserDto,
@@ -63,6 +84,12 @@ export class UserController {
     const userUpdated = await this.userService.updateUser(user, id);
     return userUpdated;
   }
+
+  // @Put('tokenDevice')
+  // async updateTokenDevice(@Body() user: UserDto): Promise<UserResponseDto> {
+  //   const userUpdated = await this.userService.updateTokenDevice(user);
+  //   return userUpdated;
+  // }
 
   @Delete(':id')
   async deleteUser(

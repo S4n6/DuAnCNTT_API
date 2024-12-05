@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Ticket } from './ticket.entity';
 
 @Entity()
 export class Registration {
@@ -24,5 +25,5 @@ export class Registration {
   ticketId: string;
 
   @ManyToOne(() => Ticket, (ticket) => ticket.registration)
-  ticket: Ticket;
+  tickets: Ticket;
 }

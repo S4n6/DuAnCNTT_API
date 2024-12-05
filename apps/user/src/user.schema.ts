@@ -1,6 +1,7 @@
 // src/user/user.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { TokenDevice } from './tokenDevice.schema';
 
 @Schema()
 export class User extends Document {
@@ -24,6 +25,10 @@ export class User extends Document {
 
   @Prop()
   avatar?: string;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'TokenDevice' }] })
+  tokenDevices: TokenDevice[];
+
 
   toJSON() {
     const { __v, password, ...rest } = this.toObject();

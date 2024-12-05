@@ -1,5 +1,7 @@
 import { Controller, Post, Get, Param, Body, Patch } from '@nestjs/common';
 import { NotificationService } from './notification.service';
+import { NotificationResponse } from './notification.response';
+import { NotificationRequestSend } from './notification.request';
 
 @Controller('/api/notifications/')
 export class NotificationController {
@@ -9,26 +11,37 @@ export class NotificationController {
   async createNotification(
     @Body('userId') userId: string,
     @Body('message') message: string,
-  ): Promise<any> {
+  ): Promise<NotificationResponse> {
     return this.notificationService.createNotification(userId, message);
   }
 
   @Get()
-  async getAllNotifications(): Promise<any> {
+  async getAllNotifications(): Promise<NotificationResponse> {
     return this.notificationService.getAllNotifications();
   }
 
   @Get(':userId')
   async getUserNotifications(
     @Param('userId') userId: string,
-  ): Promise<any> {
+  ): Promise<NotificationResponse> {
     return this.notificationService.getUserNotifications(userId);
+  }
+
+  @Post(':userId')
+  async sendNotificationToUser(
+    @Param('userId') userId: string,
+    @Body('message') message: NotificationRequestSend,
+  ): Promise<NotificationResponse> {
+    return this.notificationService.sendNotificationToTokenDevice(
+      userId,
+      message,
+    );
   }
 
   @Patch(':notificationId/read')
   async markAsRead(
     @Param('notificationId') notificationId: string,
-  ): Promise<any> {
+  ): Promise<NotificationResponse> {
     return this.notificationService.markAsRead(notificationId);
   }
 }
