@@ -1,12 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { RegistrationService } from './registration.service';
+import { EventPattern, Payload } from '@nestjs/microservices';
+import { RegistrationRequestCreate } from './request/registration.request';
+import { RegistrationResponse } from './response/registration.response';
 
-@Controller()
+@Controller('/api/registration/')
 export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}
 
-  @Get()
-  getHello(): string {
-    return this.registrationService.getHello();
+  @EventPattern('registration_created')
+  async createRegistration(@Payload() data: RegistrationRequestCreate): RegistrationResponse {
+    return 'Register';
   }
 }

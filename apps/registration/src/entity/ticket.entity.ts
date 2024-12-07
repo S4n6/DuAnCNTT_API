@@ -3,8 +3,8 @@ import { Registration } from './registration.entity';
 
 @Entity()
 export class Ticket {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   price: number;
@@ -16,7 +16,10 @@ export class Ticket {
   type: string;
 
   @Column()
-  registrationId: string;
+  eventId: string;
+
+  @Column()
+  userId: string;
 
   @ManyToOne(() => Registration, (registration) => registration.tickets)
   registration: Registration;

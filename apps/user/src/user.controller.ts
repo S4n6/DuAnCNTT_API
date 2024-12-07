@@ -12,7 +12,6 @@ import { UserService } from './user.service';
 import { GrpcMethod } from '@nestjs/microservices';
 import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
 import { UserDto } from './user.dto';
-import { User } from './user.schema';
 import { UserResponseDto } from './user.response';
 import { ObjectId } from 'mongoose';
 

@@ -14,4 +14,6 @@ export class Speaker {
 
   @Column()
   eventId: string;
+
+  
 }
