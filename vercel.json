@@ -1,0 +1,149 @@
+{
+  "version": 2,
+  "projects": [
+    {
+      "name": "auth",
+      "src": "apps/auth",
+      "builds": [
+        {
+          "src": "apps/auth/package.json",
+          "use": "@vercel/node"
+        }
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "apps/auth/$1"
+        }
+      ]
+    },
+    {
+      "name": "user",
+      "src": "apps/user",
+      "builds": [
+        {
+          "src": "apps/user/package.json",
+          "use": "@vercel/node"
+        }
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "apps/user/$1"
+        }
+      ]
+    },
+    {
+      "name": "event",
+      "src": "apps/event",
+      "builds": [
+        {
+          "src": "apps/event/package.json",
+          "use": "@vercel/node"
+        }
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "apps/event/$1"
+        }
+      ]
+    },
+    {
+      "name": "registration",
+      "src": "apps/registration",
+      "builds": [
+        {
+          "src": "apps/registration/package.json",
+          "use": "@vercel/node"
+        }
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "apps/registration/$1"
+        }
+      ]
+    },
+    {
+      "name": "feedback-and-rating",
+      "src": "apps/feedback-and-rating",
+      "builds": [
+        {
+          "src": "apps/feedback-and-rating/package.json",
+          "use": "@vercel/node"
+        }
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "apps/feedback-and-rating/$1"
+        }
+      ]
+    },
+    {
+      "name": "notification",
+      "src": "apps/notification",
+      "builds": [
+        {
+          "src": "apps/notification/package.json",
+          "use": "@vercel/node"
+        }
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "apps/notification/$1"
+        }
+      ]
+    },
+    {
+      "name": "participants",
+      "src": "apps/participants",
+      "builds": [
+        {
+          "src": "apps/participants/package.json",
+          "use": "@vercel/node"
+        }
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "apps/participants/$1"
+        }
+      ]
+    },
+    {
+      "name": "schedule",
+      "src": "apps/schedule",
+      "builds": [
+        {
+          "src": "apps/schedule/package.json",
+          "use": "@vercel/node"
+        }
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "apps/schedule/$1"
+        }
+      ]
+    },
+    {
+      "name": "check-in-out",
+      "src": "apps/check-in-out",
+      "builds": [
+        {
+          "src": "apps/check-in-out/package.json",
+          "use": "@vercel/node"
+        }
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "apps/check-in-out/$1"
+        }
+      ]
+    }
+  ]
+}
