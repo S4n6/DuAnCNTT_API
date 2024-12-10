@@ -9,11 +9,5 @@
       "src": "apps/user/src/main.ts",
       "use": "@vercel/node"
     }
-  ],
-  "probes": [
-    {
-      "path": "/api/healthcheck",
-      "mustContain": "OK"
-    }
   ]
 }
