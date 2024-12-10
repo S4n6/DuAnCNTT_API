@@ -5,102 +5,102 @@
       "src": "apps/auth/package.json",
       "use": "@vercel/node",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist/apps/auth"
       }
     },
     {
       "src": "apps/user/package.json",
       "use": "@vercel/node",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist/apps/user"
       }
     },
     {
       "src": "apps/event/package.json",
       "use": "@vercel/node",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist/apps/event"
       }
     },
     {
       "src": "apps/registration/package.json",
       "use": "@vercel/node",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist/apps/registration"
       }
     },
     {
       "src": "apps/feedback-and-rating/package.json",
       "use": "@vercel/node",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist/apps/feedback-and-rating"
       }
     },
     {
       "src": "apps/notification/package.json",
       "use": "@vercel/node",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist/apps/notification"
       }
     },
     {
       "src": "apps/participants/package.json",
       "use": "@vercel/node",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist/apps/participants"
       }
     },
     {
       "src": "apps/schedule/package.json",
       "use": "@vercel/node",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist/apps/schedule"
       }
     },
     {
       "src": "apps/check-in-out/package.json",
       "use": "@vercel/node",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist/apps/check-in-out"
       }
     }
   ],
   "routes": [
     {
       "src": "/auth/(.*)",
-      "dest": "apps/auth/$1"
+      "dest": "dist/apps/auth/$1"
     },
     {
       "src": "/user/(.*)",
-      "dest": "apps/user/$1"
+      "dest": "dist/apps/user/src/main.ts"
     },
     {
       "src": "/event/(.*)",
-      "dest": "apps/event/$1"
+      "dest": "dist/apps/event/$1"
     },
     {
       "src": "/registration/(.*)",
-      "dest": "apps/registration/$1"
+      "dest": "dist/apps/registration/$1"
     },
     {
       "src": "/feedback-and-rating/(.*)",
-      "dest": "apps/feedback-and-rating/$1"
+      "dest": "dist/apps/feedback-and-rating/$1"
     },
     {
       "src": "/notification/(.*)",
-      "dest": "apps/notification/$1"
+      "dest": "dist/apps/notification/$1"
     },
     {
       "src": "/participants/(.*)",
-      "dest": "apps/participants/$1"
+      "dest": "dist/apps/participants/src/main.ts"
     },
     {
       "src": "/schedule/(.*)",
-      "dest": "apps/schedule/$1"
+      "dest": "dist/apps/schedule/$1"
     },
     {
       "src": "/check-in-out/(.*)",
-      "dest": "apps/check-in-out/$1"
+      "dest": "dist/apps/check-in-out/$1"
     }
   ]
 }
