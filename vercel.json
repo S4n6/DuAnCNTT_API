@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "/apps/user/src/main.ts",
+      "src": "apps/user/package.json",
       "use": "@vercel/node",
       "config": {
         "distDir": "dist/apps/user"
       }
     },
     {
-      "src": "/apps/participants/src/main.ts",
+      "src": "apps/participants/package.json",
       "use": "@vercel/node",
       "config": {
         "distDir": "dist/apps/participants"
@@ -19,11 +19,11 @@
   "routes": [
     {
       "src": "/user/(.*)",
-      "dest": "/apps/user/src/main.ts"
+      "dest": "/dist/apps/user/$1"
     },
     {
       "src": "/participants/(.*)",
-      "dest": "/apps/participants/src/main.ts"
+      "dest": "/dist/apps/participants/$1"
     }
   ]
 }
