@@ -35,11 +35,7 @@ export class GuestService {
     try {
       const newGuest = new this.guestModel(guestDto);
       const savedGuest = await newGuest.save();
-      const guest: GuestDto = {
-        _id: savedGuest._id,
-        ...guestDto,
-      };
-      return new GuestResponse(true, 'Guest created successfully', guest);
+      return new GuestResponse(true, 'Guest created successfully', null);
     } catch (error) {
       return new GuestResponse(false, error?.message, null);
     }
