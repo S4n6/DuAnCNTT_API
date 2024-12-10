@@ -1,7 +1,10 @@
 import { Controller, Post, Get, Param, Body, Patch } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { NotificationResponse } from './notification.response';
-import { NotificationRequestSend } from './notification.request';
+import {
+  NotificationRequestCreate,
+  NotificationRequestSend,
+} from './notification.request';
 
 @Controller('/api/notifications/')
 export class NotificationController {
@@ -9,10 +12,9 @@ export class NotificationController {
 
   @Post()
   async createNotification(
-    @Body('userId') userId: string,
-    @Body('message') message: string,
+    @Body('userId') notification: NotificationRequestCreate,
   ): Promise<NotificationResponse> {
-    return this.notificationService.createNotification(userId, message);
+    return this.notificationService.createNotification(notification);
   }
 
   @Get()

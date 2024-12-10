@@ -9,7 +9,9 @@ export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}
 
   @EventPattern('registration_created')
-  async createRegistration(@Payload() data: RegistrationRequestCreate): RegistrationResponse {
-    return 'Register';
+  async createRegistration(
+    @Payload() data: RegistrationRequestCreate,
+  ): Promise<RegistrationResponse> {
+    return this.registrationService.createRegistration(data);
   }
 }

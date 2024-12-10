@@ -1,6 +1,7 @@
 export class GuestDto {
-  _id: number;
-  name: string;
+  id: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   avatar: string;
