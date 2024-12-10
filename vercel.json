@@ -2,105 +2,28 @@
   "version": 2,
   "builds": [
     {
-      "src": "apps/auth/package.json",
-      "use": "@vercel/node",
-      "config": {
-        "distDir": "dist/apps/auth"
-      }
-    },
-    {
-      "src": "apps/user/package.json",
+      "src": "/package.json",
       "use": "@vercel/node",
       "config": {
         "distDir": "dist/apps/user"
       }
     },
     {
-      "src": "apps/event/package.json",
-      "use": "@vercel/node",
-      "config": {
-        "distDir": "dist/apps/event"
-      }
-    },
-    {
-      "src": "apps/registration/package.json",
-      "use": "@vercel/node",
-      "config": {
-        "distDir": "dist/apps/registration"
-      }
-    },
-    {
-      "src": "apps/feedback-and-rating/package.json",
-      "use": "@vercel/node",
-      "config": {
-        "distDir": "dist/apps/feedback-and-rating"
-      }
-    },
-    {
-      "src": "apps/notification/package.json",
-      "use": "@vercel/node",
-      "config": {
-        "distDir": "dist/apps/notification"
-      }
-    },
-    {
-      "src": "apps/participants/package.json",
+      "src": "/package.json",
       "use": "@vercel/node",
       "config": {
         "distDir": "dist/apps/participants"
-      }
-    },
-    {
-      "src": "apps/schedule/package.json",
-      "use": "@vercel/node",
-      "config": {
-        "distDir": "dist/apps/schedule"
-      }
-    },
-    {
-      "src": "apps/check-in-out/package.json",
-      "use": "@vercel/node",
-      "config": {
-        "distDir": "dist/apps/check-in-out"
       }
     }
   ],
   "routes": [
     {
-      "src": "/auth/(.*)",
-      "dest": "dist/apps/auth/$1"
-    },
-    {
       "src": "/user/(.*)",
-      "dest": "dist/apps/user/src/main.ts"
-    },
-    {
-      "src": "/event/(.*)",
-      "dest": "dist/apps/event/$1"
-    },
-    {
-      "src": "/registration/(.*)",
-      "dest": "dist/apps/registration/$1"
-    },
-    {
-      "src": "/feedback-and-rating/(.*)",
-      "dest": "dist/apps/feedback-and-rating/$1"
-    },
-    {
-      "src": "/notification/(.*)",
-      "dest": "dist/apps/notification/$1"
+      "dest": "dist/apps/user/$1"
     },
     {
       "src": "/participants/(.*)",
-      "dest": "dist/apps/participants/src/main.ts"
-    },
-    {
-      "src": "/schedule/(.*)",
-      "dest": "dist/apps/schedule/$1"
-    },
-    {
-      "src": "/check-in-out/(.*)",
-      "dest": "dist/apps/check-in-out/$1"
+      "dest": "dist/apps/participants/$1"
     }
   ]
 }
