@@ -62,15 +62,15 @@ jobs:
         run: |
           docker run --rm \
             --env-file .env \
-            sang12/manage_event:user-service-latest npx jest --config ./test/jest-e2e.json
+            user-service-latest npx jest --config ./test/jest-e2e.json
 
       - name: Run tests for event service
         run: |
           docker run --rm \
             --env-file .env \
-            sang12/manage_event:event-service-latest npx jest --config ./test/jest-e2e.json
+            event-service-latest npx jest --config ./test/jest-e2e.json
 
       - name: Lint the code
         run: |
-          docker run --rm --env-file .env sang12/manage_event:user-service-latest npm run lint
-          docker run --rm --env-file .env sang12/manage_event:event-service-latest npm run lint
+          docker run --rm --env-file .env user-service-latest npm run lint
+          docker run --rm --env-file .env event-service-latest npm run lint
