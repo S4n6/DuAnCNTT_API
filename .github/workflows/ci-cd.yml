@@ -35,6 +35,7 @@ jobs:
       - name: Run tests for user service
         run: |
           docker run --rm \
+            --env-file .env \
             user-service:latest \
             npx jest --config ./test/jest-e2e.json
         env: # Định nghĩa biến môi trường cấp step (có thể ghi đè)
