@@ -25,4 +25,8 @@ export class TicketRequestCreate {
 
   @IsNotEmpty()
   userId: string;
+
+  @IsNotEmpty()
+  @IsNotEmpty()
+  status: string;
 }

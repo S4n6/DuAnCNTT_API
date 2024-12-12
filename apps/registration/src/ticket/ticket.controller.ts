@@ -11,7 +11,7 @@ import { TicketService } from './ticket.service';
 import { TicketResponse } from '../response/ticket.response';
 import { TicketRequestCreate } from '../request/ticket.request';
 
-@Controller('tickets')
+@Controller('/api/tickets/')
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 

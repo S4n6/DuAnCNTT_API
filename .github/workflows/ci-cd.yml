@@ -27,28 +27,68 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: Create .env file
-        run: |
-          echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
-
-      - name: Build and push Docker images
+      - name: Build Docker images
         run: |
           docker build -t user-service:latest -f apps/user/Dockerfile .
           docker build -t auth-service:latest -f apps/auth/Dockerfile .
+          docker build -t event-service:latest -f apps/event/Dockerfile .
+          docker build -t registration-service:latest -f apps/registration/Dockerfile .
+
+      - name: Push Docker images
+        run: |
+          docker tag user-service:latest your-dockerhub-username/user-service:latest
+          docker tag auth-service:latest your-dockerhub-username/auth-service:latest
+          docker tag event-service:latest your-dockerhub-username/event-service:latest
+          docker tag registration-service:latest your-dockerhub-username/registration-service:latest
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker push your-dockerhub-username/user-service:latest
+          docker push your-dockerhub-username/auth-service:latest
+          docker push your-dockerhub-username/event-service:latest
+          docker push your-dockerhub-username/registration-service:latest
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create .env file
+        run: |
+          echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
+          echo "SECRET_HASH_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
+          echo "ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
+          echo "HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }}" >> .env
+          echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}" >> .env
 
       - name: Run tests for user service
         run: |
           docker run --rm \
             --env-file .env \
-            user-service:latest \
-            npx jest --detectOpenHandles --config ./test/jest-e2e.json
+            your-dockerhub-username/user-service:latest npx jest --config ./apps/user/test/jest-e2e.json
 
+       - name: Run tests for event service
+        run: |
+          docker run --rm \
+            --env-file .env \
+            your-dockerhub-username/event-service:latest npx jest --config ./apps/event/test/jest-e2e.json
+      
       - name: Run tests for auth service
         run: |
           docker run --rm \
-            auth-service:latest npx jest --config ./test/jest-e2e.json
+            --env-file .env \
+            your-dockerhub-username/auth-service:latest npx jest --config ./apps/auth/test/jest-e2e.json
+
+      - name: Run tests for registration service
+        run: |
+          docker run --rm \
+            --env-file .env \
+            your-dockerhub-username/registration-service:latest npx jest --config ./apps/registration/test/jest-e2e.json
 
       - name: Lint the code
         run: |
-          docker run --rm user-service:latest npm run lint
-          docker run --rm auth-service:latest npm run lint
+          docker run --rm --env-file .env your-dockerhub-username/user-service:latest npm run lint
+          docker run --rm --env-file .env your-dockerhub-username/auth-service:latest npm run lint
+          docker run --rm --env-file .env your-dockerhub-username/event-service:latest npm run lint
+          docker run --rm --env-file .env your-dockerhub-username/registration-service:latest npm run lint

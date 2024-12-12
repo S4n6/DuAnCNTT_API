@@ -27,4 +27,54 @@ services:
     volumes:
       - .:/usr/src/app
 
-  
+  event:
+    build:
+      context: .
+      dockerfile: apps/event/Dockerfile
+      target: development
+    command: npm run start:dev event
+    env_file:
+      - .env
+    ports:
+      - '3002:3002'
+    volumes:
+      - .:/usr/src/app
+
+  participants:
+    build:
+      context: .
+      dockerfile: apps/participants/Dockerfile
+      target: development
+    command: npm run start:dev participants
+    env_file:
+      - .env
+    ports:
+      - '3005:3005'
+    volumes:
+      - .:/usr/src/app
+
+  notification:
+    build:
+      context: .
+      dockerfile: apps/notification/Dockerfile
+      target: development
+    command: npm run start:dev notification
+    env_file:
+      - .env
+    ports:
+      - '3003:3003'
+    volumes:
+      - .:/usr/src/app
+
+  registration:
+    build:
+      context: .
+      dockerfile: apps/registration/Dockerfile
+      target: development
+    command: npm run start:dev registration
+    env_file:
+      - .env
+    ports:
+      - '3006:3006'
+    volumes:
+      - .:/usr/src/app

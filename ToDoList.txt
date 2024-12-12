@@ -1,0 +1,13 @@
+- Các service đã xây dựng (6):
+    + auth
+    + user
+    + notification
+    + registration
+    + participants
+    + event
+
+- Nhiệm vụ cần làm:
+    + Tạo Dockerfile cho 4 services còn lại (ngoại trừ auth, user) - Done
+    + Tạo unit test cho 6 services
+    + Xây dựng lại CI CD file
+    + TÌm hiểu và tối ưu hóa Dockerfile

@@ -16,5 +16,20 @@ export class RegistrationRequestCreate {
 
   @IsString()
   @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
   registrationStatus: string;
+}
+
+export class RegistrationRequestCancel {
+  @IsNotEmpty()
+  userId: string;
+
+  @IsNotEmpty()
+  ticketId: string;
+
+  @IsNotEmpty()
+  eventId: string;
 }
