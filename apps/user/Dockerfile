@@ -12,6 +12,9 @@ RUN npm install
 
 COPY . .
 
+# Copy the .env file
+COPY .env .env
+
 # Set the working directory to the user service
 WORKDIR /usr/src/app/apps/user
 

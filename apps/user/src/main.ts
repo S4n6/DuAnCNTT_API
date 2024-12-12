@@ -2,6 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { UserModule } from './user.module';
 import { Transport, ClientOptions } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
+import * as dotenv from 'dotenv';
+import { USER_CONSTANTS } from './constant';
+
+dotenv.config();
 
 const grpcOptions: ClientOptions = {
   transport: Transport.GRPC,
@@ -15,12 +19,13 @@ const grpcOptions: ClientOptions = {
 async function bootstrap() {
   const app = await NestFactory.create(UserModule);
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3001);
+  await app.listen(USER_CONSTANTS.HOST_AUTH_SERVICE);
 
   const microservice = await NestFactory.createMicroservice(
     UserModule,
     grpcOptions,
   );
+  console.log('Microservice is running', USER_CONSTANTS.HOST_AUTH_SERVICE);
   microservice.useGlobalPipes(new ValidationPipe());
   await microservice.listen();
 }
