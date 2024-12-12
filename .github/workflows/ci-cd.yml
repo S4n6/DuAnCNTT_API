@@ -55,13 +55,13 @@ jobs:
         run: |
           docker run --rm \
             user-service:latest npx jest --config ./apps/user/test/jest-e2e.json
-        # Chạy kiểm tra cho dịch vụ người dùng
+        # Chạy test cho user service
 
       - name: Run tests for auth service
         run: |
           docker run --rm \
             auth-service:latest npx jest --config ./apps/auth/test/jest-e2e.json
-        # Chạy kiểm tra cho dịch vụ xác thực
+        # Chạy test cho auth service
 
       - name: Lint the code
         run: |

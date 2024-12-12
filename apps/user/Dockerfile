@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # Set the working directory to the user service
-WORKDIR /usr/src/app/apps/user
+# WORKDIR /usr/src/app/apps/user
 
 # Build the NestJS application
 RUN npm run build
