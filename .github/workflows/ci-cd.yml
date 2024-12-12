@@ -46,7 +46,8 @@ jobs:
             -e ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }} \
             -e HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }} \
             -e USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }} \
-            user-service:latest npx jest --config ./apps/user/test/jest-e2e.json
+            user-service:latest \
+            npx jest --config ./jest-e2e.json
 
       - name: Run tests for auth service
         run: |
