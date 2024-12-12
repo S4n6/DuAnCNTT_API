@@ -68,12 +68,12 @@ jobs:
             --env-file .env \
             your-dockerhub-username/user-service:latest npx jest --config ./apps/user/test/jest-e2e.json
 
-       - name: Run tests for event service
+      - name: Run tests for event service
         run: |
           docker run --rm \
             --env-file .env \
             your-dockerhub-username/event-service:latest npx jest --config ./apps/event/test/jest-e2e.json
-      
+
       - name: Run tests for auth service
         run: |
           docker run --rm \
