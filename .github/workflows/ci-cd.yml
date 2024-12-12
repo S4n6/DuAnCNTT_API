@@ -33,18 +33,16 @@ jobs:
           docker build -t auth-service:latest -f apps/auth/Dockerfile .
 
       - name: Run tests for user service
+        env:
+          MONGO_URL: ${{ secrets.MONGO_URL }}
+          SECRET_HASH_PASSWORD: ${{ secrets.SECRET_HASH_PASSWORD }}
+          ENCODE_PASSWORD: ${{ secrets.SECRET_HASH_PASSWORD }}
+          HOST_AUTH_SERVICE: ${{ secrets.HOST_AUTH_SERVICE }}
+          USER_SERVICE_PORT: ${{ secrets.USER_SERVICE_PORT }}
         run: |
           docker run --rm \
             user-service:latest \
             npx jest --config ./test/jest-e2e.json
-        with:
-          env:
-            MONGO_URL: ${{ secrets.MONGO_URL }}
-            SECRET_HASH_PASSWORD: ${{ secrets.SECRET_HASH_PASSWORD }}
-            ENCODE_PASSWORD: ${{ secrets.SECRET_HASH_PASSWORD }}
-            HOST_AUTH_SERVICE: ${{ secrets.HOST_AUTH_SERVICE }}
-            USER_SERVICE_PORT: ${{ secrets.USER_SERVICE_PORT }}
-          
 
       - name: Run tests for auth service
         run: |
