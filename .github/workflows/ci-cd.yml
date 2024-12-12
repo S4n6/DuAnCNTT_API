@@ -41,10 +41,10 @@ jobs:
           docker tag auth-service:latest sang12/manage_event
           docker tag event-service:latest sang12/manage_event
           docker tag registration-service:latest sang12/manage_event
-          docker push sang12/manage_event:user-service
-          docker push sang12/manage_event:auth-service
-          docker push sang12/manage_event:event-service
-          docker push sang12/manage_event:registration-service
+          docker push sang12/manage_event:latest
+          docker push sang12/manage_event:latest
+          docker push sang12/manage_event:latest
+          docker push sang12/manage_event:latest
 
   test:
     runs-on: ubuntu-latest
@@ -66,29 +66,16 @@ jobs:
         run: |
           docker run --rm \
             --env-file .env \
-            sang12/manage_event:user-service npx jest --config ./test/jest-e2e.json
+            user-service npx jest --config ./test/jest-e2e.json
 
       - name: Run tests for event service
         run: |
           docker run --rm \
             --env-file .env \
-            sang12/manage_event:event-service npx jest --config ./test/jest-e2e.json
-
-      - name: Run tests for auth service
-        run: |
-          docker run --rm \
-            --env-file .env \
-            sang12/manage_event:auth-service npx jest --config ./test/jest-e2e.json
-
-      - name: Run tests for registration service
-        run: |
-          docker run --rm \
-            --env-file .env \
-            sang12/manage_event:registration-service npx jest --config ./test/jest-e2e.json
+            event-service npx jest --config ./test/jest-e2e.json
 
       - name: Lint the code
         run: |
-          docker run --rm --env-file .env sang12/manage_event:user-service npm run lint
-          docker run --rm --env-file .env sang12/manage_event:auth-service npm run lint
-          docker run --rm --env-file .env sang12/manage_event:event-service npm run lint
-          docker run --rm --env-file .env sang12/manage_event:registration-service npm run lint
+          docker run --rm --env-file .env --name user-service sang12/manage_event npm run lint
+          docker run --rm --env-file .env --name event-service sang12/manage_event npm run lint
+
