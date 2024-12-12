@@ -37,14 +37,10 @@ jobs:
       - name: Push Docker images
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker tag user-service:latest sang12/manage_event
-          docker tag auth-service:latest sang12/manage_event
-          docker tag event-service:latest sang12/manage_event
-          docker tag registration-service:latest sang12/manage_event
-          docker push sang12/manage_event:latest
-          docker push sang12/manage_event:latest
-          docker push sang12/manage_event:latest
-          docker push sang12/manage_event:latest
+          docker tag user-service:latest sang12/manage_event:user-service-latest
+          docker tag event-service:latest sang12/manage_event:event-service:latest
+          docker push sang12/manage_event:user-service-latest
+          docker push sang12/manage_event:event-service:latest
 
   test:
     runs-on: ubuntu-latest
@@ -66,16 +62,15 @@ jobs:
         run: |
           docker run --rm \
             --env-file .env \
-            user-service npx jest --config ./test/jest-e2e.json
+            sang12/manage_event:user-service-latest npx jest --config ./test/jest-e2e.json
 
       - name: Run tests for event service
         run: |
           docker run --rm \
             --env-file .env \
-            event-service npx jest --config ./test/jest-e2e.json
+            sang12/manage_event:event-service:latest npx jest --config ./test/jest-e2e.json
 
       - name: Lint the code
         run: |
           docker run --rm --env-file .env --name user-service sang12/manage_event npm run lint
           docker run --rm --env-file .env --name event-service sang12/manage_event npm run lint
-
