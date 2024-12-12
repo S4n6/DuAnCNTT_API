@@ -19,10 +19,15 @@ describe('UserController (e2e)', () => {
     await app.close();
   });
 
-  it('/ (GET)', () => {
+  it('/api/users (GET)', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get('/api/users')
       .expect(200)
-      .expect('Hello World!');
+      .expect((res) => {
+        expect(res.body).toBeInstanceOf(Object);
+        expect(res.body.success).toBe(true);
+        expect(res.body.data).toBeInstanceOf(Array);
+        expect(res.body.data.length).toBeGreaterThan(0);
+      });
   });
 });
