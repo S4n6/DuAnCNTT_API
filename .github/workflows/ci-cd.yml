@@ -36,7 +36,7 @@ jobs:
         run: |
           docker run --rm \
             user-service:latest \
-            npx jest --config ./jest-e2e.json
+            npx jest --config ./test/jest-e2e.json
         env: # Định nghĩa biến môi trường cấp step (có thể ghi đè)
           MONGO_URL: ${{ secrets.MONGO_URL }}
           SECRET_HASH_PASSWORD: ${{ secrets.SECRET_HASH_PASSWORD }}
