@@ -39,22 +39,22 @@ jobs:
           echo HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }}
           echo USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}
 
-      - name: Run tests for auth service
+      - name: Run tests for user service
         run: |
           docker run --rm \
-            auth-service:latest npx jest --config ./test/jest-e2e.json
-        env: # Định nghĩa biến môi trường cấp step (có thể ghi đè)
+            user-service:latest \
+            npx jest --config ./jest-e2e.json
+         env: # Định nghĩa biến môi trường cấp step (có thể ghi đè)
           MONGO_URL: ${{ secrets.MONGO_URL }}
           SECRET_HASH_PASSWORD: ${{ secrets.SECRET_HASH_PASSWORD }}
           ENCODE_PASSWORD: ${{ secrets.SECRET_HASH_PASSWORD }}
           HOST_AUTH_SERVICE: ${{ secrets.HOST_AUTH_SERVICE }}
           USER_SERVICE_PORT: ${{ secrets.USER_SERVICE_PORT }}
 
-      - name: Run tests for user service
+      - name: Run tests for auth service
         run: |
           docker run --rm \
-            user-service:latest \
-            npx jest --config ./jest-e2e.json
+            auth-service:latest npx jest --config ./test/jest-e2e.json
 
       - name: Lint the code
         run: |
