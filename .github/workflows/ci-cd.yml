@@ -34,15 +34,9 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "${{ secrets.ENV }}" | base64 -d > .env
+          echo ${{ secrets.MONGO_URL }} > .env
 
       - name: Run tests for user service
-        env:
-          MONGO_URL: ${{ secrets.MONGO_URL }}
-          SECRET_HASH_PASSWORD: ${{ secrets.SECRET_HASH_PASSWORD }}
-          ENCODE_PASSWORD: ${{ secrets.SECRET_HASH_PASSWORD }}
-          HOST_AUTH_SERVICE: ${{ secrets.HOST_AUTH_SERVICE }}
-          USER_SERVICE_PORT: ${{ secrets.USER_SERVICE_PORT }}
         run: |
           docker run --rm \
             user-service:latest \
