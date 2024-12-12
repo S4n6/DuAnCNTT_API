@@ -27,21 +27,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
+      - name: Create .env file
+        run: |
+          echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
+
       - name: Build and push Docker images
         run: |
           docker build -t user-service:latest -f apps/user/Dockerfile .
           docker build -t auth-service:latest -f apps/auth/Dockerfile .
-
-      - name: Create .env file
-        run: |
-          echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
 
       - name: Run tests for user service
         run: |
           docker run --rm \
             --env-file .env \
             user-service:latest \
-            npx jest --config ./test/jest-e2e.json
+            npx jest --detectOpenHandles --config ./test/jest-e2e.json
 
       - name: Run tests for auth service
         run: |
