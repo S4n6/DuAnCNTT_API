@@ -66,25 +66,25 @@ jobs:
         run: |
           docker run --rm \
             --env-file .env \
-            sang12/user-service:latest npx jest --config ./apps/user/test/jest-e2e.json
+            sang12/user-service:latest npx jest --config ./test/jest-e2e.json
 
       - name: Run tests for event service
         run: |
           docker run --rm \
             --env-file .env \
-            sang12/event-service:latest npx jest --config ./apps/event/test/jest-e2e.json
+            sang12/event-service:latest npx jest --config ./test/jest-e2e.json
 
       - name: Run tests for auth service
         run: |
           docker run --rm \
             --env-file .env \
-            sang12/auth-service:latest npx jest --config ./apps/auth/test/jest-e2e.json
+            sang12/auth-service:latest npx jest --config ./test/jest-e2e.json
 
       - name: Run tests for registration service
         run: |
           docker run --rm \
             --env-file .env \
-            sang12/registration-service:latest npx jest --config ./apps/registration/test/jest-e2e.json
+            sang12/registration-service:latest npx jest --config ./test/jest-e2e.json
 
       - name: Lint the code
         run: |
