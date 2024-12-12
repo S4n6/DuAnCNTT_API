@@ -34,10 +34,10 @@ jobs:
 
       - name: Print environment variables
         run: |
-          echo "MONGO_URL=${{ secrets.MONGO_URL }}"
-          echo "ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}"
-          echo "HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }}"
-          echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}"
+          echo MONGO_URL=${{ secrets.MONGO_URL }}
+          echo ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}
+          echo HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }}
+          echo USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}
 
       - name: Run tests for user service
         run: |
