@@ -32,6 +32,10 @@ jobs:
           docker build -t user-service:latest -f apps/user/Dockerfile .
           docker build -t auth-service:latest -f apps/auth/Dockerfile .
 
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.ENV }}" | base64 -d > .env
+
       - name: Run tests for user service
         env:
           MONGO_URL: ${{ secrets.MONGO_URL }}
