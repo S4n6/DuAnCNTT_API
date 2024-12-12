@@ -32,23 +32,30 @@ jobs:
           docker build -t user-service:latest -f apps/user/Dockerfile .
           docker build -t auth-service:latest -f apps/auth/Dockerfile .
 
+      - name: Print environment variables
+        run: |
+          echo "MONGO_URL=${{ secrets.MONGO_URL }}"
+          echo "ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}"
+          echo "HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }}"
+          echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}"
+
       - name: Run tests for user service
         run: |
           docker run --rm \
-          -e MONGO_URL=${{ secrets.MONGO_URL }} \
-          -e ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }} \
-          -e HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }} \
-          -e USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }} \
-          user-service:latest npx jest --config ./apps/user/test/jest-e2e.json
+            -e MONGO_URL=${{ secrets.MONGO_URL }} \
+            -e ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }} \
+            -e HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }} \
+            -e USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }} \
+            user-service:latest npx jest --config ./apps/user/test/jest-e2e.json
 
       - name: Run tests for auth service
         run: |
           docker run --rm \
-          -e MONGO_URL=${{ secrets.MONGO_URL }} \
-          -e ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }} \
-          -e HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }} \
-          -e USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }} \
-          auth-service:latest npx jest --config ./apps/auth/test/jest-e2e.json
+            -e MONGO_URL=${{ secrets.MONGO_URL }} \
+            -e ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }} \
+            -e HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }} \
+            -e USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }} \
+            auth-service:latest npx jest --config ./apps/auth/test/jest-e2e.json
 
       - name: Lint the code
         run: |
