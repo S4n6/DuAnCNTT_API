@@ -41,6 +41,7 @@ jobs:
           USER_SERVICE_PORT: ${{ secrets.USER_SERVICE_PORT }}
         run: |
           docker run --rm \
+            -e MONGO_URL=${{ secrets.MONGO_URL }} \
             user-service:latest \
             npx jest --config ./test/jest-e2e.json
 
