@@ -19,13 +19,12 @@ const grpcOptions: ClientOptions = {
 async function bootstrap() {
   const app = await NestFactory.create(UserModule);
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(USER_CONSTANTS.HOST_AUTH_SERVICE);
+  await app.listen(USER_CONSTANTS.PORT || 3001);
 
   const microservice = await NestFactory.createMicroservice(
     UserModule,
     grpcOptions,
   );
-  console.log('Microservice is running', USER_CONSTANTS.HOST_AUTH_SERVICE);
   microservice.useGlobalPipes(new ValidationPipe());
   await microservice.listen();
 }
