@@ -40,9 +40,9 @@ jobs:
         run: |
           docker run --rm \
            -e MONGO_URL=${{ secrets.MONGO_URL }} \
-           -e SECRET_HASH_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }} \
+           -e ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }} \
            -e HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }} \
-           -e PORT=${{ secrets.PORT }} \
+           -e USER_SERVICE_PORT=${{ secrets.PORT }} \
            user-service:latest npx jest --config ./test/jest-e2e.json
         # Chạy test cho user service
 
