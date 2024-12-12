@@ -36,15 +36,15 @@ jobs:
 
       - name: Push Docker images
         run: |
-          docker tag user-service:latest your-dockerhub-username/user-service:latest
-          docker tag auth-service:latest your-dockerhub-username/auth-service:latest
-          docker tag event-service:latest your-dockerhub-username/event-service:latest
-          docker tag registration-service:latest your-dockerhub-username/registration-service:latest
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker push your-dockerhub-username/user-service:latest
-          docker push your-dockerhub-username/auth-service:latest
-          docker push your-dockerhub-username/event-service:latest
-          docker push your-dockerhub-username/registration-service:latest
+          docker tag user-service:latest sang12/user-service:latest
+          docker tag auth-service:latest sang12/auth-service:latest
+          docker tag event-service:latest sang12/event-service:latest
+          docker tag registration-service:latest sang12/registration-service:latest
+          docker push sang12/user-service:latest
+          docker push sang12/auth-service:latest
+          docker push sang12/event-service:latest
+          docker push sang12/registration-service:latest
 
   test:
     runs-on: ubuntu-latest
@@ -66,29 +66,29 @@ jobs:
         run: |
           docker run --rm \
             --env-file .env \
-            your-dockerhub-username/user-service:latest npx jest --config ./apps/user/test/jest-e2e.json
+            sang12/user-service:latest npx jest --config ./apps/user/test/jest-e2e.json
 
       - name: Run tests for event service
         run: |
           docker run --rm \
             --env-file .env \
-            your-dockerhub-username/event-service:latest npx jest --config ./apps/event/test/jest-e2e.json
+            sang12/event-service:latest npx jest --config ./apps/event/test/jest-e2e.json
 
       - name: Run tests for auth service
         run: |
           docker run --rm \
             --env-file .env \
-            your-dockerhub-username/auth-service:latest npx jest --config ./apps/auth/test/jest-e2e.json
+            sang12/auth-service:latest npx jest --config ./apps/auth/test/jest-e2e.json
 
       - name: Run tests for registration service
         run: |
           docker run --rm \
             --env-file .env \
-            your-dockerhub-username/registration-service:latest npx jest --config ./apps/registration/test/jest-e2e.json
+            sang12/registration-service:latest npx jest --config ./apps/registration/test/jest-e2e.json
 
       - name: Lint the code
         run: |
-          docker run --rm --env-file .env your-dockerhub-username/user-service:latest npm run lint
-          docker run --rm --env-file .env your-dockerhub-username/auth-service:latest npm run lint
-          docker run --rm --env-file .env your-dockerhub-username/event-service:latest npm run lint
-          docker run --rm --env-file .env your-dockerhub-username/registration-service:latest npm run lint
+          docker run --rm --env-file .env sang12/user-service:latest npm run lint
+          docker run --rm --env-file .env sang12/auth-service:latest npm run lint
+          docker run --rm --env-file .env sang12/event-service:latest npm run lint
+          docker run --rm --env-file .env sang12/registration-service:latest npm run lint
