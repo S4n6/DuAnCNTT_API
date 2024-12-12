@@ -16,7 +16,7 @@ COPY . .
 WORKDIR /usr/src/app/apps/user
 
 # Copy the .env file
-COPY .env .env
+COPY ../../.env .env
 
 # Build the NestJS application
 RUN npm run build
