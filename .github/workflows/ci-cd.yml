@@ -38,18 +38,18 @@ jobs:
 
       - name: Build Docker images
         run: |
-          docker build -t sang12/manage_event-user-service:latest -f apps/user/Dockerfile .
-          docker build -t sang12/manage_event-auth-service:latest -f apps/auth/Dockerfile .
-          docker build -t sang12/manage_event-event-service:latest -f apps/event/Dockerfile .
-          docker build -t sang12/manage_event-registration-service:latest -f apps/registration/Dockerfile .
+          docker build -t sang12/manage_event:user-service -f apps/user/Dockerfile .
+          docker build -t sang12/manage_event:auth-service -f apps/auth/Dockerfile .
+          docker build -t sang12/manage_event:event-service -f apps/event/Dockerfile .
+          docker build -t sang12/manage_event:registration-service -f apps/registration/Dockerfile .
 
       - name: Push Docker images
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker push sang12/manage_event-user-service:latest
-          docker push sang12/manage_event-auth-service:latest
-          docker push sang12/manage_event-event-service:latest
-          docker push sang12/manage_event-registration-service:latest
+          docker push sang12/manage_event:user-service
+          docker push sang12/manage_event:auth-service
+          docker push sang12/manage_event:event-service
+          docker push sang12/manage_event:registration-service
 
   test:
     runs-on: ubuntu-latest
@@ -68,20 +68,20 @@ jobs:
           echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
           echo "SECRET_HASH_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
           echo "ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
-          echo "HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }}" >> .env
+          echo "HOST_AUTH_SERVICE=http://auth-service:3000" >> .env
           echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}" >> .env
-          echo "GRPC_HOST_USER_SERVICE=http://user-service:5001" >> .env
+          echo "GRPC_HOST_USER_SERVICE=user-service:5001" >> .env
 
       - name: Create Docker network
         run: docker network create backend
 
       - name: Start auth service container
         run: |
-          docker run -d --name auth-service --network backend --env-file .env sang12/manage_event-auth-service:latest
+          docker run -d --name auth-service --network backend --env-file .env sang12/manage_event:auth-service
 
       - name: Start user service container
         run: |
-          docker run -d --name user-service --network backend --env-file .env sang12/manage_event-user-service:latest
+          docker run -d --name user-service --network backend --env-file .env sang12/manage_event:user-service
 
       - name: Run tests for user service
         run: |
