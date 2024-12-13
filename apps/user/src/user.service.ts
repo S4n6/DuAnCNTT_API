@@ -21,81 +21,50 @@ export class UserService {
   async getAllUsers(): Promise<UserResponseDto> {
     const users: User[] = await this.userModel.find();
     if (!users) {
-      return {
-        success: false,
-        message: 'Users not found',
-      };
+      return new UserResponseDto(false, 'Users not found', null);
     }
-    return {
-      success: true,
-      message: 'Users found',
-      data: users,
-    };
+    return new UserResponseDto(true, 'Users found', users);
   }
 
-  async getAllTokenDevices(): Promise<object> {
+  async getAllTokenDevices(): Promise<UserResponseDto> {
     try {
       const tokenDevices = await this.tokenDeviceModel.find();
-      return {
-        success: true,
-        message: 'Token devices found',
-        data: tokenDevices,
-      };
+      return new UserResponseDto(true, 'Token devices found', null);
     } catch (error) {
       console.error('Error fetching token devices:', error);
-      return {
-        success: false,
-        message: 'Failed to fetch token devices',
-      };
+      return new UserResponseDto(false, 'Failed to fetch token devices');
     }
   }
 
-  async getTokenDevicesByUserId(userId: ObjectId): Promise<object> {
+  async getTokenDevicesByUserId(userId: ObjectId): Promise<UserResponseDto> {
     try {
-      const tokenDevices = await this.tokenDeviceModel.find({ user: userId }).exec();
-      return {
-        success: true,
-        message: 'Token devices found',
-        data: tokenDevices,
-      };
+      const tokenDevices = await this.tokenDeviceModel
+        .find({ user: userId })
+        .exec();
+      return new UserResponseDto(true, 'Token devices found', null);
     } catch (error) {
       console.error('Error fetching token devices by user ID:', error);
-      return {
-        success: false,
-        message: 'Failed to fetch token devices by user ID',
-      };
+      return new UserResponseDto(
+        false,
+        'Failed to fetch token devices by user ID',
+      );
     }
   }
-
 
   async getUserById(id: ObjectId): Promise<UserResponseDto> {
     const user = await this.userModel.findById(id);
     if (!user) {
-      return {
-        success: false,
-        message: 'User not found',
-      };
+      return new UserResponseDto(false, 'User not found');
     }
-    return {
-      success: true,
-      message: 'User found',
-      data: user,
-    };
+    return new UserResponseDto(true, 'User found', user);
   }
 
   async getUserByEmail(email: string): Promise<UserResponseDto> {
     const user = await this.userModel.findOne({ email });
     if (!user) {
-      return {
-        success: false,
-        message: 'User not found',
-      };
+      return new UserResponseDto(false, 'User not found');
     }
-    return {
-      success: true,
-      message: 'User found',
-      data: user,
-    };
+    return new UserResponseDto(true, 'User found', user);
   }
 
   async createUserByPhoneNumber(user: UserDto): Promise<UserResponseDto> {
@@ -103,17 +72,11 @@ export class UserService {
       const checkedUser = await this.getUserByPhoneNumber(user.phoneNumber);
 
       if (checkedUser.success) {
-        return {
-          success: false,
-          message: 'User already exists',
-        };
+        return new UserResponseDto(false, 'User already exists');
       }
 
       if (!Object.values(ROLE).includes(user.role as string)) {
-        return {
-          success: false,
-          message: 'Invalid role',
-        };
+        return new UserResponseDto(false, 'Invalid role');
       }
 
       const secretHashPassword = USER_CONSTANTS.SECRET_HASH_PASSWORD;
@@ -124,17 +87,14 @@ export class UserService {
       );
       const createdUser = new this.userModel(user);
       await createdUser.save();
-      return {
-        success: true,
-        message: 'User created successfully',
-        data: createdUser,
-      };
+      return new UserResponseDto(
+        true,
+        'User created successfully',
+        createdUser,
+      );
     } catch (error) {
       console.error('Error creating user:', error);
-      return {
-        success: false,
-        message: 'User creation failed',
-      };
+      return new UserResponseDto(false, 'User creation failed');
     }
   }
 
@@ -148,17 +108,10 @@ export class UserService {
         token: tokenDeviceData,
       });
       await tokenDevice.save();
-      return {
-        success: true,
-        message: 'Token device created successfully',
-        data: null,
-      };
+      return new UserResponseDto(true, 'Token device created successfully');
     } catch (error) {
       console.error('Error creating token device:', error);
-      return {
-        success: false,
-        message: 'Token device creation failed',
-      };
+      return new UserResponseDto(false, 'Token device creation failed');
     }
   }
 
@@ -166,25 +119,19 @@ export class UserService {
     try {
       const existingUser = await this.userModel.findById(id);
       if (!existingUser) {
-        return {
-          success: false,
-          message: 'User not found',
-        };
+        return new UserResponseDto(false, 'User not found');
       }
 
       Object.assign(existingUser, user);
       await existingUser.save();
-      return {
-        success: true,
-        message: 'User updated successfully',
-        data: existingUser,
-      };
+      return new UserResponseDto(
+        true,
+        'User updated successfully',
+        existingUser,
+      );
     } catch (error) {
       console.error('Error updating user:', error);
-      return {
-        success: false,
-        message: 'User update failed',
-      };
+      return new UserResponseDto(false, 'User update failed');
     }
   }
 
@@ -192,39 +139,23 @@ export class UserService {
     try {
       const existingUser = await this.userModel.findById(id);
       if (!existingUser) {
-        return {
-          success: false,
-          message: 'User not found',
-        };
+        return new UserResponseDto(false, 'User not found');
       }
 
       await existingUser.deleteOne();
-      return {
-        success: true,
-        message: 'User deleted successfully',
-      };
+      return new UserResponseDto(true, 'User deleted successfully');
     } catch (error) {
       console.error('Error deleting user:', error);
-      return {
-        success: false,
-        message: 'User deletion failed',
-      };
+      return new UserResponseDto(false, 'User deletion failed');
     }
   }
 
   async getUserByPhoneNumber(phoneNumber: string): Promise<UserResponseDto> {
     const user: User = await this.userModel.findOne({ phoneNumber });
     if (!user) {
-      return {
-        success: false,
-        message: 'User not found',
-      };
+      return new UserResponseDto(false, 'User not found');
     }
-    return {
-      success: true,
-      message: 'User found',
-      data: user,
-    };
+    return new UserResponseDto(true, 'User found', user);
   }
 
   async createUserByEmail(user: UserDto): Promise<UserResponseDto> {
@@ -232,17 +163,11 @@ export class UserService {
       const checkedUser = await this.getUserByEmail(user.email);
 
       if (checkedUser.success) {
-        return {
-          success: false,
-          message: 'User already exists',
-        };
+        return new UserResponseDto(false, 'User already exists');
       }
 
       if (!Object.values(ROLE).includes(user.role as string)) {
-        return {
-          success: false,
-          message: 'Invalid role',
-        };
+        return new UserResponseDto(false, 'Invalid role');
       }
 
       const secretHashPassword = USER_CONSTANTS.SECRET_HASH_PASSWORD;
@@ -251,25 +176,35 @@ export class UserService {
         user.password + secretHashPassword,
         salt,
       );
+
       const createdUser = new this.userModel(user);
       await createdUser.save();
       const response = await lastValueFrom(
-        this.httpService.post(`${USER_CONSTANTS.HOST_AUTH_SERVICE}`, {
-          userId: createdUser._id,
-        }),
+        this.httpService.post(
+          `${USER_CONSTANTS.HOST_AUTH_SERVICE}/api/auth/createRefreshToken`,
+          { userId: createdUser._id },
+        ),
       );
-      console.log('response', response);
-      return {
-        success: true,
-        message: 'User created successfully',
-        data: createdUser,
-      };
+
+      if (!response.data.success) {
+        return new UserResponseDto(
+          true,
+          'User created successfully',
+          createdUser,
+        );
+      }
+
+      return new UserResponseDto(
+        true,
+        'User created successfully',
+        createdUser,
+      );
     } catch (error) {
       console.error('Error creating user:', error);
-      return {
-        success: false,
-        message: 'User creation failed',
-      };
+      return new UserResponseDto(
+        false,
+        error?.message || 'User creation failed',
+      );
     }
   }
 
@@ -277,10 +212,7 @@ export class UserService {
     const secretHashPassword = USER_CONSTANTS.SECRET_HASH_PASSWORD;
     const user = await this.getUserByEmail(data.username);
     if (!user?.success) {
-      return {
-        success: false,
-        message: 'User not found',
-      };
+      return new UserResponseDto(false, 'User not found');
     }
     const userData = user?.data as User;
     const isPasswordValid = await bcrypt.compare(
@@ -290,15 +222,9 @@ export class UserService {
     console.log('isPasswordValid', isPasswordValid);
 
     if (!isPasswordValid) {
-      return {
-        success: false,
-        message: 'Invalid password',
-      };
+      return new UserResponseDto(false, 'Invalid password');
     }
-    return {
-      success: true,
-      message: 'User validated successfully',
-    };
+    return new UserResponseDto(true, 'User validated successfully');
   }
 
   async validateUserByPhoneNumber(data): Promise<UserResponseDto> {
@@ -306,21 +232,12 @@ export class UserService {
       .findOne({ phoneNumber: data.phoneNumber })
       .exec();
     if (!user) {
-      return {
-        success: false,
-        message: 'User not found',
-      };
+      return new UserResponseDto(false, 'User not found');
     }
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
     if (!isPasswordValid) {
-      return {
-        success: false,
-        message: 'Invalid password',
-      };
+      return new UserResponseDto(false, 'Invalid password');
     }
-    return {
-      success: true,
-      message: 'User validated successfully',
-    };
+    return new UserResponseDto(true, 'User validated successfully');
   }
 }

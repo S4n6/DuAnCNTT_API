@@ -41,4 +41,10 @@ export class UserResponseDto {
   success: boolean;
   message: string;
   data?: User | User[];
+
+  constructor(success: boolean, message: string, data?: User | User[]) {
+    this.success = success;
+    this.message = message;
+    this.data = data;
+  }
 }

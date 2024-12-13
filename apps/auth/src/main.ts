@@ -9,5 +9,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
+  console.log(`Auth service is running on: ${await app.getUrl()}`);
 }
 bootstrap();

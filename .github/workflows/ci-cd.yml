@@ -39,8 +39,10 @@ jobs:
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
           docker tag user-service:latest sang12/manage_event:user-service-latest
           docker tag event-service:latest sang12/manage_event:event-service-latest
+          docker tag auth-service:latest sang12/manage_event:auth-service-latest
           docker push sang12/manage_event:user-service-latest
           docker push sang12/manage_event:event-service-latest
+          docker push sang12/manage_event:auth-service-latest
 
   test:
     runs-on: ubuntu-latest
@@ -62,10 +64,15 @@ jobs:
           echo "HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }}" >> .env
           echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}" >> .env
 
+      - name: Start auth service container
+        run: |
+          docker run -d --name auth-service --env-file .env sang12/manage_event-auth-service:latest
+
       - name: Run tests for user service
         run: |
           docker run --rm \
             --env-file .env \
+            --link auth-service:auth-service \
             sang12/manage_event:user-service-latest npx jest --config ./test/jest-e2e.json
 
       - name: Run tests for event service

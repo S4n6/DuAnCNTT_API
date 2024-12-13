@@ -31,12 +31,12 @@ export class AuthController {
       success: true,
       message: 'Login successfully',
       data: {
-        access_token,
+        ...access_token,
       },
     });
   }
 
-  @Post('/createAccessToken')
+  @Post('createAccessToken')
   async createAccessToken(@Res() res: Response, @Body() user: UserDto) {
     const access_token = await this.authService.createAccessToken(user);
     return res.status(200).json({
@@ -48,7 +48,7 @@ export class AuthController {
     });
   }
 
-  @Get('/verifyAccessToken/:token')
+  @Get('verifyAccessToken/:token')
   async verifyAccessToken(@Res() res: Response, token: string) {
     const isVerified = await this.authService.verifyAccessToken(token);
     return res.status(200).json({
@@ -57,7 +57,7 @@ export class AuthController {
     });
   }
 
-  @Post('/createRefreshToken')
+  @Post('createRefreshToken')
   async createRefreshToken(
     @Res() res: Response,
     @Body() user: { userId: string },
