@@ -51,7 +51,6 @@ export class UserController {
 
   @Post('createUserByEmail')
   async createUserByEmail(@Body() user: UserDto): Promise<UserResponseDto> {
-    console.log('user', user);
     const userCreated = await this.userService.createUserByEmail(user);
     return userCreated;
   }

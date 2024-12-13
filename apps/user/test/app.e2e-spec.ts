@@ -10,8 +10,42 @@ describe('UserController (e2e)', () => {
   let app: INestApplication;
   const userService = {
     getAllUsers: () => [
-      { id: '1', name: 'John Doe', email: 'john.doe@example.com' },
+      {
+        id: '1',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@example.com',
+        role: 'user',
+      },
     ],
+    getUserByPhoneNumber: jest.fn().mockResolvedValue({
+      success: true,
+      data: {
+        id: '1',
+        firstName: 'John',
+        lastName: 'Doe',
+        phoneNumber: '1234567890',
+      },
+    }),
+    getUserById: jest.fn().mockResolvedValue({
+      success: true,
+      data: { id: '1', firstName: 'John', lastName: 'Doe' },
+    }),
+    createUserByEmail: jest.fn().mockResolvedValue({
+      success: true,
+      data: {
+        id: '2',
+        firstName: 'Jane',
+        lastName: 'Doe',
+        email: 'jane.doe@example.com',
+        role: 'user',
+      },
+    }),
+    updateUser: jest.fn().mockResolvedValue({
+      success: true,
+      data: { id: '1', firstName: 'John', lastName: 'Smith' },
+    }),
+    deleteUser: jest.fn().mockResolvedValue({ success: true }),
   };
 
   beforeAll(async () => {
