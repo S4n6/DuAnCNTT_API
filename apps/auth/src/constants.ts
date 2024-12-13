@@ -9,3 +9,9 @@ export const jwtConstants = {
   JWT_REFRESH_TOKEN_HASH_SECRET: process.env.JWT_REFRESH_TOKEN_HASH_SECRET,
   
 };
+
+export const AUTH_CONSTANTS = {
+  PORT: process.env.AUTH_SERVICE_PORT,
+  GRPC_HOST_USER_SERVICE: process.env.GRPC_HOST_USER_SERVICE,
+  SECRET_HASH_PASSWORD: process.env.SECRET_HASH_PASSWORD,
+};

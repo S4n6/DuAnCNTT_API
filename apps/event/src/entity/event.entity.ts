@@ -28,7 +28,7 @@ export class Event {
   @Column()
   description: string;
 
-  @Column()
+  @Column({ default: 0 })
   slots: number;
 
   @Column()

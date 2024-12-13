@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
+import { AUTH_CONSTANTS, jwtConstants } from './constants';
 import { PassportModule } from '@nestjs/passport';
 import { ClientOptions, ClientsModule, Transport } from '@nestjs/microservices';
 import * as dotenv from 'dotenv';
@@ -16,7 +16,7 @@ export const grpcClientOptions: ClientOptions = {
   options: {
     package: 'user',
     protoPath: 'lib/common/user.proto',
-    url: '0.0.0.0:5001',
+    url: AUTH_CONSTANTS.GRPC_HOST_USER_SERVICE,
   },
 };
 

@@ -20,7 +20,6 @@ RUN npm run build
 
 # Expose the ports the app runs on
 EXPOSE 3000
-EXPOSE 5001
 
 # Define the command to run the application
 CMD ["npm", "run", "start:dev"]

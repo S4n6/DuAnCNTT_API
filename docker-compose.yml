@@ -12,6 +12,10 @@ services:
       - '3000:3000'
     volumes:
       - .:/usr/src/app
+    networks:
+      - backend
+    depends_on:
+      - user
 
   user:
     build:
@@ -26,6 +30,8 @@ services:
       - '5001:5001'
     volumes:
       - .:/usr/src/app
+    networks:
+      - backend
 
   event:
     build:
@@ -78,3 +84,7 @@ services:
       - '3006:3006'
     volumes:
       - .:/usr/src/app
+
+networks:
+  backend:
+    driver: bridge

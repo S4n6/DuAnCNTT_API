@@ -63,20 +63,22 @@ jobs:
           echo "ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
           echo "HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }}" >> .env
           echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}" >> .env
+          echo "GRPC_HOST_USER_SERVICE=${{ secrets.GRPC_HOST_USER_SERVICE }}" >> .env
 
       - name: Create Docker network
-        run: docker network create test-network
+        run: docker network create backend
 
-      - name: Start auth service container
+     - name: Start auth service container
         run: |
-          docker run -d --name auth-service --network test-network --env-file .env sang12/manage_event:auth-service-latest
+          docker run -d --name auth-service --network backend --env-file .env sang12/manage_event-auth-service:latest
+
+      - name: Start user service container
+        run: |
+          docker run -d --name user-service --network backend --env-file .env sang12/manage_event-user-service:latest
 
       - name: Run tests for user service
         run: |
-          docker run --rm \
-            --network test-network \
-            --env-file .env \
-            sang12/manage_event:user-service-latest npx jest --config ./test/jest-e2e.json
+          docker exec user-service npx jest --config ./test/jest-e2e.json
 
       - name: Run tests for event service
         run: |
