@@ -9,5 +9,5 @@
 - Nhiệm vụ cần làm:
     + Tạo Dockerfile cho 4 services còn lại (ngoại trừ auth, user) - Done
     + Tạo unit test cho 6 services
-    + Xây dựng lại CI CD file
+    + Xây dựng lại CI CD file - Done
     + TÌm hiểu và tối ưu hóa Dockerfile
