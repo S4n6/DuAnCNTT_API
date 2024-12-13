@@ -3,68 +3,45 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { UserModule } from './../src/user.module';
 import { UserService } from './../src/user.service';
-import { getModelToken } from '@nestjs/mongoose';
-import { User } from './../src/user.schema';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from './../src/user.schema';
+import { Connection } from 'mongoose';
+import { USER_CONSTANTS } from '../src/constant';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
-  const userService = {
-    getAllUsers: () => [
-      {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        role: 'user',
-      },
-    ],
-    getUserByPhoneNumber: jest.fn().mockResolvedValue({
-      success: true,
-      data: {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        phoneNumber: '1234567890',
-      },
-    }),
-    getUserById: jest.fn().mockResolvedValue({
-      success: true,
-      data: { id: '1', firstName: 'John', lastName: 'Doe' },
-    }),
-    createUserByEmail: jest.fn().mockResolvedValue({
-      success: true,
-      data: {
-        id: '2',
-        firstName: 'Jane',
-        lastName: 'Doe',
-        email: 'jane.doe@example.com',
-        role: 'user',
-      },
-    }),
-    updateUser: jest.fn().mockResolvedValue({
-      success: true,
-      data: { id: '1', firstName: 'John', lastName: 'Smith' },
-    }),
-    deleteUser: jest.fn().mockResolvedValue({ success: true }),
-  };
+  let connection: Connection;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [UserModule],
-    })
-      .overrideProvider(UserService)
-      .useValue(userService)
-      .compile();
+      imports: [UserModule, MongooseModule.forRoot(USER_CONSTANTS.MONGO_URL)],
+    }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+
+    connection = app.get<Connection>('DatabaseConnection');
   });
 
   afterAll(async () => {
     await app.close();
   });
 
-  it('/api/users (GET)', () => {
+  beforeEach(async () => {
+    // Clean up the database before each test
+    await connection.collection('users').deleteMany({});
+  });
+
+  it('/api/users (GET)', async () => {
+    // Insert test data
+    await connection.collection('users').insertOne({
+      id: '1',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      role: 'user',
+    });
+
     return request(app.getHttpServer())
       .get('/api/users')
       .expect(200)
@@ -73,10 +50,27 @@ describe('UserController (e2e)', () => {
         expect(res.body.success).toBe(true);
         expect(res.body.data).toBeInstanceOf(Array);
         expect(res.body.data.length).toBeGreaterThan(0);
+        expect(res.body.data[0]).toHaveProperty('id', '1');
+        expect(res.body.data[0]).toHaveProperty('firstName', 'John');
+        expect(res.body.data[0]).toHaveProperty('lastName', 'Doe');
+        expect(res.body.data[0]).toHaveProperty(
+          'email',
+          'john.doe@example.com',
+        );
+        expect(res.body.data[0]).toHaveProperty('role', 'user');
       });
   });
 
-  it('/api/users/:id (GET)', () => {
+  it('/api/users/:id (GET)', async () => {
+    // Insert test data
+    await connection.collection('users').insertOne({
+      id: '1',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      role: 'user',
+    });
+
     return request(app.getHttpServer())
       .get('/api/users/1')
       .expect(200)
@@ -84,6 +78,10 @@ describe('UserController (e2e)', () => {
         expect(res.body).toBeInstanceOf(Object);
         expect(res.body.success).toBe(true);
         expect(res.body.data).toHaveProperty('id', '1');
+        expect(res.body.data).toHaveProperty('firstName', 'John');
+        expect(res.body.data).toHaveProperty('lastName', 'Doe');
+        expect(res.body.data).toHaveProperty('email', 'john.doe@example.com');
+        expect(res.body.data).toHaveProperty('role', 'user');
       });
   });
 
@@ -91,7 +89,8 @@ describe('UserController (e2e)', () => {
     return request(app.getHttpServer())
       .post('/api/users/createUserByEmail')
       .send({
-        name: 'Jane Doe',
+        firstName: 'Jane',
+        lastName: 'Doe',
         email: 'jane.doe@example.com',
         password: 'password',
       })
@@ -103,19 +102,38 @@ describe('UserController (e2e)', () => {
       });
   });
 
-  it('/api/users/:id (PATCH)', () => {
+  it('/api/users/:id (PATCH)', async () => {
+    // Insert test data
+    await connection.collection('users').insertOne({
+      id: '1',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      role: 'user',
+    });
+
     return request(app.getHttpServer())
       .patch('/api/users/1')
-      .send({ name: 'John Smith' })
+      .send({ firstName: 'John', lastName: 'Smith' })
       .expect(200)
       .expect((res) => {
         expect(res.body).toBeInstanceOf(Object);
         expect(res.body.success).toBe(true);
-        expect(res.body.data).toHaveProperty('name', 'John Smith');
+        expect(res.body.data).toHaveProperty('firstName', 'John');
+        expect(res.body.data).toHaveProperty('lastName', 'Smith');
       });
   });
 
-  it('/api/users/:id (DELETE)', () => {
+  it('/api/users/:id (DELETE)', async () => {
+    // Insert test data
+    await connection.collection('users').insertOne({
+      id: '1',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      role: 'user',
+    });
+
     return request(app.getHttpServer())
       .delete('/api/users/1')
       .expect(200)
