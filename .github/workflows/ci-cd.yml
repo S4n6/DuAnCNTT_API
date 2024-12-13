@@ -69,7 +69,7 @@ jobs:
 
       - name: Start auth service container
         run: |
-          docker run -d --name auth-service --network --env-file .env sang12/manage_event:auth-service-latest
+          docker run -d --name auth-service --network test-network --env-file .env sang12/manage_event:auth-service-latest
 
       - name: Run tests for user service
         run: |
