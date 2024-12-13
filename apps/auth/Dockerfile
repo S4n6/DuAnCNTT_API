@@ -19,7 +19,7 @@ WORKDIR /usr/src/app/apps/auth
 RUN npm run build
 
 # Expose the ports the app runs on
-EXPOSE 3001
+EXPOSE 3000
 EXPOSE 5001
 
 # Define the command to run the application
