@@ -27,22 +27,29 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-buildx-
 
+      - name: Create .env file
+        run: |
+          echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
+          echo "SECRET_HASH_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
+          echo "ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
+          echo "HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }}" >> .env
+          echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}" >> .env
+          echo "GRPC_HOST_USER_SERVICE=${{ secrets.GRPC_HOST_USER_SERVICE }}" >> .env
+
       - name: Build Docker images
         run: |
-          docker build -t user-service:latest -f apps/user/Dockerfile .
-          docker build -t auth-service:latest -f apps/auth/Dockerfile .
-          docker build -t event-service:latest -f apps/event/Dockerfile .
-          docker build -t registration-service:latest -f apps/registration/Dockerfile .
+          docker build -t sang12/manage_event-user-service:latest -f apps/user/Dockerfile .
+          docker build -t sang12/manage_event-auth-service:latest -f apps/auth/Dockerfile .
+          docker build -t sang12/manage_event-event-service:latest -f apps/event/Dockerfile .
+          docker build -t sang12/manage_event-registration-service:latest -f apps/registration/Dockerfile .
 
       - name: Push Docker images
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker tag user-service:latest sang12/manage_event:user-service-latest
-          docker tag event-service:latest sang12/manage_event:event-service-latest
-          docker tag auth-service:latest sang12/manage_event:auth-service-latest
-          docker push sang12/manage_event:user-service-latest
-          docker push sang12/manage_event:event-service-latest
-          docker push sang12/manage_event:auth-service-latest
+          docker push sang12/manage_event-user-service:latest
+          docker push sang12/manage_event-auth-service:latest
+          docker push sang12/manage_event-event-service:latest
+          docker push sang12/manage_event-registration-service:latest
 
   test:
     runs-on: ubuntu-latest
@@ -63,12 +70,12 @@ jobs:
           echo "ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
           echo "HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }}" >> .env
           echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}" >> .env
-          echo "GRPC_HOST_USER_SERVICE=${{ secrets.GRPC_HOST_USER_SERVICE }}" >> .env
+          echo "GRPC_HOST_USER_SERVICE=http://user-service:5001" >> .env
 
       - name: Create Docker network
         run: docker network create backend
 
-     - name: Start auth service container
+      - name: Start auth service container
         run: |
           docker run -d --name auth-service --network backend --env-file .env sang12/manage_event-auth-service:latest
 
@@ -80,13 +87,14 @@ jobs:
         run: |
           docker exec user-service npx jest --config ./test/jest-e2e.json
 
-      - name: Run tests for event service
+      - name: Stop and remove user service container
         run: |
-          docker run --rm \
-            --env-file .env \
-            sang12/manage_event:event-service-latest npx jest --config ./test/jest-e2e.json
+          docker stop user-service
+          docker rm user-service
+
+      - name: Remove Docker network
+        run: docker network rm backend
 
       - name: Lint the code
         run: |
-          docker run --rm --env-file .env sang12/manage_event:user-service-latest npm run lint
-          docker run --rm --env-file .env sang12/manage_event:event-service-latest npm run lint
+          docker run --rm --env-file .env sang12/manage_event-user-service:latest npm run lint
