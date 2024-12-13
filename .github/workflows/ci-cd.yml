@@ -68,33 +68,33 @@ jobs:
           echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
           echo "SECRET_HASH_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
           echo "ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
-          echo "HOST_AUTH_SERVICE=http://auth-service:3000" >> .env
+          echo "HOST_AUTH_SERVICE=http://auth:3000" >> .env
           echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}" >> .env
-          echo "GRPC_HOST_USER_SERVICE=user-service:5001" >> .env
+          echo "GRPC_HOST_USER_SERVICE=user:5001" >> .env
 
       - name: Create Docker network
         run: docker network create backend
 
       - name: Start auth service container
         run: |
-          docker run -d --name auth-service --network backend --env-file .env sang12/manage_event:auth-service
+          docker run -d --name auth --network backend --env-file .env sang12/manage_event:auth-service
 
       - name: Start user service container
         run: |
-          docker run -d --name user-service --network backend --env-file .env sang12/manage_event:user-service
+          docker run -d --name user --network backend --env-file .env sang12/manage_event:user-service
 
       - name: Run tests for user service
         run: |
-          docker exec user-service npx jest --config ./test/jest-e2e.json
+          docker exec user npx jest --config ./test/jest-e2e.json
 
       - name: Stop and remove user service container
         run: |
-          docker stop user-service
-          docker rm user-service
+          docker stop user
+          docker rm user
 
       - name: Remove Docker network
         run: docker network rm backend
 
       - name: Lint the code
         run: |
-          docker run --rm --env-file .env sang12/manage_event-user-service:latest npm run lint
+          docker run --rm --env-file .env sang12/manage_event:user-service npm run lint
