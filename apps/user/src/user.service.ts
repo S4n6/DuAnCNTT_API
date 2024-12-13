@@ -181,7 +181,8 @@ export class UserService {
       await createdUser.save();
       const response = await lastValueFrom(
         this.httpService.post(
-          `${USER_CONSTANTS.HOST_AUTH_SERVICE}/api/auth/createRefreshToken`,
+          // `${USER_CONSTANTS.HOST_AUTH_SERVICE}/api/auth/createRefreshToken`,
+          'http://auth-service:3000/api/auth/createRefreshToken',
           { userId: createdUser._id },
         ),
       );
