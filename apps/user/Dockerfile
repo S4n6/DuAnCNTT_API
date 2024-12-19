@@ -10,8 +10,7 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
-COPY . .
+
 
 # Set the working directory to the user service
 WORKDIR /usr/src/app/apps/user
@@ -19,6 +18,8 @@ WORKDIR /usr/src/app/apps/user
 # Build the NestJS application
 RUN npm run build
 
+# Copy the rest of the application code
+COPY . .
 
 # Expose the ports the app runs on
 EXPOSE 3001
