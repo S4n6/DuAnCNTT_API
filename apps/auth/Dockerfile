@@ -25,7 +25,7 @@ FROM node:16-alpine
 WORKDIR /usr/src/app
 
 # Copy the built application from the builder stage
-COPY --from=builder /usr/src/app/apps/auth/dist .
+COPY --from=development /usr/src/app/apps/auth/dist .
 
 # Expose the ports the app runs on
 EXPOSE 3000
