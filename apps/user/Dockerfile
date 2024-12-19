@@ -19,6 +19,14 @@ WORKDIR /usr/src/app/apps/user
 # Build the NestJS application
 RUN npm run build
 
+# Production stage
+FROM node:16-alpine
+
+WORKDIR /usr/src/app
+
+# Copy the built application from the builder stage
+COPY --from=builder /usr/src/app/apps/user/dist .
+
 # Expose the ports the app runs on
 EXPOSE 3001
 EXPOSE 5001
