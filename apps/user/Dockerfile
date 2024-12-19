@@ -32,4 +32,4 @@ EXPOSE 3001
 EXPOSE 5001
 
 # Define the command to run the application
-CMD ["node","dist/main.js"]
+CMD ["npm","run start user"]
