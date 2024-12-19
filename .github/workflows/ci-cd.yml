@@ -83,6 +83,11 @@ jobs:
         run: |
           docker run -d --name user --network backend --env-file .env sang12/manage_event:user-service
 
+      - name: Check auth service logs
+        run: |
+          sleep 10
+          docker logs auth-service
+
       - name: Run tests for user service
         run: |
           docker exec user npx jest --config ./test/jest-e2e.json
