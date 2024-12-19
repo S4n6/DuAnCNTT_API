@@ -7,18 +7,13 @@ services:
       target: development
     command: npm run start:dev auth
     env_file:
-      - .env
+      - ./.env
     ports:
       - '3000:3000'
     volumes:
       - .:/usr/src/app
     networks:
       - backend
-    healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://localhost:3000/health || exit 1']
-      interval: 30s
-      timeout: 10s
-      retries: 5
 
   user:
     build:
@@ -27,7 +22,7 @@ services:
       target: development
     command: npm run start:dev user
     env_file:
-      - .env
+      - ./.env
     ports:
       - '3001:3001'
       - '5001:5001'
@@ -36,60 +31,55 @@ services:
     networks:
       - backend
     depends_on:
-      auth:
-        condition: service_healthy
+      - auth
 
-  event:
-    build:
-      context: .
-      dockerfile: apps/event/Dockerfile
-      target: development
-    command: npm run start:dev event
-    env_file:
-      - .env
-    ports:
-      - '3002:3002'
-    volumes:
-      - .:/usr/src/app
+  # event:
+  #   build:
+  #     context: .
+  #     dockerfile: apps/event/Dockerfile
+  #     target: development
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - '3002:3002'
+  #   volumes:
+  #     - .:/usr/src/app
 
-  participants:
-    build:
-      context: .
-      dockerfile: apps/participants/Dockerfile
-      target: development
-    command: npm run start:dev participants
-    env_file:
-      - .env
-    ports:
-      - '3005:3005'
-    volumes:
-      - .:/usr/src/app
+  # participants:
+  #   build:
+  #     context: .
+  #     dockerfile: apps/participants/Dockerfile
+  #     target: development
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - '3005:3005'
+  #   volumes:
+  #     - .:/usr/src/app
 
-  notification:
-    build:
-      context: .
-      dockerfile: apps/notification/Dockerfile
-      target: development
-    command: npm run start:dev notification
-    env_file:
-      - .env
-    ports:
-      - '3003:3003'
-    volumes:
-      - .:/usr/src/app
+  # notification:
+  #   build:
+  #     context: .
+  #     dockerfile: apps/notification/Dockerfile
+  #     target: development
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - '3003:3003'
+  #   volumes:
+  #     - .:/usr/src/app
 
-  registration:
-    build:
-      context: .
-      dockerfile: apps/registration/Dockerfile
-      target: development
-    command: npm run start:dev registration
-    env_file:
-      - .env
-    ports:
-      - '3006:3006'
-    volumes:
-      - .:/usr/src/app
+  # registration:
+  #   build:
+  #     context: .
+  #     dockerfile: apps/registration/Dockerfile
+  #     target: development
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - '3006:3006'
+  #   volumes:
+  #     - .:/usr/src/app
 
 networks:
   backend:

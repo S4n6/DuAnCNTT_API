@@ -18,8 +18,17 @@ WORKDIR /usr/src/app/apps/auth
 # Build the NestJS application
 RUN npm run build
 
+
+# Production stage
+FROM node:16-alpine
+
+WORKDIR /usr/src/app
+
+# Copy the built application
+COPY --from=development /usr/src/app/dist ./dist
+
 # Expose the ports the app runs on
 EXPOSE 3000
 
 # Define the command to run the application
-CMD ["npm", "run", "start:dev"]
+CMD ["node", "dist/apps/auth/main"]
