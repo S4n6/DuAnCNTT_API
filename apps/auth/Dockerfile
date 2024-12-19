@@ -18,11 +18,10 @@ WORKDIR /usr/src/app/apps/auth
 # Biên dịch TypeScript
 RUN npm run build
 
-# Chỉ copy thư mục dist
-COPY ./dist/apps/auth /usr/src/app/dist
 
 # Expose the ports the app runs on
 EXPOSE 3000
 
 # Define the command to run the application
-CMD ["node", "dist/main.js"]
+CMD ["npm", "run", "start:dev"]
+

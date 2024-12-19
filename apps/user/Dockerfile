@@ -19,12 +19,11 @@ WORKDIR /usr/src/app/apps/user
 # Build the NestJS application
 RUN npm run build
 
-# Chỉ copy thư mục dist
-COPY ./dist/apps/user /usr/src/app/dist
 
 # Expose the ports the app runs on
 EXPOSE 3001
 EXPOSE 5001
 
 # Define the command to run the application
-CMD ["node", "dist/main.js"]
+CMD ["npm", "run", "start:dev"]
+
