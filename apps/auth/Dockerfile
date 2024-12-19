@@ -31,4 +31,4 @@ COPY --from=builder /usr/src/app/dist .
 EXPOSE 3000
 
 # Define the command to run the application
-CMD ["node","dist/apps/auth/main"]
+CMD ["node","dist/main.js"]
