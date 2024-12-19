@@ -20,7 +20,7 @@ WORKDIR /usr/src/app/apps/user
 RUN npm run build
 
 # Chỉ copy thư mục dist
-COPY ./usr/src/app/dist/apps/user /usr/src/app/dist
+COPY ./dist/apps/user /usr/src/app/dist
 
 # Expose the ports the app runs on
 EXPOSE 3001
