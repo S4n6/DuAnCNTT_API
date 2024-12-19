@@ -78,6 +78,12 @@ jobs:
       - name: Start auth service container
         run: |
           docker run -d --name auth --network backend --env-file .env sang12/manage_event:auth-service
+      
+      - name: Wait for auth service to be healthy
+        run: |
+          until [ "`docker inspect -f {{.State.Health.Status}} auth`" == "healthy" ]; do
+            sleep 5;
+          done
 
       - name: Start user service container
         run: |
