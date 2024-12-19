@@ -86,7 +86,7 @@ jobs:
       - name: Check auth service logs
         run: |
           sleep 10
-          docker logs auth-service
+          docker logs auth
 
       - name: Run tests for user service
         run: |
