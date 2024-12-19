@@ -1,5 +1,5 @@
 # Use the official Node.js image as the base image
-FROM node:16-alpine as development
+FROM node:16-alpine as builder
 
 # Set the working directory
 WORKDIR /usr/src/app
@@ -25,7 +25,7 @@ FROM node:16-alpine
 WORKDIR /usr/src/app
 
 # Copy the built application from the builder stage
-COPY --from=development /usr/src/app/apps/user/dist .
+COPY --from=builder /usr/src/app/apps/user/dist .
 
 # Expose the ports the app runs on
 EXPOSE 3001
