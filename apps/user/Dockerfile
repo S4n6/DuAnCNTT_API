@@ -14,22 +14,17 @@ RUN npm install
 COPY . .
 
 # Set the working directory to the user service
-# WORKDIR /usr/src/app/apps/user
+WORKDIR /usr/src/app/apps/user
 
 # Build the NestJS application
 RUN npm run build
 
-# Production stage
-FROM node:16-alpine
-
-WORKDIR /usr/src/app
-
-# Copy the built application from the builder stage
-COPY --from=builder /usr/src/app/dist .
+# Chỉ copy thư mục dist
+COPY ../../dist/apps/user /usr/src/app/dist
 
 # Expose the ports the app runs on
 EXPOSE 3001
 EXPOSE 5001
 
 # Define the command to run the application
-CMD ["npm","run start"]
+CMD ["node", "dist/main.js"]

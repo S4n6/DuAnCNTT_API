@@ -12,23 +12,17 @@ RUN npm install
 
 COPY . .
 
-# Set the working directory to the auth service
-# WORKDIR /usr/src/app/apps/auth
+# Vào thư mục của ứng dụng user
+WORKDIR /usr/src/app/apps/auth
 
-# Build the NestJS application
+# Biên dịch TypeScript
 RUN npm run build
 
-
-# Production stage
-FROM node:16-alpine
-
-WORKDIR /usr/src/app
-
-# Copy the built application from the builder stage
-COPY --from=builder /usr/src/app/dist .
+# Chỉ copy thư mục dist
+COPY ../../dist/apps/auth /usr/src/app/dist
 
 # Expose the ports the app runs on
 EXPOSE 3000
 
 # Define the command to run the application
-CMD ["npm","run start"]
+CMD ["node", "dist/main.js"]
