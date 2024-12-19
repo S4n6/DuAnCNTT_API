@@ -19,7 +19,7 @@ WORKDIR /usr/src/app/apps/auth
 RUN npm run build
 
 # Chỉ copy thư mục dist
-COPY ../../dist/apps/auth /usr/src/app/dist
+COPY ./usr/src/app/dist/apps/auth /usr/src/app/dist
 
 # Expose the ports the app runs on
 EXPOSE 3000
