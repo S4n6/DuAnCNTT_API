@@ -14,8 +14,7 @@ services:
       - .:/usr/src/app
     networks:
       - backend
-    depends_on:
-      - user
+
 
   user:
     build:
@@ -32,6 +31,8 @@ services:
       - .:/usr/src/app
     networks:
       - backend
+    depends_on:
+      - auth
 
   event:
     build:
