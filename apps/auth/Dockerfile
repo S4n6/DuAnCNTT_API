@@ -24,11 +24,17 @@ FROM node:16-alpine
 
 WORKDIR /usr/src/app
 
-# Copy the built application
-COPY --from=development /usr/src/app/dist ./dist
+# Copy the built application from the builder stage
+COPY --from=builder /usr/src/app/apps/auth/dist ./dist
+
+# Copy the package.json and package-lock.json files
+COPY apps/auth/package*.json ./
+
+# Install production dependencies
+RUN npm install --only=production
 
 # Expose the ports the app runs on
 EXPOSE 3000
 
 # Define the command to run the application
-CMD ["npm", "run", "start:dev", "auth"]
+CMD ["node","dist/apps/auth/main"]
