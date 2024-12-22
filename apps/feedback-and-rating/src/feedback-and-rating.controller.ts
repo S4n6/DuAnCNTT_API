@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { FeedbackAndRatingService } from './feedback-and-rating.service';
 import { IFeedbackResponse } from './response/feedback.response';
 import { IRatingResponse } from './response/rating.response';
@@ -10,6 +10,11 @@ export class FeedbackAndRatingController {
   constructor(
     private readonly feedbackAndRatingService: FeedbackAndRatingService,
   ) {}
+
+  @Get('rating/:eventId')
+  async getRatingByEventId(@Param() eventId: string): Promise<IRatingResponse> {
+    return await this.feedbackAndRatingService.getRatingByEventId(eventId);
+  }
 
   @Post('survey')
   async createSurvey(

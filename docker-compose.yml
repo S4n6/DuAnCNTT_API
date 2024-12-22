@@ -19,8 +19,8 @@ services:
     build:
       context: .
       dockerfile: apps/user/Dockerfile
-      target: development
-    command: npm run start:dev user
+      # target: development
+    # command: npm run start:dev user
     env_file:
       - ./.env
     ports:
