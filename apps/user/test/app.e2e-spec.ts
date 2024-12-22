@@ -1,12 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { UserModule } from './../src/user.module';
-import { UserService } from './../src/user.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from './../src/user.schema';
 import { Connection, ObjectId } from 'mongoose';
-import { USER_CONSTANTS } from '../src/constant';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
@@ -15,7 +14,7 @@ describe('UserController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [UserModule, MongooseModule.forRoot(USER_CONSTANTS.MONGO_URL)],
+      imports: [MongooseModule.forRoot(process.env.MONGO_URL)],
     }).compile();
 
     app = moduleFixture.createNestApplication();

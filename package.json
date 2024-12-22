@@ -17,7 +17,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/app-manage-event_api/test/jest-e2e.json"
+    "test:e2e": "jest --config ./apps/app-manage-event_api/test/jest-e2e.json",
+    "test:user": "jest --config ./apps/user/test/jest-e2e.json"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.12.2",
