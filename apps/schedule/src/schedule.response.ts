@@ -11,9 +11,9 @@ export class ScheduleResponse implements IScheduleResponse {
   message: string;
   data?: Schedule | Schedule[];
 
-  constructor(data: IScheduleResponse) {
-    this.success = data.success;
-    this.message = data.message;
-    this.data = data.data;
+  constructor(success: boolean, message: string, data?: Schedule | Schedule[]) {
+    this.success = success;
+    this.message = message;
+    this.data = data;
   }
 }

@@ -11,13 +11,11 @@ export class ScheduleService {
   ) {}
 
   async getSchedule(eventId: string): Promise<IScheduleResponse> {
-    try{
-
-        const schedule = await this.scheduleModel.findOne({ eventId });
-        return new ScheduleResponse(true, 'Schedule found', schedule);
-
-    }catch(e){
-        console.log(e)
-        }
+    try {
+      const schedule = await this.scheduleModel.findOne({ eventId });
+      return new ScheduleResponse(true, 'Schedule found', schedule);
+    } catch (e) {
+      return new ScheduleResponse(false, e.message, null);
+    }
   }
 }
