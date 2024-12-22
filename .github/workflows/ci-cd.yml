@@ -79,6 +79,10 @@ jobs:
         run: |
           docker run -d --name auth --network backend --env-file .env sang12/manage_event:auth-service
 
+      - name: List folders in /usr/src/app
+        run: |
+          docker exec user ls -l /usr/src/app
+
       - name: Start user service container
         run: |
           docker run -d --name user --network backend --env-file .env sang12/manage_event:user-service
