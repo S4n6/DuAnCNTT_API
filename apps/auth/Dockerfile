@@ -10,18 +10,18 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+COPY . .
 
 # Vào thư mục của ứng dụng user
-WORKDIR /usr/src/app/apps/auth
+# WORKDIR /usr/src/app/apps/auth
 
 # Biên dịch TypeScript
 RUN npm run build
-
-COPY . .
 
 # Expose the ports the app runs on
 EXPOSE 3000
 
 # Define the command to run the application
-CMD ["npm", "run", "start:dev"]
+# CMD ["npm", "run", "start:dev"]
+CMD ["node", "dist/apps/auth/main"]
 
