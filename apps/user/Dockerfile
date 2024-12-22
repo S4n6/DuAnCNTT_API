@@ -30,6 +30,9 @@ COPY --from=builder /usr/src/app/dist ./dist
 # Copy the package.json and package-lock.json files
 COPY ./package*.json ./
 
+# Copy the .proto file
+COPY lib/common/user.proto ./lib/common/user.proto
+
 # Install production dependencies
 RUN npm install --only=production
 
