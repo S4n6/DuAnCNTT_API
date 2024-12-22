@@ -28,7 +28,7 @@ WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app/dist/apps/auth ./dist
 
 # Copy the package.json and package-lock.json files
-COPY apps/auth/package*.json ./
+COPY ./package*.json ./
 
 # Install production dependencies
 RUN npm install --only=production
