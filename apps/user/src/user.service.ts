@@ -189,9 +189,9 @@ export class UserService {
 
       if (!response.data.success) {
         return new UserResponseDto(
-          true,
-          'User created successfully',
-          createdUser,
+          false,
+          'User created failed due to creating refresh token',
+          null,
         );
       }
 

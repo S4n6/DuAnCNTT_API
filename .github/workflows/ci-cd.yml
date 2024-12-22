@@ -85,7 +85,7 @@ jobs:
 
       - name: List folders in /usr/src/app
         run: |
-          docker exec user ls -l /usr/src/app/test
+          docker exec user ls -l /usr/src/app
 
       # - name: Check logs
       #   run: |
