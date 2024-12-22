@@ -11,7 +11,7 @@ export class FeedbackAndRatingService {
     } catch (error) {}
   }
 
-  async sendRatingEmail(event: RatingRequest): Promise<IRatingResponse> {
+  async ratingEvent(event: RatingRequest): Promise<IRatingResponse> {
     try {
     } catch (error) {}
   }

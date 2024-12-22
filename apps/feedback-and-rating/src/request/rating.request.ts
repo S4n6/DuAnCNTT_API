@@ -1,9 +1,11 @@
 import { IsString, IsInt, Min, Max, IsNotEmpty } from 'class-validator';
+import { ObjectId } from 'mongoose';
 
 export interface IRatingRequest {
   eventId: string;
   rating: number;
   comment: string;
+  userId: ObjectId;
 }
 
 export class RatingRequest implements IRatingRequest {
@@ -19,4 +21,7 @@ export class RatingRequest implements IRatingRequest {
   @IsString()
   @IsNotEmpty()
   comment: string;
+
+  @IsNotEmpty()
+  userId: ObjectId;
 }

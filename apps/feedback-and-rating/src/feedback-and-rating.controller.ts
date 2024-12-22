@@ -13,13 +13,13 @@ export class FeedbackAndRatingController {
 
   @Post('survey')
   async createSurvey(
-    @Body() event: FeedbackRequest,
+    @Body() survey: FeedbackRequest,
   ): Promise<IFeedbackResponse> {
-    return await this.feedbackAndRatingService.sendSurveyEmail(event);
+    return await this.feedbackAndRatingService.sendSurveyEmail(survey);
   }
 
   @Post('rating')
-  async createRating(@Body() event: RatingRequest): Promise<IRatingResponse> {
-    return await this.feedbackAndRatingService.sendRatingEmail(event);
+  async createRating(@Body() rating: RatingRequest): Promise<IRatingResponse> {
+    return await this.feedbackAndRatingService.ratingEvent(rating);
   }
 }
