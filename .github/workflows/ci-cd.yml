@@ -90,7 +90,7 @@ jobs:
 
       - name: Run tests for user service
         run: |
-          docker exec user npx jest --config ./apps/user/test/jest-e2e.json
+          docker exec user npx jest --config /usr/src/app/apps/user/test/jest-e2e.json
 
       - name: Stop and remove user service container
         run: |
