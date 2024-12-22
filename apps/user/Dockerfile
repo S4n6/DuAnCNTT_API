@@ -31,9 +31,9 @@ COPY --from=builder /usr/src/app/dist ./dist
 COPY ./package*.json ./
 
 # Copy the .proto file
-# COPY lib/common/user.proto ./lib/common/user.proto
+COPY lib/common/user.proto ./lib/common/user.proto
 
-COPY . .
+COPY test/jest-e2e.json ./test/jest-e2e.json
 
 # Install production dependencies
 RUN npm install --only=production
