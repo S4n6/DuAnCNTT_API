@@ -38,6 +38,9 @@ COPY apps/user/test/jest-e2e.json ./test/jest-e2e.json
 # Install production dependencies
 RUN npm install --only=production
 
+# Install development dependencies for testing
+RUN npm install --save-dev ts-jest jest @types/jest
+
 # Expose the ports the app runs on
 EXPOSE 3001
 
