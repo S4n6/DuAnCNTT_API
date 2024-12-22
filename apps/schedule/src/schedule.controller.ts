@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { IScheduleResponse } from './schedule.response';
 import { ScheduleRequest } from './schedule.request';
@@ -27,9 +35,9 @@ export class ScheduleController {
   }
 
   @Delete('/:eventId')
-  async deleteSchedule(@Param('eventId') eventId: string): Promise<void> {
+  async deleteSchedule(
+    @Param('eventId') eventId: string,
+  ): Promise<IScheduleResponse> {
     return this.scheduleService.deleteSchedule(eventId);
   }
-
-
 }
