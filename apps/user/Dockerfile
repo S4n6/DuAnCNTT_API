@@ -33,13 +33,10 @@ COPY ./package*.json ./
 # Copy the .proto file
 COPY lib/common/user.proto ./lib/common/user.proto
 
-COPY /usr/src/app/apps/user/test ./test
+COPY apps/user/test ./test
 
 # Install production dependencies
-RUN npm install --only=production
-
-# Install development dependencies for testing
-RUN npm install --save-dev ts-jest jest @types/jest
+RUN npm install --only=production && npm install --save-dev ts-jest jest @types/jest
 
 # Expose the ports the app runs on
 EXPOSE 3001
