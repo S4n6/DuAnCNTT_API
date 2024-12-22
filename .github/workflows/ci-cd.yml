@@ -85,7 +85,7 @@ jobs:
 
       - name: List folders in /usr/src/app
         run: |
-          docker exec user ls -l /usr/src/app
+          docker exec user ls -l /usr/src/app/test
 
       # - name: Check logs
       #   run: |
@@ -94,7 +94,7 @@ jobs:
 
       - name: Run tests for user service
         run: |
-          docker exec user npx jest --config /test/jest-e2e.json
+          docker exec user npx jest --config /apps/user/test/jest-e2e.json
 
       - name: Stop and remove user service container
         run: |
