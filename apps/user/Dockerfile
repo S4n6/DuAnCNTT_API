@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Set the working directory to the auth service
-WORKDIR /usr/src/app/apps/user
+# WORKDIR /usr/src/app/apps/user
 
 # Build the NestJS application
 RUN npm run build
@@ -37,6 +37,4 @@ RUN npm install --only=production
 EXPOSE 3001
 
 # Define the command to run the application
-# CMD ["node", "dist/main.js"]
-
-CMD ["npm", "run start user"]
+CMD ["node", "dist/apps/user/src/main.js"]
