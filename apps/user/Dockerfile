@@ -35,7 +35,7 @@ COPY ./package*.json ./
 
 # COPY apps/user/test ./test
 
-COPY . .
+COPY apps ./apps
 
 # Install production dependencies
 RUN npm install --only=production && npm install --save-dev ts-jest jest @types/jest
