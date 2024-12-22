@@ -4,8 +4,8 @@ services:
     build:
       context: .
       dockerfile: apps/auth/Dockerfile
-      target: development
-    command: npm run start:dev auth
+      # target: development
+    # command: npm run start:dev auth
     env_file:
       - ./.env
     ports:
