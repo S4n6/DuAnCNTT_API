@@ -8,8 +8,15 @@ export class ScheduleService {
   constructor(
     @InjectModel('Schedule') private readonly scheduleModel: Model<Schedule>,
   ) {}
-  
+
   async getSchedule(eventId: string) {
-    
+    try{
+
+        const schedule = await this.scheduleModel.findOne({ eventId });
+        return schedule;
+
+    }catch(e){
+        console.log(e)
+        }
   }
 }
