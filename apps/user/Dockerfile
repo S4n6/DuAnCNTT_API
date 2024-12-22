@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Set the working directory to the auth service
-# WORKDIR /usr/src/app/apps/auth
+WORKDIR /usr/src/app/apps/user
 
 # Build the NestJS application
 RUN npm run build

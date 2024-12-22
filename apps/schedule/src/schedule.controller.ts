@@ -5,8 +5,4 @@ import { ScheduleService } from './schedule.service';
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
-  @Get()
-  getHello(): string {
-    return this.scheduleService.getHello();
-  }
 }
