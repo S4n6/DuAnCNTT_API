@@ -4,7 +4,8 @@
     "declaration": false,
     // "outDir": "../../dist/apps/user"
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "esModuleInterop": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
