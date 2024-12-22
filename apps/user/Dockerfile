@@ -33,7 +33,7 @@ COPY ./package*.json ./
 # Copy the .proto file
 COPY lib/common/user.proto ./lib/common/user.proto
 
-COPY apps/user/test ./test
+COPY /usr/src/app/apps/user/test ./test
 
 # Install production dependencies
 RUN npm install --only=production
