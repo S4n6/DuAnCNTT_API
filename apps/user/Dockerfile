@@ -33,7 +33,7 @@ COPY ./package*.json ./
 # Copy the .proto file
 COPY lib/common/user.proto ./lib/common/user.proto
 
-COPY apps/user/test/jest-e2e.json ./test/jest-e2e.json
+COPY apps/user/test ./test
 
 # Install production dependencies
 RUN npm install --only=production
