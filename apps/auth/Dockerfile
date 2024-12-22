@@ -25,7 +25,7 @@ FROM node:16-alpine
 WORKDIR /usr/src/app
 
 # Copy the built application from the builder stage
-COPY --from=builder /usr/src/app/dist/apps/auth ./dist
+COPY --from=builder /usr/src/app/apps/auth/dist/apps/auth ./dist/apps/auth
 
 # Copy the package.json and package-lock.json files
 COPY ./package*.json ./
@@ -37,4 +37,4 @@ RUN npm install --only=production
 EXPOSE 3000
 
 # Define the command to run the application
-CMD ["node", "dist/apps/auth/src/main.js"]
+CMD ["node", "dist/apps/auth/main.js"]
