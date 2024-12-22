@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Set the working directory to the auth service
-WORKDIR /usr/src/app/apps/auth
+# WORKDIR /usr/src/app/apps/auth
 
 # Build the NestJS application
 RUN npm run build
@@ -25,7 +25,7 @@ FROM node:16-alpine
 WORKDIR /usr/src/app
 
 # Copy the built application from the builder stage
-COPY --from=builder /usr/src/app/apps/auth/dist/apps/auth ./dist/apps/auth
+COPY --from=builder /usr/src/app/dist ./dist
 
 # Copy the package.json and package-lock.json files
 COPY ./package*.json ./
