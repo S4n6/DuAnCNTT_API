@@ -33,7 +33,7 @@ COPY ./package*.json ./
 # Copy the .proto file
 COPY lib/common/user.proto ./lib/common/user.proto
 
-COPY apps/user/test ./apps/user/test
+COPY apps/user/test ./test
 
 # Install production dependencies
 RUN npm install --only=production && npm install --save-dev ts-jest jest @types/jest
