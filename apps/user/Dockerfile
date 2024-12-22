@@ -37,4 +37,6 @@ RUN npm install --only=production
 EXPOSE 3001
 
 # Define the command to run the application
-CMD ["node", "dist/main.js"]
+# CMD ["node", "dist/main.js"]
+
+CMD ["npm", "run start user"]
