@@ -35,9 +35,6 @@ jobs:
           echo "HOST_AUTH_SERVICE=${{ secrets.HOST_AUTH_SERVICE }}" >> .env
           echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}" >> .env
           echo "GRPC_HOST_USER_SERVICE=${{ secrets.GRPC_HOST_USER_SERVICE }}" >> .env
-          echo "GG_CLIENT_ID=${{ secrets.GG_CLIENT_ID }}" >> .env
-          echo "GG_CLIENT_SECRET=${{ secrets.GG_CLIENT_SECRET }}" >> .env
-          echo "GG_CALLBACK_URL=${{ secrets.GG_CALLBACK_URL }}" >> .env
 
       - name: Build Docker images
         run: |
@@ -74,6 +71,9 @@ jobs:
           echo "HOST_AUTH_SERVICE=http://auth:3000" >> .env
           echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}" >> .env
           echo "GRPC_HOST_USER_SERVICE=user:5001" >> .env
+          echo "GG_CLIENT_ID=${{ secrets.GG_CLIENT_ID }}" >> .env
+          echo "GG_CLIENT_SECRET=${{ secrets.GG_CLIENT_SECRET }}" >> .env
+          echo "GG_CALLBACK_URL=${{ secrets.GG_CALLBACK_URL }}" >> .env
 
       - name: Create Docker network
         run: docker network create backend
