@@ -13,9 +13,6 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Set the working directory to the auth service
-# WORKDIR /usr/src/app/apps/user
-
 # Build the NestJS application
 RUN npm run build
 
@@ -28,14 +25,9 @@ WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app/dist ./dist
 
 # Copy the package.json and package-lock.json files
-COPY ./package*.json ./
+# COPY ./package*.json ./
 
-# Copy the .proto file
-# COPY lib/common/user.proto ./lib/common/user.proto
-
-# COPY apps/user/test ./test
-
-COPY apps ./apps
+COPY . .
 
 # Install production dependencies
 RUN npm install --only=production && npm install --save-dev ts-jest jest @types/jest

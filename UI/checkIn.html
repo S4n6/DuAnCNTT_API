@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Participants Count</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+      }
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .participants-count {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Participants Count</h1>
+      <div class="participants-count" id="participantsCountContainer"></div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      socket.on('participantsCount', function (data) {
+        const participantsCountContainer = document.getElementById(
+          'participantsCountContainer',
+        );
+        participantsCountContainer.innerHTML = `<p>Participants Count for Event ${data.eventId}: ${data.count}</p>`;
+      });
+
+      // Emit an event to get the initial participants count
+      socket.emit('getParticipantsCount', 'EVENT67890');
+    </script>
+  </body>
+</html>

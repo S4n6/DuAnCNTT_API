@@ -28,12 +28,6 @@ export class User extends Document {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'TokenDevice' }] })
   tokenDevices: TokenDevice[];
-
-
-  toJSON() {
-    const { __v, password, ...rest } = this.toObject();
-    return rest;
-  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

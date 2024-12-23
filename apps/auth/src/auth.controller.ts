@@ -1,10 +1,19 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthResponseDto } from './auth.response';
 import { Response } from 'express';
-import { LoginRequestDto } from './auth.requestLogin';
+import { LoginRequestDto } from './auth.request';
 import { UserDto } from './user.dto';
 import { jwtConstants } from './constants';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('/api/auth/')
 export class AuthController {
@@ -36,6 +45,26 @@ export class AuthController {
     });
   }
 
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() req) {}
+
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req, @Res() res: Response) {
+    const { user } = req;
+    const access_token = await this.authService.validateOAuthLogin(user);
+    // return res.redirect(`http://localhost:3000?token=${access_token}`);
+    return res.status(200).json({
+      success: true,
+      message: 'Login successfully',
+      data: {
+        access_token,
+      },
+    });
+  }
+
+  // API handle token
   @Post('createAccessToken')
   async createAccessToken(@Res() res: Response, @Body() user: UserDto) {
     const access_token = await this.authService.createAccessToken(user);

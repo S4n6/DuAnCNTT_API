@@ -58,6 +58,17 @@ export class AuthService implements OnModuleInit {
     }
   }
 
+  async validateOAuthLogin(user: any): Promise<string> {
+    const payload = {
+      email: user?.user?.email,
+      firstName: user?.user?.firstName,
+      lastName: user?.user?.lastName,
+      picture: user?.user?.picture,
+    };
+
+    return this.jwtService.sign(payload);
+  }
+
   async createAccessToken(user): Promise<string> {
     return this.jwtService.sign(user, {
       expiresIn: jwtConstants.JWT_EXPIRES_IN_ACCESS_TOKEN,

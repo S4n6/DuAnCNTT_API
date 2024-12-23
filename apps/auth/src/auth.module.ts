@@ -5,11 +5,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { AUTH_CONSTANTS, jwtConstants } from './constants';
 import { PassportModule } from '@nestjs/passport';
 import { ClientOptions, ClientsModule, Transport } from '@nestjs/microservices';
-import * as dotenv from 'dotenv';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Token, TokenSchema } from './token.schema';
-
-dotenv.config();
+import { GoogleStrategy } from './strategy/google.strategy';
 
 export const grpcClientOptions: ClientOptions = {
   transport: Transport.GRPC,
@@ -22,7 +20,7 @@ export const grpcClientOptions: ClientOptions = {
 
 @Module({
   imports: [
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'google' }),
     JwtModule.register({
       secret: jwtConstants.JWT_SECRET,
     }),
@@ -36,6 +34,6 @@ export const grpcClientOptions: ClientOptions = {
     MongooseModule.forFeature([{ name: Token.name, schema: TokenSchema }]),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, GoogleStrategy],
 })
 export class AuthModule {}
