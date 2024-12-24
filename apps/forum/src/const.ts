@@ -12,6 +12,6 @@ export const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
-export const NOTIFICATION_CONSTANTS = {
-  PORT: process.env.NOTIFICATION_SERVICE_PORT,
+export const FORUM_CONSTANTS = {
+  PORT: process.env.FORUM_SERVICE_PORT,
 };
