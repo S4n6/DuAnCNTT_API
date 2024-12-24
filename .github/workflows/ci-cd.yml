@@ -70,21 +70,19 @@ jobs:
           echo "ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
           echo "HOST_AUTH_SERVICE=http://auth:3000" >> .env
           echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}" >> .env
+          echo "AUTH_SERVICE_PORT=3000" >> .env
           echo "GRPC_HOST_USER_SERVICE=user:5001" >> .env
           echo "GG_CLIENT_ID=${{ secrets.GG_CLIENT_ID }}" >> .env
           echo "GG_CLIENT_SECRET=${{ secrets.GG_CLIENT_SECRET }}" >> .env
           echo "GG_CALLBACK_URL=${{ secrets.GG_CALLBACK_URL }}" >> .env
 
-      - name: Create Docker network
-        run: docker network create backend
-
       - name: Start auth service container
         run: |
-          docker run -d --name auth --network backend --env-file .env -p 3000:3000 sang12/manage_event:auth-service
+          docker run -d --name auth --env-file .env -p 3000:3000 sang12/manage_event:auth-service
 
       - name: Start user service container
         run: |
-          docker run -d --name user --network backend --env-file .env sang12/manage_event:user-service
+          docker run -d --name user --env-file .env sang12/manage_event:user-service
 
       - name: List folders in /usr/src/app
         run: |
@@ -103,9 +101,6 @@ jobs:
         run: |
           docker stop user
           docker rm user
-
-      - name: Remove Docker network
-        run: docker network rm backend
 
       - name: Lint the code
         run: |
