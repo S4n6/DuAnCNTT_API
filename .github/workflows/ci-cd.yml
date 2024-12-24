@@ -68,7 +68,7 @@ jobs:
           echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
           echo "SECRET_HASH_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
           echo "ENCODE_PASSWORD=${{ secrets.SECRET_HASH_PASSWORD }}" >> .env
-          echo "HOST_AUTH_SERVICE=http://auth:3000" >> .env
+          echo "HOST_AUTH_SERVICE=http://auth:42883" >> .env
           echo "USER_SERVICE_PORT=${{ secrets.USER_SERVICE_PORT }}" >> .env
           echo "GRPC_HOST_USER_SERVICE=user:5001" >> .env
           echo "GG_CLIENT_ID=${{ secrets.GG_CLIENT_ID }}" >> .env
