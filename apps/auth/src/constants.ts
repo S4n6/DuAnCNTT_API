@@ -15,4 +15,5 @@ export const AUTH_CONSTANTS = {
   GG_CLIENT_ID: process.env.GG_CLIENT_ID,
   GG_CLIENT_SECRET: process.env.GG_CLIENT_SECRET,
   GG_CALLBACK_URL: process.env.GG_CALLBACK_URL,
+  MONGO_URL: process.env.MONGO_URL,
 };

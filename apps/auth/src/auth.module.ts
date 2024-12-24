@@ -30,7 +30,7 @@ export const grpcClientOptions: ClientOptions = {
         ...grpcClientOptions,
       },
     ]),
-    MongooseModule.forRoot(process.env.MONGO_URL),
+    MongooseModule.forRoot(AUTH_CONSTANTS.MONGO_URL),
     MongooseModule.forFeature([{ name: Token.name, schema: TokenSchema }]),
   ],
   controllers: [AuthController],
