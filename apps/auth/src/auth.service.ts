@@ -85,20 +85,24 @@ export class AuthService implements OnModuleInit {
   }
 
   async createRefreshToken(userId: string, expiresIn: string): Promise<Token> {
-    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-    const refreshToken = this.jwtService.sign({ userId }, { expiresIn });
-    // Hash the refresh token before storing it
-    const salt = await bcrypt.genSalt(10);
-    const hashedRefreshToken = await bcrypt.hash(
-      refreshToken + jwtConstants.JWT_REFRESH_TOKEN_HASH_SECRET,
-      salt,
-    );
-    const token = new this.tokenModel({
-      userId,
-      refreshToken: hashedRefreshToken,
-      expiresAt,
-    });
-    return token.save();
+    try {
+      const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+      const refreshToken = this.jwtService.sign({ userId }, { expiresIn });
+      // Hash the refresh token before storing it
+      const salt = await bcrypt.genSalt(10);
+      const hashedRefreshToken = await bcrypt.hash(
+        refreshToken + jwtConstants.JWT_REFRESH_TOKEN_HASH_SECRET,
+        salt,
+      );
+      const token = new this.tokenModel({
+        userId,
+        refreshToken: hashedRefreshToken,
+        expiresAt,
+      });
+      return await token.save();
+    } catch (error) {
+      throw new Error('Error creating refresh token: ' + error.message);
+    }
   }
 
   async findRefreshToken(userId: string): Promise<Token> {

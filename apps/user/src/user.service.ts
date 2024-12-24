@@ -190,7 +190,8 @@ export class UserService {
       if (!response.data.success) {
         return new UserResponseDto(
           false,
-          'User created failed due to creating refresh token',
+          response?.data?.message ||
+            'User created failed due to creating refresh token',
           null,
         );
       }
@@ -201,7 +202,7 @@ export class UserService {
         createdUser,
       );
     } catch (error) {
-      console.error('Error creating user:', error);
+      console.error('Error creating user:', error?.message);
       return new UserResponseDto(
         false,
         error?.message || 'User creation failed',

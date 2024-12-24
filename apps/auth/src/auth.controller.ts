@@ -91,16 +91,24 @@ export class AuthController {
     @Res() res: Response,
     @Body() user: { userId: string },
   ) {
-    const refresh_token = await this.authService.createRefreshToken(
-      user?.userId,
-      jwtConstants.JWT_EXPIRES_IN_REFRESH_TOKEN,
-    );
-    return res.status(200).json({
-      success: true,
-      message: 'Refresh token created successfully',
-      data: {
-        refresh_token,
-      },
-    });
+    try {
+      const refresh_token = await this.authService.createRefreshToken(
+        user?.userId,
+        jwtConstants.JWT_EXPIRES_IN_REFRESH_TOKEN,
+      );
+      return res.status(200).json({
+        success: true,
+        message: 'Refresh token created successfully',
+        data: {
+          refresh_token,
+        },
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Error creating refresh token',
+        error: error.message,
+      });
+    }
   }
 }
