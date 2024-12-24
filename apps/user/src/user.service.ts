@@ -179,22 +179,22 @@ export class UserService {
 
       const createdUser = new this.userModel(user);
       await createdUser.save();
-      const response = await lastValueFrom(
-        this.httpService.post(
-          `${USER_CONSTANTS.HOST_AUTH_SERVICE}/api/auth/createRefreshToken`,
-          // 'http://auth-service:3000/api/auth/createRefreshToken',
-          { userId: createdUser._id },
-        ),
-      );
+      // const response = await lastValueFrom(
+      //   this.httpService.post(
+      //     `${USER_CONSTANTS.HOST_AUTH_SERVICE}/api/auth/createRefreshToken`,
+      //     // 'http://auth-service:3000/api/auth/createRefreshToken',
+      //     { userId: createdUser._id },
+      //   ),
+      // );
 
-      if (!response.data.success) {
-        return new UserResponseDto(
-          false,
-          response?.data?.message ||
-            'User created failed due to creating refresh token',
-          null,
-        );
-      }
+      // if (!response.data.success) {
+      //   return new UserResponseDto(
+      //     false,
+      //     response?.data?.message ||
+      //       'User created failed due to creating refresh token',
+      //     null,
+      //   );
+      // }
 
       return new UserResponseDto(
         true,
@@ -202,7 +202,7 @@ export class UserService {
         createdUser,
       );
     } catch (error) {
-      console.error('Error creating user:', error?.message);
+      console.error('Error creating user:', error);
       return new UserResponseDto(
         false,
         error?.message || 'User creation failed',
