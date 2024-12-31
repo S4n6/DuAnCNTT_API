@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { GrpcMethod } from '@nestjs/microservices';
@@ -34,9 +35,12 @@ export class UserController {
     return this.userService.getTokenDevicesByUserId(userId);
   }
 
-  @Get('email')
-  getUserByEmail(email: string): Promise<UserResponseDto> {
-    return this.userService.getUserByEmail(email);
+  @Get('email/:email')
+  getUserByEmail(
+    @Param() payload: { email: string },
+  ): Promise<UserResponseDto> {
+    console.log('get user by email:', payload);
+    return this.userService.getUserByEmail(payload.email);
   }
 
   @Get('phoneNumber')
@@ -49,19 +53,20 @@ export class UserController {
     return this.userService.getUserById(id);
   }
 
-  @Post('createUserByEmail')
+  @Post()
   async createUserByEmail(@Body() user: UserDto): Promise<UserResponseDto> {
+    console.log('create user by email:', user);
     const userCreated = await this.userService.createUserByEmail(user);
     return userCreated;
   }
 
-  @Post('createUserByPhoneNumber')
-  async createUserByPhoneNumber(
-    @Body() user: UserDto,
-  ): Promise<UserResponseDto> {
-    const userCreated = await this.userService.createUserByPhoneNumber(user);
-    return userCreated;
-  }
+  // @Post('createUserByPhoneNumber')
+  // async createUserByPhoneNumber(
+  //   @Body() user: UserDto,
+  // ): Promise<UserResponseDto> {
+  //   const userCreated = await this.userService.createUserByPhoneNumber(user);
+  //   return userCreated;
+  // }
 
   @Post('tokenDevice')
   async createTokenDevice(

@@ -1,4 +1,5 @@
 // src/user/user.dto.ts
+import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsString,
@@ -10,17 +11,13 @@ import {
 export class UserDto {
   @IsString()
   @IsNotEmpty()
-  firstName: string;
-
-  @IsString()
-  @IsNotEmpty()
-  lastName: string;
+  fullName: string;
 
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @IsPhoneNumber(null)
+  @IsPhoneNumber('VN')
   @IsOptional()
   phoneNumber?: string;
 
@@ -28,6 +25,7 @@ export class UserDto {
   @IsNotEmpty()
   password: string;
 
+  @Transform(({ value }) => value?.trim() || 'user')
   @IsString()
   @IsNotEmpty()
   role: string;

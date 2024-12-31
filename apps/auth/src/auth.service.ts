@@ -8,6 +8,10 @@ import { Model } from 'mongoose';
 import { UserDto } from './user.dto';
 import * as bcrypt from 'bcryptjs';
 import { jwtConstants } from './constants';
+import { HttpService } from '@nestjs/axios';
+import { AuthResponseDto } from './auth.response';
+import { decrypt, encrypt } from './crypto.util';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
@@ -16,6 +20,7 @@ export class AuthService implements OnModuleInit {
     private readonly jwtService: JwtService,
     @Inject('USER_PACKAGE') private client: ClientGrpc,
     @InjectModel(Token.name) private tokenModel: Model<Token>,
+    private readonly httpService: HttpService,
   ) {}
 
   onModuleInit() {
@@ -34,8 +39,51 @@ export class AuthService implements OnModuleInit {
       return null;
     }
     return {
+      user: user.data,
       access_token,
     };
+  }
+
+  async register(user: UserDto): Promise<AuthResponseDto> {
+    try {
+      console.log('register...', user);
+      const isUserExist = await this.httpService
+        .get('http://localhost:3001/api/users/email/' + user.email)
+        .toPromise();
+
+      if (!isUserExist.data.success) {
+        const hashedPassword = encrypt(user.password);
+        user.password = hashedPassword;
+        const verificationToken = this.jwtService.sign(
+          { user },
+          { expiresIn: '1h' },
+        );
+        const templateEmail = {
+          to: user.email,
+          subject: 'Tạo tài khoản',
+          text:
+            'Để đăng kí tài khoản mời bạn nhấn vào link sau đây http://localhost:3000/api/auth/validTokenSignUp/' +
+            verificationToken,
+        };
+
+        const sendMail = await this.httpService
+          .post('http://localhost:3007/api/email/notify', {
+            email: templateEmail,
+          })
+          .toPromise();
+        console.log('sendMail', sendMail.data);
+        if (sendMail.data.success) {
+          return new AuthResponseDto(true, 'Email sent', {});
+        } else {
+          return new AuthResponseDto(false, 'Error sending email', {});
+        }
+      } else {
+        return new AuthResponseDto(false, 'User already exists', {});
+      }
+    } catch (error) {
+      console.log('error', error);
+      return new AuthResponseDto(false, 'Error creating user', {});
+    }
   }
 
   async validateUser(
@@ -67,6 +115,34 @@ export class AuthService implements OnModuleInit {
     };
 
     return this.jwtService.sign(payload);
+  }
+
+  async validTokenSignUp(token: string): Promise<AuthResponseDto> {
+    try {
+      console.log('before', token);
+
+      const decoded = this.jwtService.verify(token);
+      console.log('decoded', decoded);
+      if (decoded) {
+        const user = decoded.user;
+        user.password = decrypt(user.password);
+        const response = await lastValueFrom(
+          this.httpService.post('http://localhost:3001/api/users/', user),
+        );
+        const userCreated = response.data;
+        if (userCreated.success) {
+          return new AuthResponseDto(true, 'User created successfully', {});
+        } else {
+          return new AuthResponseDto(false, userCreated.message, {});
+        }
+      }
+      return new AuthResponseDto(true, 'Token is valid', {});
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return new AuthResponseDto(false, 'Token is expired', {});
+      }
+      return new AuthResponseDto(false, 'Token is invalid', {});
+    }
   }
 
   async createAccessToken(user): Promise<string> {

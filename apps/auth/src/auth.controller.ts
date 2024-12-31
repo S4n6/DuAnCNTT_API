@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Req,
   Res,
@@ -24,6 +25,7 @@ export class AuthController {
     @Res() res: Response,
     @Body() user: LoginRequestDto,
   ): Promise<any> {
+    console.log('login...', user);
     const access_token = await this.authService.login(
       user.email,
       user.phoneNumber,
@@ -62,6 +64,12 @@ export class AuthController {
         access_token,
       },
     });
+  }
+
+  @Post('register')
+  async register(@Res() res: Response, @Body() user: UserDto) {
+    const result = await this.authService.register(user);
+    return res.status(result.success ? 200 : 400).json(result);
   }
 
   // API handle token
@@ -110,5 +118,14 @@ export class AuthController {
         error: error.message,
       });
     }
+  }
+
+  @Get('validTokenSignUp/:token')
+  async validTokenSignUp(
+    @Res() res: Response,
+    @Param() payload: { token: string },
+  ) {
+    const result = await this.authService.validTokenSignUp(payload.token);
+    return res.status(result.success ? 200 : 400).json(result);
   }
 }

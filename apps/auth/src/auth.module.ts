@@ -8,6 +8,7 @@ import { ClientOptions, ClientsModule, Transport } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Token, TokenSchema } from './token.schema';
 import { GoogleStrategy } from './strategy/google.strategy';
+import { HttpModule } from '@nestjs/axios';
 
 export const grpcClientOptions: ClientOptions = {
   transport: Transport.GRPC,
@@ -32,6 +33,7 @@ export const grpcClientOptions: ClientOptions = {
     ]),
     MongooseModule.forRoot(AUTH_CONSTANTS.MONGO_URL),
     MongooseModule.forFeature([{ name: Token.name, schema: TokenSchema }]),
+    HttpModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, GoogleStrategy],

@@ -6,10 +6,7 @@ import { TokenDevice } from './tokenDevice.schema';
 @Schema()
 export class User extends Document {
   @Prop({ required: true })
-  firstName: string;
-
-  @Prop({ required: true })
-  lastName: string;
+  fullName: string;
 
   @Prop({ required: true, unique: true })
   email: string;

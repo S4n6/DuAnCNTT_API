@@ -12,49 +12,40 @@ export class EventService {
     private readonly eventRepository: Repository<Event>,
   ) {}
 
-  async getAllEvents(): Promise<EventResponseDto> {
-    const events: Event[] = await this.eventRepository.find();
+  async getAllEvents(page: number, limit: number): Promise<EventResponseDto> {
+    const [events, total] = await this.eventRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
     if (!events) {
-      return {
-        success: false,
-        message: 'Events not found',
-      };
+      return new EventResponseDto(false, 'Events not found');
     }
-    return {
-      success: true,
-      message: 'Events found',
-      data: events,
-    };
+    return new EventResponseDto(true, 'Events found', {
+      events,
+      page,
+      total,
+    });
   }
 
   async getEventById(id: string): Promise<EventResponseDto> {
     const event = await this.eventRepository.findOne({ where: { id } });
     if (!event) {
-      return {
-        success: false,
-        message: 'Event not found',
-      };
+      return new EventResponseDto(false, 'Event not found');
     }
-    return {
-      success: true,
-      message: 'Event found',
-      data: event,
-    };
+    return new EventResponseDto(true, 'Event found', event);
   }
 
   async createEvent(event: RequestCreateEventDto): Promise<EventResponseDto> {
     try {
-      const newEvent = await this.eventRepository.save(event);
-      return {
-        success: true,
-        message: 'Event created',
-        data: newEvent,
-      };
+      const newEvent: Event = await this.eventRepository.save(event);
+      return new EventResponseDto(true, 'Event created', {
+        events: newEvent,
+        page: 1,
+        total: 1,
+      });
     } catch (error) {
-      return {
-        success: false,
-        message: 'Event creation failed',
-      };
+      return new EventResponseDto(false, 'Event creation failed');
     }
   }
 
@@ -64,30 +55,19 @@ export class EventService {
   ): Promise<EventResponseDto> {
     const updateResult = await this.eventRepository.update(id, event);
     if (updateResult.affected === 0) {
-      return {
-        success: false,
-        message: 'Event update failed',
-      };
+      return new EventResponseDto(false, 'Event update failed');
     }
     const updatedEvent = await this.eventRepository.findOne({ where: { id } });
-    return {
-      success: true,
-      message: 'Event updated',
-      data: updatedEvent,
-    };
+    return new EventResponseDto(true, 'Event updated', {
+      events: updatedEvent,
+    });
   }
 
   async deleteEvent(id: string): Promise<EventResponseDto> {
     const deleteResult = await this.eventRepository.delete(id);
     if (deleteResult.affected === 0) {
-      return {
-        success: false,
-        message: 'Event delete failed',
-      };
+      return new EventResponseDto(false, 'Event delete failed');
     }
-    return {
-      success: true,
-      message: 'Event deleted',
-    };
+    return new EventResponseDto(true, 'Event deleted');
   }
 }

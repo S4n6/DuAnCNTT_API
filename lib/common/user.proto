@@ -20,5 +20,15 @@ message RequestValidateUserByPhoneNumber {
 message UserResponse {
   string message = 1;
   bool success = 2;
+  UserData data = 3;
+}
+
+message UserData {
+  string _id = 1;
+  string fullName = 2;
+  string email = 3;
+  string phoneNumber = 4;
+  string role = 5;
+  string avatar = 6;
 }
 

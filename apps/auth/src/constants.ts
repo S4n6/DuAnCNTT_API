@@ -11,7 +11,7 @@ export const jwtConstants = {
 export const AUTH_CONSTANTS = {
   PORT: process.env.AUTH_SERVICE_PORT,
   GRPC_HOST_USER_SERVICE: process.env.GRPC_HOST_USER_SERVICE,
-  SECRET_HASH_PASSWORD: process.env.SECRET_HASH_PASSWORD,
+  SECRET_HASH_PASSWORD: process.env.ENCODE_PASSWORD,
   GG_CLIENT_ID: process.env.GG_CLIENT_ID,
   GG_CLIENT_SECRET: process.env.GG_CLIENT_SECRET,
   GG_CALLBACK_URL: process.env.GG_CALLBACK_URL,

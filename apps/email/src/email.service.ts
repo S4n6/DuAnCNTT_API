@@ -53,7 +53,7 @@ export class EmailService {
     };
 
     try {
-      console.log('Sending email...');
+      console.log('Sending email...', mailOptions);
       await this.transporter.sendMail(mailOptions);
       return {
         success: true,

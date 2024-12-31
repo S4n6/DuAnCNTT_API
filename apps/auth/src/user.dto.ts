@@ -9,16 +9,12 @@ import {
 
 export class UserDto {
   @IsString()
-  @IsNotEmpty()
-  _id: string;
+  @IsOptional()
+  _id?: string;
 
   @IsString()
   @IsNotEmpty()
-  firstName: string;
-
-  @IsString()
-  @IsNotEmpty()
-  lastName: string;
+  fullName: string;
 
   @IsEmail()
   @IsNotEmpty()
@@ -30,5 +26,13 @@ export class UserDto {
 
   @IsString()
   @IsNotEmpty()
+  password: string;
+
+  @IsString()
+  @IsNotEmpty()
   role: string;
+
+  @IsString()
+  @IsOptional()
+  avatar?: string;
 }

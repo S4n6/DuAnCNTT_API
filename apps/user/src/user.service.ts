@@ -221,12 +221,10 @@ export class UserService {
       data.password + secretHashPassword,
       userData.password,
     );
-    console.log('isPasswordValid', isPasswordValid);
-
     if (!isPasswordValid) {
-      return new UserResponseDto(false, 'Invalid password');
+      return new UserResponseDto(false, 'Invalid password', userData);
     }
-    return new UserResponseDto(true, 'User validated successfully');
+    return new UserResponseDto(true, 'User validated successfully', userData);
   }
 
   async validateUserByPhoneNumber(data): Promise<UserResponseDto> {

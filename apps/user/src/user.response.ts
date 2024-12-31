@@ -15,11 +15,7 @@ export class UserResponseType {
 
   @IsString()
   @IsNotEmpty()
-  firstName: string;
-
-  @IsString()
-  @IsNotEmpty()
-  lastName: string;
+  fullName: string;
 
   @IsEmail()
   @IsNotEmpty()

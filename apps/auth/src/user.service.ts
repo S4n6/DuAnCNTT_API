@@ -6,6 +6,7 @@ export interface UserService {
     email: string;
     password: string;
   }): Observable<any>;
+
   validateUserByPhoneNumber(data: {
     phoneNumber: string;
     password: string;
