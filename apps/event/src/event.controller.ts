@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Res, Response } from '@nestjs/common';
 import { EventService } from './event.service';
 import { EventResponseDto } from './event.response';
 import { Post, Put, Delete, Body, Param } from '@nestjs/common';
@@ -14,6 +14,30 @@ export class EventController {
     @Query('limit') limit: number = 10,
   ): Promise<EventResponseDto> {
     return await this.eventService.getAllEvents(page, limit);
+  }
+
+  @Get('search')
+  async searchEvents(
+    @Response() res,
+    @Query('name') name?: string,
+    @Query('startDate') startDate?: Date,
+    @Query('endDate') endDate?: Date,
+    @Query('locationId') locationId?: string,
+    @Query('typeId') typeId?: string,
+  ): Promise<EventResponseDto> {
+    const response = await this.eventService.searchEvents(
+      name,
+      startDate,
+      endDate,
+      locationId,
+      typeId,
+    );
+
+    if (response.data.events === null) {
+      return res.status(404).send(response);
+    }
+
+    return res.status(200).send(response);
   }
 
   @Get(':id')

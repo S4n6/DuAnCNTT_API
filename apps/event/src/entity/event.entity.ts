@@ -16,10 +16,10 @@ export class Event {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ type: 'timestamp' })
   startDate: Date;
 
-  @Column()
+  @Column({ type: 'timestamp' })
   endDate: Date;
 
   @Column()
@@ -28,8 +28,14 @@ export class Event {
   @Column()
   description: string;
 
+  @Column('simple-array')
+  images: string[];
+
   @Column({ default: 0 })
   slots: number;
+
+  @Column({ default: 0 })
+  price: number;
 
   @Column()
   typeId: string;

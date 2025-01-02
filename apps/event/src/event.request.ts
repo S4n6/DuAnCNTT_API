@@ -25,4 +25,7 @@ export class RequestCreateEventDto {
   @IsString()
   @IsNotEmpty()
   typeId: string;
+
+  @IsString({ each: true })
+  images: string[];
 }

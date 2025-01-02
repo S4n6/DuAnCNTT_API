@@ -17,7 +17,6 @@ export class EventService {
       skip: (page - 1) * limit,
       take: limit,
     });
-
     if (!events) {
       return new EventResponseDto(false, 'Events not found');
     }
@@ -28,12 +27,49 @@ export class EventService {
     });
   }
 
+  async searchEvents(
+    name?: string,
+    startDate?: Date,
+    endDate?: Date,
+    locationId?: string,
+    typeId?: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<EventResponseDto> {
+    const query = this.eventRepository.createQueryBuilder('event');
+
+    if (name) {
+      query.andWhere('event.name ILIKE :name', { name: `%${name}%` });
+    }
+    if (startDate) {
+      query.andWhere('event.startDate >= :startDate', { startDate });
+    }
+    if (endDate) {
+      query.andWhere('event.endDate <= :endDate', { endDate });
+    }
+    if (locationId) {
+      query.andWhere('event.locationId = :locationId', { locationId });
+    }
+    if (typeId) {
+      query.andWhere('event.typeId = :typeId', { typeId });
+    }
+    query.skip((page - 1) * limit).take(limit);
+
+    const [events, total] = await query.getManyAndCount();
+    if (!events.length) {
+      return new EventResponseDto(false, 'No events found', { events: null });
+    }
+    return new EventResponseDto(true, 'Events found', { events, page, total });
+  }
+
   async getEventById(id: string): Promise<EventResponseDto> {
     const event = await this.eventRepository.findOne({ where: { id } });
     if (!event) {
       return new EventResponseDto(false, 'Event not found');
     }
-    return new EventResponseDto(true, 'Event found', event);
+    return new EventResponseDto(true, 'Event found', {
+      events: event,
+    });
   }
 
   async createEvent(event: RequestCreateEventDto): Promise<EventResponseDto> {
