@@ -40,6 +40,9 @@ export class Event {
   @Column()
   typeId: string;
 
+  @Column({ default: false })
+  isVerified: boolean;
+
   @ManyToOne(() => Location, (location) => location.events)
   location: Location;
 

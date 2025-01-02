@@ -25,6 +25,7 @@ export class EventController {
     @Query('locationId') locationId?: string,
     @Query('typeId') typeId?: string,
   ): Promise<EventResponseDto> {
+    console.log('searchEvents::', name, startDate, endDate, locationId, typeId);
     const response = await this.eventService.searchEvents(
       name,
       startDate,
@@ -36,7 +37,6 @@ export class EventController {
     if (response.data.events === null) {
       return res.status(404).send(response);
     }
-
     return res.status(200).send(response);
   }
 

@@ -1,8 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Speaker {
@@ -15,5 +11,6 @@ export class Speaker {
   @Column()
   eventId: string;
 
-  
+  @Column({ default: false })
+  isAccepted: boolean;
 }

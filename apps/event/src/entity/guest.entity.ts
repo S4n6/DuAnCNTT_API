@@ -10,4 +10,7 @@ export class Guest {
 
   @Column()
   eventId: string;
+
+  @Column({ default: false })
+  isAccepted: boolean;
 }
