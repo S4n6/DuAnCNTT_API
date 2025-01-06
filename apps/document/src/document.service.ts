@@ -1,11 +1,14 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { GoogleDriveService } from './googleDrive.service';
+import { lastValueFrom } from 'rxjs';
+import { DOCUMENTS_CONSTANTS } from './constants';
+import FormData from 'form-data';
 
 @Injectable()
 export class DocumentService {
-  constructor(private readonly googleDriveService: GoogleDriveService) {}
+  constructor(private readonly httpService: HttpService) {}
 
-  async getDocumentByEventId(eventId: string) {
+  async getDocumentsByEventId(eventId: string) {
     return {
       id: 1,
       name: 'Document 1',
@@ -13,17 +16,29 @@ export class DocumentService {
     };
   }
 
-  async uploadDocument(file: Express.Multer.File, eventId: string) {
+  async uploadDocument(files: Express.Multer.File[], eventId: string) {
     try {
-      const fileName = file.originalname + '-' + Date.now() + '-' + eventId;
-      const fileBuffer = file.buffer;
-      return this.googleDriveService.uploadFile(
-        fileBuffer,
-        fileName,
-        file.mimetype,
+      const formData = new FormData();
+      for (const file of files) {
+        const fileName = `${file.originalname}-${Date.now()}-${eventId}`;
+        formData.append('images', file.buffer, fileName);
+      }
+
+      const response = await lastValueFrom(
+        this.httpService.post(
+          DOCUMENTS_CONSTANTS.URL_SERVICE_UPLOAD,
+          formData,
+          {
+            headers: {
+              ...formData.getHeaders(),
+            },
+          },
+        ),
       );
+
+      return response.data;
     } catch (error) {
-      return error;
+      throw new Error(`Failed to upload documents: ${error.message}`);
     }
   }
 }

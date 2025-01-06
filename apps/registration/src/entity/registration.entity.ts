@@ -7,7 +7,7 @@ export class Registration {
   id: string;
 
   @Column()
-  name: string;
+  name?: string;
 
   @Column()
   userId: string;

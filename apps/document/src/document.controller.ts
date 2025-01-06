@@ -15,18 +15,18 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
-  @Get('/:eventId')
+  @Get(':eventId')
   async getDocumentByEventId(eventId: string) {
-    return this.documentService.getDocumentByEventId(eventId);
+    return this.documentService.getDocumentsByEventId(eventId);
   }
 
   @Post(':eventId')
   @UseInterceptors(FileInterceptor('file'))
   async uploadDocument(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() files: Express.Multer.File[],
     @Param('eventId') eventId: string,
   ) {
-    const result = await this.documentService.uploadDocument(file, eventId);
+    const result = await this.documentService.uploadDocument(files, eventId);
     return result;
   }
 }

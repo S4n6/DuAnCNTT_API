@@ -4,16 +4,10 @@ import { Document, Types } from 'mongoose';
 @Schema()
 export class Speaker extends Document {
   @Prop({ required: true })
-  firstName: string;
-
-  @Prop({ required: true })
-  lastName: string;
-
-  @Prop({ required: true, unique: true })
-  email: string;
+  fullName: string;
 
   @Prop()
-  eventId?: string;
+  email?: string;
 
   @Prop()
   userId?: string;
@@ -23,9 +17,6 @@ export class Speaker extends Document {
 
   @Prop()
   avatar?: string;
-
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Event' }] })
-  events: Types.ObjectId[];
 }
 
 export const SpeakerSchema = SchemaFactory.createForClass(Speaker);

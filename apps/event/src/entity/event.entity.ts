@@ -26,6 +26,9 @@ export class Event {
   locationId: string;
 
   @Column()
+  ownerId: string;
+
+  @Column()
   description: string;
 
   @Column('simple-array')

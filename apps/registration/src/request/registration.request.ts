@@ -1,4 +1,10 @@
-import { IsString, IsUUID, IsDate, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsUUID,
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class RegistrationRequestCreate {
@@ -14,13 +20,10 @@ export class RegistrationRequestCreate {
   @IsNotEmpty()
   registrationDate: Date;
 
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+  @IsOptional()
+  name?: string;
 
-  @IsString()
-  @IsNotEmpty()
-  registrationStatus: string;
+  registrationStatus: boolean = true;
 }
 
 export class RegistrationRequestCancel {
