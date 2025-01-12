@@ -19,6 +19,22 @@ export class GuestService {
     }
   }
 
+  async findByName(name: string): Promise<GuestResponse> {
+    try {
+      const guests: GuestDto[] = await this.guestModel.find({ name });
+      if (guests.length === 0) {
+        return new GuestResponse(
+          false,
+          `Guest with name ${name} not found`,
+          [],
+        );
+      }
+      return new GuestResponse(true, 'Guests found', guests);
+    } catch (error) {
+      return new GuestResponse(false, error?.message, []);
+    }
+  }
+
   async findOne(id: ObjectId): Promise<GuestResponse> {
     try {
       const guest: GuestDto = await this.guestModel.findById(id);

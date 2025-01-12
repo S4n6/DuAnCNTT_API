@@ -16,7 +16,9 @@ export class RegistrationController {
   async createRegistration(
     @Body() data: RegistrationRequestCreate,
   ): Promise<RegistrationResponse> {
+    console.log('createRegistration::', data);
     return this.registrationService.createRegistration(data);
+    // return this.registrationService.createRegistration(data);
   }
 
   @Put('/cancel')

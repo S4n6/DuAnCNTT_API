@@ -11,7 +11,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(REGISTRATION_CONSTANT.PORT);
   console.log(`Registration service is running on: ${await app.getUrl()}`);
-
   const microserviceOptions: MicroserviceOptions = {
     transport: Transport.RMQ,
     options: rabbitmqConfig.options,

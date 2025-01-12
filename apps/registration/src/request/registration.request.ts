@@ -23,7 +23,7 @@ export class RegistrationRequestCreate {
   @IsOptional()
   name?: string;
 
-  registrationStatus: boolean = true;
+  registrationStatus: string = 'registered';
 }
 
 export class RegistrationRequestCancel {

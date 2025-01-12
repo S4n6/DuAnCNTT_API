@@ -14,6 +14,7 @@ export class EventController {
     @Query('limit') limit: number = 10,
   ): Promise<EventResponseDto> {
     return await this.eventService.getAllEvents(page, limit);
+    
   }
 
   @Get('search')

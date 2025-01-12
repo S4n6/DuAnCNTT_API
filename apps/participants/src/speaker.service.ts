@@ -20,6 +20,22 @@ export class SpeakerService {
     }
   }
 
+  async findByName(name: string): Promise<SpeakerResponse> {
+    try {
+      const speakers: SpeakerDto[] = await this.speakerModel.find({ name });
+      if (speakers.length === 0) {
+        return new SpeakerResponse(
+          false,
+          `Speaker with name ${name} not found`,
+          [],
+        );
+      }
+      return new SpeakerResponse(true, 'Speakers found', speakers);
+    } catch (error) {
+      return new SpeakerResponse(false, error?.message, []);
+    }
+  }
+
   async findOne(id: ObjectId): Promise<SpeakerResponse> {
     try {
       const speaker: SpeakerDto = await this.speakerModel.findById(id);
