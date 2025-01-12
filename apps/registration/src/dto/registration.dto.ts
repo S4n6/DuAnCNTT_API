@@ -3,7 +3,7 @@ export class RegistrationDto {
   eventId: string;
   userId: string;
   registrationDate: Date;
-  registrationStatus: string;
+  registrationStatus: boolean;
   ticketId: string;
 }
 

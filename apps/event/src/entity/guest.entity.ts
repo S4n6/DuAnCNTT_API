@@ -11,6 +11,6 @@ export class Guest {
   @Column()
   eventId: string;
 
-  @Column({ default: false })
+  @Column({ default: 'pending' })
   isAccepted: boolean;
 }

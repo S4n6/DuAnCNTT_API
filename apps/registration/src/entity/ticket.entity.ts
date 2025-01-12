@@ -18,8 +18,8 @@ export class Ticket {
   @Column()
   eventId: string;
 
-  @Column({ default: 'active' })
-  status: string;
+  @Column({ default: false })
+  status: boolean;
 
   @Column()
   userId: string;

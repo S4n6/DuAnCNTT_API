@@ -28,6 +28,24 @@ export class TicketService {
     }
   }
 
+  async findByUserId(userId: string): Promise<TicketResponse> {
+    try {
+      const tickets: Ticket[] = await this.ticketRepository.find({
+        where: { userId },
+      });
+      if (!tickets) {
+        return new TicketResponse(false, 'Tickets not found', null);
+      }
+      return new TicketResponse(true, 'Tickets found', tickets);
+    } catch (error) {
+      return new TicketResponse(
+        false,
+        error.message || 'Failed to fetch tickets',
+        null,
+      );
+    }
+  }
+
   async findOne(id: string): Promise<TicketResponse> {
     try {
       const ticket = await this.ticketRepository.findOne({ where: { id } });

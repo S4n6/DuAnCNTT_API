@@ -5,6 +5,5 @@ export class TicketDto {
   ticketType: string;
   ticketPrice: number;
   ticketQuantity: number;
-  ticketStatus: string;
-  
+  ticketStatus: boolean;
 }

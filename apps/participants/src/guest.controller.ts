@@ -21,6 +21,11 @@ export class GuestController {
     return this.guestService.findAll();
   }
 
+  @Get('name/:name')
+  async findByName(@Param('name') name: string): Promise<GuestResponse> {
+    return this.guestService.findByName(name);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: ObjectId): Promise<GuestResponse> {
     return this.guestService.findOne(id);

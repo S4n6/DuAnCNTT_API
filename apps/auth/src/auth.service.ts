@@ -97,7 +97,6 @@ export class AuthService implements OnModuleInit {
         .toPromise();
       return user;
     }
-
     if (phoneNumber) {
       const user = await this.userService
         .validateUserByPhoneNumber({ phoneNumber, password })
@@ -136,6 +135,7 @@ export class AuthService implements OnModuleInit {
           return new AuthResponseDto(false, userCreated.message, {});
         }
       }
+
       return new AuthResponseDto(true, 'Token is valid', {});
     } catch (error) {
       if (error.name === 'TokenExpiredError') {

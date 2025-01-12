@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Query } from '@nestjs/common';
 import { RegistrationService } from './registration.service';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import {
@@ -11,6 +11,15 @@ import { RegistrationResponse } from './response/registration.response';
 export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}
 
+  @Get('isRegistered')
+  async isRegistered(
+    @Query('eventId') eventId: string,
+    @Query('userId') userId: string,
+  ): Promise<RegistrationResponse> {
+    console.log('isRegistered::', eventId, userId);
+    return this.registrationService.checkRegistrationOfUser(userId, eventId);
+  }
+
   // @EventPattern('registration_created')
   @Post()
   async createRegistration(
@@ -21,7 +30,7 @@ export class RegistrationController {
     // return this.registrationService.createRegistration(data);
   }
 
-  @Put('/cancel')
+  @Post('/cancel')
   async cancelRegistration(
     @Body() data: RegistrationRequestCancel,
   ): Promise<RegistrationResponse> {

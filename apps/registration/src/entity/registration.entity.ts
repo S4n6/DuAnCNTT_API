@@ -19,7 +19,7 @@ export class Registration {
   registrationDate: Date;
 
   @Column()
-  registrationStatus: string;
+  registrationStatus: boolean;
 
   @Column()
   ticketId: string;

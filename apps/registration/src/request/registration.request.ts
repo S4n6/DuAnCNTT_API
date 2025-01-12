@@ -23,15 +23,12 @@ export class RegistrationRequestCreate {
   @IsOptional()
   name?: string;
 
-  registrationStatus: string = 'registered';
+  registrationStatus: boolean = true;
 }
 
 export class RegistrationRequestCancel {
   @IsNotEmpty()
   userId: string;
-
-  @IsNotEmpty()
-  ticketId: string;
 
   @IsNotEmpty()
   eventId: string;

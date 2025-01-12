@@ -21,6 +21,11 @@ export class SpeakerController {
     return this.speakerService.findAll();
   }
 
+  @Get('name/:name')
+  async findByName(@Param('name') name: string): Promise<SpeakerResponse> {
+    return this.speakerService.findByName(name);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: ObjectId): Promise<SpeakerResponse> {
     return this.speakerService.findOne(id);

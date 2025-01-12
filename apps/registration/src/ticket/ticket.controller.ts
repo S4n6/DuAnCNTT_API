@@ -20,6 +20,11 @@ export class TicketController {
     return this.ticketService.findAll();
   }
 
+  @Get('userId/:userId')
+  findByUserId(@Param('userId') userId: string): Promise<TicketResponse> {
+    return this.ticketService.findByUserId(userId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string): Promise<TicketResponse> {
     return this.ticketService.findOne(id);

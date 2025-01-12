@@ -28,5 +28,5 @@ export class TicketRequestCreate {
 
   @IsNotEmpty()
   @IsNotEmpty()
-  status: string;
+  status: boolean;
 }

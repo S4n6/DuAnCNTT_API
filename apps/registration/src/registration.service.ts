@@ -32,7 +32,7 @@ export class RegistrationService {
         const registrationData = Array.isArray(isRegistered.data)
           ? isRegistered.data[0]
           : isRegistered.data;
-        if (registrationData.registrationStatus === 'cancelled') {
+        if (registrationData.registrationStatus === false) {
           return this.reRegister(data.eventId, data.userId);
         }
 
@@ -44,13 +44,14 @@ export class RegistrationService {
       }
 
       const ticketPayload: TicketRequestCreate = {
-        price: 250,
+        price: 100,
         seatNumber: 'A42',
-        type: 'VIP',
-        eventId: '123e4567-e89b-12d3-a456-426614174000',
-        userId: '123e4567-e89b-12d3-a456-426614174001',
-        status: 'using',
+        type: 'Normal',
+        eventId: data.eventId,
+        userId: data.userId,
+        status: true,
       };
+
       const ticket: TicketResponse =
         await this.ticketService.create(ticketPayload);
       if (!ticket.success) {
@@ -59,6 +60,7 @@ export class RegistrationService {
 
       const registration = this.registrationRepository.create({
         ...data,
+        registrationStatus: true,
         ticketId: Array.isArray(ticket.data)
           ? ticket.data[0].id
           : ticket.data.id,
@@ -88,15 +90,15 @@ export class RegistrationService {
       }
 
       const ticket: TicketResponse = await this.ticketService.update(
-        data.ticketId,
-        { status: 'cancelled' },
+        registration.ticketId,
+        { status: false },
       );
       if (!ticket.success) {
         return new RegistrationResponse(false, ticket.message, null);
       }
 
       await this.registrationRepository.update(registration.id, {
-        registrationStatus: 'cancelled',
+        registrationStatus: false,
       });
 
       return new RegistrationResponse(true, 'Registration cancelled', null);
@@ -142,7 +144,7 @@ export class RegistrationService {
 
       const ticket: TicketResponse = await this.ticketService.update(
         registration.ticketId,
-        { status: 'confirmed' },
+        { status: false },
       );
 
       if (!ticket.success) {
@@ -150,12 +152,12 @@ export class RegistrationService {
       }
 
       await this.registrationRepository.update(registration.id, {
-        registrationStatus: 'confirmed',
+        registrationStatus: true,
       });
 
       return new RegistrationResponse(true, 'Registration confirmed', {
         ...registration,
-        registrationStatus: 'confirmed',
+        registrationStatus: true,
       });
     } catch (error) {
       return new RegistrationResponse(

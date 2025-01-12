@@ -11,6 +11,6 @@ export class Speaker {
   @Column()
   eventId: string;
 
-  @Column({ default: false })
-  isAccepted: boolean;
+  @Column({ default: 'pending' })
+  isAccepted: string;
 }
