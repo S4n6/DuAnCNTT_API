@@ -1,16 +1,16 @@
-import { IsString, IsDate, IsNotEmpty } from 'class-validator';
+import { IsString, IsDate, IsNotEmpty, IsOptional } from 'class-validator';
 
 export interface IScheduleRequest {
   eventId: string;
   title: string;
-  description: string;
+  description?: string;
   startTime: Date;
   endTime: Date;
-  resources: string;
+  // resources: string;
 }
 
 export class ScheduleRequest implements IScheduleRequest {
-  @IsString()
+
   @IsNotEmpty()
   eventId: string;
 
@@ -19,27 +19,12 @@ export class ScheduleRequest implements IScheduleRequest {
   title: string;
 
   @IsString()
-  @IsNotEmpty()
-  description: string;
+  @IsOptional()
+  description?: string;
 
-  @IsDate()
   @IsNotEmpty()
   startTime: Date;
 
-  @IsDate()
   @IsNotEmpty()
   endTime: Date;
-
-  @IsString()
-  @IsNotEmpty()
-  resources: string;
-
-  constructor(data: IScheduleRequest) {
-    this.eventId = data.eventId;
-    this.title = data.title;
-    this.description = data.description;
-    this.startTime = data.startTime;
-    this.endTime = data.endTime;
-    this.resources = data.resources;
-  }
 }

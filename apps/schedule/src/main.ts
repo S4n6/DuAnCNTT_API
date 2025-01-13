@@ -7,5 +7,6 @@ async function bootstrap() {
   const app = await NestFactory.create(ScheduleModule);
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(SCHEDULE_CONSTANTS.PORT);
+  console.log(`Schedule service is running on: ${await app.getUrl()}`);
 }
 bootstrap();

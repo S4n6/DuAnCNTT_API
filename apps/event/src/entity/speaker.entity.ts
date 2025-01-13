@@ -6,7 +6,13 @@ export class Speaker {
   id: string;
 
   @Column()
-  speakerId: string;
+  userId: string;
+
+  @Column()
+  fullName: string;
+
+  @Column()
+  avatar: string;
 
   @Column()
   eventId: string;

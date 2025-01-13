@@ -20,8 +20,8 @@ export class Schedule {
   @Prop({ required: true })
   endTime: Date;
 
-  @Prop({ required: true })
-  resources: string;
+  // @Prop()
+  // resources?: string;
 }
 
 export const ScheduleSchema = SchemaFactory.createForClass(Schedule);

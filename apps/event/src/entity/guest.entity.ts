@@ -6,11 +6,17 @@ export class Guest {
   id: string;
 
   @Column()
-  guestId: string;
+  userId: string;
+
+  @Column()
+  fullName: string;
+
+  @Column()
+  avatar: string;
 
   @Column()
   eventId: string;
 
   @Column({ default: 'pending' })
-  isAccepted: boolean;
+  isAccepted: string;
 }

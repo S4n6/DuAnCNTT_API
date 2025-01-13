@@ -26,6 +26,15 @@ export class UserService {
     return new UserResponseDto(true, 'Users found', users);
   }
 
+  async getUserByName(name: string): Promise<UserResponseDto> {
+    console.log('name:', name);
+    const users = await this.userModel.find({ fullName: { $regex: name, $options: 'i' } });
+    if (!users || users.length === 0) {
+      return new UserResponseDto(false, 'User not found');
+    }
+    return new UserResponseDto(true, 'User found', users);
+  }
+
   async getAllTokenDevices(): Promise<UserResponseDto> {
     try {
       const tokenDevices = await this.tokenDeviceModel.find();

@@ -24,6 +24,7 @@ export class ScheduleController {
   async createSchedule(
     @Body() schedule: ScheduleRequest,
   ): Promise<IScheduleResponse> {
+    console.log('schedule::', schedule);
     return this.scheduleService.createSchedule(schedule);
   }
 

@@ -79,6 +79,16 @@ let UserService = class UserService {
             return new user_response_1.UserResponseDto(true, 'Users found', users);
         });
     }
+    getUserByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('name:', name);
+            const users = yield this.userModel.find({ fullName: { $regex: name, $options: 'i' } });
+            if (!users || users.length === 0) {
+                return new user_response_1.UserResponseDto(false, 'User not found');
+            }
+            return new user_response_1.UserResponseDto(true, 'User found', users);
+        });
+    }
     getAllTokenDevices() {
         return __awaiter(this, void 0, void 0, function* () {
             try {

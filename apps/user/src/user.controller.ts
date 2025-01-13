@@ -35,6 +35,11 @@ export class UserController {
     return this.userService.getTokenDevicesByUserId(userId);
   }
 
+  @Get('name/:name')
+  getUserByName(@Param('name') name: string): Promise<UserResponseDto> {
+    return this.userService.getUserByName(name);
+  }
+
   @Get('email/:email')
   getUserByEmail(
     @Param() payload: { email: string },

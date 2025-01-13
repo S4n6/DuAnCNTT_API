@@ -40,6 +40,9 @@ let UserController = class UserController {
     getTokenDevicesByUserId(userId) {
         return this.userService.getTokenDevicesByUserId(userId);
     }
+    getUserByName(name) {
+        return this.userService.getUserByName(name);
+    }
     getUserByEmail(payload) {
         console.log('get user by email:', payload);
         return this.userService.getUserByEmail(payload.email);
@@ -108,6 +111,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getTokenDevicesByUserId", null);
+__decorate([
+    (0, common_1.Get)('name/:name'),
+    __param(0, (0, common_1.Param)('name')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "getUserByName", null);
 __decorate([
     (0, common_1.Get)('email/:email'),
     __param(0, (0, common_1.Param)()),

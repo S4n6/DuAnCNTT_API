@@ -4,14 +4,17 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { Express } from 'express';
 import { DocumentService } from './document.service';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 
-@Controller('/api/document/')
+@Controller('/api/document')
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
@@ -21,11 +24,12 @@ export class DocumentController {
   }
 
   @Post(':eventId')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FilesInterceptor('files'))
   async uploadDocument(
-    @UploadedFile() files: Express.Multer.File[],
+    @UploadedFiles() files: Array<Express.Multer.File>,
     @Param('eventId') eventId: string,
   ) {
+    console.log('files', files);
     const result = await this.documentService.uploadDocument(files, eventId);
     return result;
   }
