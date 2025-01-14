@@ -1,69 +1,98 @@
 import { Injectable } from '@nestjs/common';
-import { Comment, Post } from './forum.schema';
-import { db } from './firebaseAdmin.config';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { PostDocument } from './post.schema';
+import { CommentDocument } from './comment.schema';
+import {
+  CommentResponse,
+  ICommentResponse,
+  IPostResponse,
+  PostResponse,
+} from './forum.response';
 
 @Injectable()
 export class ForumService {
-  private postsRef = db.ref('posts');
+  constructor(
+    @InjectModel('Post') private readonly postModel: Model<PostDocument>,
+    @InjectModel('Comment')
+    private readonly commentModel: Model<CommentDocument>,
+  ) {}
 
-  async createPost(post: Omit<Post, 'id' | 'createdAt'>): Promise<string> {
-    const newPostRef = this.postsRef.push();
-    await newPostRef.set({
-      ...post,
-      createdAt: Date.now(),
+  async createPost(data: {
+    title: string;
+    content: string;
+    authorId: string;
+    avatar: string;
+    fullName: string;
+  }): Promise<IPostResponse> {
+    const newPost = new this.postModel({
+      title: data.title,
+      content: data.content,
+      authorId: data.authorId,
+      createdAt: new Date(),
+      avatar: data.avatar,
+      fullName: data.fullName,
+      isVerify: true,
     });
-    return newPostRef.key;
+    const result = await newPost.save();
+    return new PostResponse(true, 'Post created successfully', {
+      posts: result,
+      total: 1,
+      page: 1,
+    });
   }
 
-  async getPosts(): Promise<Post[]> {
-    const snapshot = await this.postsRef.once('value');
-    const posts: Post[] = [];
-    snapshot.forEach((child) => {
-      posts.push({ id: child.key, ...child.val() });
-    });
-    return posts;
-  }
-
-  async addComment(
+  async createComment(
     postId: string,
-    comment: Omit<Comment, 'id' | 'createdAt'>,
-  ): Promise<string> {
-    const commentsRef = this.postsRef.child(postId).child('comments');
-    const newCommentRef = commentsRef.push();
-    await newCommentRef.set({
-      ...comment,
-      createdAt: Date.now(),
+    data: { content: string; authorId: string },
+  ): Promise<ICommentResponse> {
+    const newComment = new this.commentModel({
+      content: data.content,
+      authorId: data.authorId,
+      createdAt: new Date(),
+      postId,
     });
-    return newCommentRef.key;
+    const savedComment: CommentDocument = await newComment.save();
+
+    return new CommentResponse(true, 'Comment created successfully', {
+      comments: [savedComment],
+      total: 1,
+      page: 1,
+    });
   }
 
-  async addReply(
+  async getPosts(page: number = 1, limit: number = 10): Promise<IPostResponse> {
+    const skip = (page - 1) * limit;
+    const posts = await this.postModel.find().skip(skip).limit(limit).exec();
+    const total = await this.postModel.countDocuments().exec();
+    return new PostResponse(true, 'Posts fetched successfully', {
+      posts,
+      total,
+      page,
+    });
+  }
+
+  async getComments(
     postId: string,
-    commentId: string,
-    reply: Omit<Comment, 'id' | 'createdAt'>,
-  ): Promise<string> {
-    const repliesRef = this.postsRef
-      .child(postId)
-      .child('comments')
-      .child(commentId)
-      .child('replies');
-    const newReplyRef = repliesRef.push();
-    await newReplyRef.set({
-      ...reply,
-      createdAt: Date.now(),
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<ICommentResponse> {
+    const skip = (page - 1) * limit;
+    const post = await this.postModel
+      .findById(postId)
+      .populate({
+        path: 'comments',
+        options: {
+          skip,
+          limit,
+        },
+      })
+      .exec();
+    const total = post.comments.length;
+    return new CommentResponse(true, 'Comments fetched successfully', {
+      comments: post.comments,
+      total,
+      page,
     });
-    return newReplyRef.key;
-  }
-
-  async getComments(postId: string): Promise<Comment[]> {
-    const snapshot = await this.postsRef
-      .child(postId)
-      .child('comments')
-      .once('value');
-    const comments: Comment[] = [];
-    snapshot.forEach((child) => {
-      comments.push({ id: child.key, ...child.val() });
-    });
-    return comments;
   }
 }

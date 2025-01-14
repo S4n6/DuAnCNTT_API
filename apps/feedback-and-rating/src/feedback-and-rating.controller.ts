@@ -4,11 +4,13 @@ import { IFeedbackResponse } from './response/feedback.response';
 import { IRatingResponse } from './response/rating.response';
 import { FeedbackRequest } from './request/feedback.request';
 import { RatingRequest } from './request/rating.request';
+import { FeedbackAndRatingGateway } from './feedback-and-rating.gateway';
 
 @Controller('/api/feedbackAndRating/')
 export class FeedbackAndRatingController {
   constructor(
     private readonly feedbackAndRatingService: FeedbackAndRatingService,
+    private readonly feedbackAndRatingGateway: FeedbackAndRatingGateway,
   ) {}
 
   @Get('rating/:eventId')
@@ -25,6 +27,13 @@ export class FeedbackAndRatingController {
 
   @Post('rating')
   async createRating(@Body() rating: RatingRequest): Promise<IRatingResponse> {
-    return await this.feedbackAndRatingService.ratingEvent(rating);
+    const response = await this.feedbackAndRatingService.ratingEvent(rating);
+    console.log(response);
+    // if (response.success) {
+    //   const updatedRating =
+    //     await this.feedbackAndRatingService.getRatingByEventId(rating.eventId);
+    //   this.feedbackAndRatingGateway.server.emit('ratingUpdate', updatedRating);
+    // }
+    return response;
   }
 }

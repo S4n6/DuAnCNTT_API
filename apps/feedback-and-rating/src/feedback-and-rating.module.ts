@@ -4,6 +4,7 @@ import { FeedbackAndRatingService } from './feedback-and-rating.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FEEDBACK_RATING_CONSTANTS } from './constants';
 import { RatingSchema } from './rating.schema';
+import { FeedbackAndRatingGateway } from './feedback-and-rating.gateway';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { RatingSchema } from './rating.schema';
     MongooseModule.forFeature([{ name: 'Rating', schema: RatingSchema }]),
   ],
   controllers: [FeedbackAndRatingController],
-  providers: [FeedbackAndRatingService],
+  providers: [FeedbackAndRatingService, FeedbackAndRatingGateway],
 })
 export class FeedbackAndRatingModule {}
