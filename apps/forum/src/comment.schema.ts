@@ -4,7 +4,7 @@ export interface CommentDocument extends Document {
   content: string;
   authorId: string;
   createdAt: Date;
-  postId: ObjectId;
+  postId?: ObjectId;
   replies?: CommentDocument[];
 }
 
@@ -12,7 +12,7 @@ export const CommentSchema = new Schema<CommentDocument>({
   content: { type: String, required: true },
   authorId: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
-  postId: { type: Schema.Types.ObjectId, required: true },
+  postId: { type: Schema.Types.ObjectId, ref: 'Post' },
   replies: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
 });
 

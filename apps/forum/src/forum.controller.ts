@@ -24,6 +24,15 @@ export class ForumController {
     return response;
   }
 
+  @Post('reply/:id')
+  async createReply(
+    @Param('id') commentId: string,
+    @Body('content') content: string,
+    @Body('authorId') authorId: string,
+  ): Promise<any> {
+    return this.forumService.addReply(commentId, { content, authorId });
+  }
+
   @Post('post/:id/comment')
   async createComment(
     @Param('id') postId: string,

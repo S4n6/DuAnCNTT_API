@@ -78,21 +78,39 @@ export class ForumService {
     limit: number = 10,
   ): Promise<ICommentResponse> {
     const skip = (page - 1) * limit;
-    const post = await this.postModel
-      .findById(postId)
-      .populate({
-        path: 'comments',
-        options: {
-          skip,
-          limit,
-        },
-      })
+    const comments = await this.commentModel
+      .find({ postId })
+      .skip(skip)
+      .limit(limit)
+      .populate('replies')
       .exec();
-    const total = post.comments.length;
+    const total = await this.commentModel.countDocuments({ postId }).exec();
     return new CommentResponse(true, 'Comments fetched successfully', {
-      comments: post.comments,
+      comments,
       total,
       page,
+    });
+  }
+
+  async addReply(
+    commentId: string,
+    data: { content: string; authorId: string },
+  ): Promise<ICommentResponse> {
+    const newReply = new this.commentModel({
+      content: data.content,
+      authorId: data.authorId,
+      createdAt: new Date(),
+      postId: null, // Replies do not need a postId
+    });
+    const savedReply: any = (await newReply.save()) as any;
+    const comment = await this.commentModel.findById(commentId).exec();
+    comment.replies.push(savedReply._id);
+    await comment.save();
+
+    return new CommentResponse(true, 'Reply added successfully', {
+      comments: [savedReply],
+      total: 1,
+      page: 1,
     });
   }
 }

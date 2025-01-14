@@ -14,14 +14,6 @@ export class ForumGateway {
 
   constructor(private readonly forumService: ForumService) {}
 
-  @SubscribeMessage('createComment')
-  async handleCreateComment(
-    @MessageBody() data: { postId: string; content: string; authorId: string },
-  ): Promise<void> {
-    const comment = await this.forumService.createComment(data.postId, data);
-    this.server.emit('commentCreated', comment);
-  }
-
   @SubscribeMessage('getPosts')
   async handleGetPosts(
     @MessageBody() data: { page: number; limit: number },
@@ -34,6 +26,7 @@ export class ForumGateway {
   async handleGetComments(
     @MessageBody() data: { postId: string; page: number; limit: number },
   ): Promise<void> {
+    console.log(data);
     const comments = await this.forumService.getComments(
       data.postId,
       data.page,

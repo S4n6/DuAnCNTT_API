@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { FORUM_CONSTANTS } from './const';
 import { PostSchema } from './post.schema';
 import { CommentSchema } from './comment.schema';
+import { ForumGateway } from './forum.gateway';
 
 @Module({
   imports: [
@@ -21,6 +22,6 @@ import { CommentSchema } from './comment.schema';
     ]),
   ],
   controllers: [ForumController],
-  providers: [ForumService],
+  providers: [ForumService, ForumGateway],
 })
 export class ForumModule {}
