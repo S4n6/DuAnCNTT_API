@@ -4,6 +4,7 @@ import {
   IsNumber,
   IsNotEmpty,
   IsOptional,
+  IsBoolean,
 } from 'class-validator';
 
 export class TicketRequestCreate {
@@ -11,22 +12,18 @@ export class TicketRequestCreate {
   @IsNotEmpty()
   price: number;
 
-  @IsString()
-  @IsNotEmpty()
-  seatNumber: string;
-
-  @IsString()
-  @IsNotEmpty()
-  type: string;
-
   @IsUUID()
   @IsNotEmpty()
   eventId: string;
 
   @IsNotEmpty()
+  @IsString()
   userId: string;
 
   @IsNotEmpty()
-  @IsNotEmpty()
+  @IsBoolean()
   status: boolean;
+
+  @IsOptional()
+  qrCode: Buffer;
 }

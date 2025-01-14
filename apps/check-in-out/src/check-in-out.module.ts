@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CHECK_IN_OUT_CONSTANTS } from './constants';
 import { CheckInOut, CheckInOutSchema } from './check-in-out.schema';
 import { CheckInOutGateway } from './check-in-out.gateway';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { CheckInOutGateway } from './check-in-out.gateway';
     MongooseModule.forFeature([
       { name: CheckInOut.name, schema: CheckInOutSchema },
     ]),
+    HttpModule,
   ],
   controllers: [CheckInOutController],
   providers: [CheckInOutService, CheckInOutGateway],

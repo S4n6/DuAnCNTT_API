@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
 import { CheckInOutService } from './check-in-out.service';
 import { ICheckInOutResponse } from './check-in-out.response';
 import { Response } from 'express';
@@ -16,11 +16,12 @@ export class CheckInOutController {
   async qr(
     @Param('type') type: string,
     @Res() res: Response,
-    @Body() event: object,
+    @Body() event: { eventId: string; userId: string },
   ) {
     const qrCodeDataURL = await this.checkInOutService.generateQRCode(
       type,
-      event,
+      event.eventId,
+      event.userId,
     );
     if (!qrCodeDataURL.success) {
       return res.status(500).send(qrCodeDataURL.message);
@@ -29,23 +30,42 @@ export class CheckInOutController {
     res.send(Buffer.from(qrCodeDataURL.data.split(',')[1], 'base64'));
   }
 
+  @Get('check-in-by-qr-code')
+  async checkInByQRCode(
+    @Query('eventId') eventId: string,
+    @Query('userId') userId: string,
+  ): Promise<ICheckInOutResponse> {
+    return this.checkInOutService.checkInByQRCode(eventId, userId);
+  }
+
+  @Get('check-out-by-qr-code')
+  async checkOutByQRCode(
+    @Query('eventId') eventId: string,
+    @Query('userId') userId: string,
+  ): Promise<ICheckInOutResponse> {
+    return this.checkInOutService.checkOutByQRCode(eventId, userId);
+  }
+
   @Post('check-in')
   async checkIn(
-    @Body() participantInfo: CheckInOutRequest,
+    @Body() payload: { email: string; eventId: string },
   ): Promise<ICheckInOutResponse> {
-    const response = await this.checkInOutService.checkIn(participantInfo);
+    console.log('checkIn::', payload);
+    const response = await this.checkInOutService.checkIn(payload);
     if (response.success) {
-      await this.checkInOutGateway.updateParticipantsCount(
-        participantInfo.eventId,
-      );
+      await this.checkInOutGateway.updateParticipantsCount(payload.eventId);
     }
     return response;
   }
 
   @Post('check-out')
   async checkOut(
-    @Body() participantInfo: CheckInOutRequest,
+    @Body() payload: { email: string; eventId: string },
   ): Promise<ICheckInOutResponse> {
-    return this.checkInOutService.checkOut(participantInfo);
+    const response = await this.checkInOutService.checkOut(payload);
+    if (response.success) {
+      await this.checkInOutGateway.updateParticipantsCount(payload.eventId);
+    }
+    return response;
   }
 }

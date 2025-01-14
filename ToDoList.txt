@@ -1,13 +1,12 @@
 - Tổng số chức năng: 12
 - Chức năng đã hoàn thành: 
-    + 1,2,4 (dang dở tí -- 2, 12)
+    + 1,2,4 (dang dở tí -- 2)
     + 3 9 10 (còn edit và tạo sự kiện tí)
 - Mục tiêu: 
     + 11: tương tác và mạng lưới
+    + 12: rating và khảo sát
     + 5: Thông báo và Nhắc nhở
-    + 6: Quản lý diễn giả và khách mời (CHỉ mời)
-    + 7: Check-in và Check-out
-    + 8: Thống kê giờ ra vào
+    + 6: Quản lý diễn giả và khách mời (mời, hủy ở phía owner, còn accept và hủy ở client --dễ)
+    + 7: Check-in và Check-out (gần done, quét qr code, gắn qr vào ticket)
+    + 8: Thống kê giờ ra vào (đang làm) -- dễ
 
-
-- Còn lại: 5, 6, 7, 8

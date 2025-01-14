@@ -34,6 +34,16 @@ export class SpeakerController {
     return this.speakerService.create(speaker);
   }
 
+  @Put('cancel')
+  async cancel(@Body() payload: {userId: string, eventId: string}): Promise<Speaker> {
+    return this.speakerService.cancel(payload);
+  }
+
+  @Put('accept')
+  async accept(@Body() payload: {userId: string, eventId: string}): Promise<Speaker> {
+    return this.speakerService.accept(payload);
+  }
+
   @Put(':id')
   async update(
     @Param('id') id: string,

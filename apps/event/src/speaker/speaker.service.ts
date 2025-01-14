@@ -31,6 +31,22 @@ export class SpeakerService {
     return this.findOne(id);
   }
 
+  async cancel(payload: { userId: string; eventId: string }): Promise<Speaker> {
+    const speaker = await this.speakerRepository.findOne({
+      where: { userId: payload.userId, eventId: payload.eventId },
+    });
+    speaker.isAccepted = 'canceled';
+    return this.speakerRepository.save(speaker);
+  }
+
+  async accept(payload: { userId: string; eventId: string }): Promise<Speaker> {
+    const speaker = await this.speakerRepository.findOne({
+      where: { userId: payload.userId, eventId: payload.eventId },
+    });
+    speaker.isAccepted = 'accepted';
+    return this.speakerRepository.save(speaker);
+  }
+
   async remove(id: string): Promise<void> {
     await this.speakerRepository.delete(id);
   }

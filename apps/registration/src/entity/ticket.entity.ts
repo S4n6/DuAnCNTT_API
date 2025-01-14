@@ -10,9 +10,6 @@ export class Ticket {
   price: number;
 
   @Column()
-  seatNumber: string;
-
-  @Column()
   type: string;
 
   @Column()
@@ -23,6 +20,9 @@ export class Ticket {
 
   @Column()
   userId: string;
+
+  @Column({ type: 'bytea', nullable: true })
+  qrCode: Buffer;
 
   @ManyToOne(() => Registration, (registration) => registration.tickets)
   registration: Registration;

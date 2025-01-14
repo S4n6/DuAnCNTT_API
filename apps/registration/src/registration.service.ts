@@ -45,11 +45,10 @@ export class RegistrationService {
 
       const ticketPayload: TicketRequestCreate = {
         price: 100,
-        seatNumber: 'A42',
-        type: 'Normal',
         eventId: data.eventId,
         userId: data.userId,
         status: true,
+        qrCode: null,
       };
 
       const ticket: TicketResponse =

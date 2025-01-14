@@ -19,7 +19,7 @@ export class CheckInOutGateway {
     @MessageBody() eventId: string,
   ): Promise<void> {
     const count = await this.checkInOutService.getParticipantsCount(eventId);
-    this.server.emit('participantsCount', { eventId, count });
+    this.server.emit('participantsCount', count);
   }
 
   async updateParticipantsCount(eventId: string): Promise<void> {
