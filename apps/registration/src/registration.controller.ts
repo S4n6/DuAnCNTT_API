@@ -20,6 +20,13 @@ export class RegistrationController {
     return this.registrationService.checkRegistrationOfUser(userId, eventId);
   }
 
+  @Get(':userId')
+  async getRegistrations(
+    @Query('userId') userId: string,
+  ): Promise<RegistrationResponse> {
+    return this.registrationService.getRegistrationsByUserId(userId);
+  }
+
   // @EventPattern('registration_created')
   @Post()
   async createRegistration(

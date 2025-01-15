@@ -41,6 +41,15 @@ export class EventController {
     return res.status(200).send(response);
   }
 
+  @Get('own/:userId')
+  async getOwnEvents(
+    @Param('userId') userId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<EventResponseDto> {
+    return await this.eventService.getOwnEvents(userId, page, limit);
+  }
+
   @Get(':id')
   async getEventById(@Param() id: string): Promise<EventResponseDto> {
     return await this.eventService.getEventById(id);

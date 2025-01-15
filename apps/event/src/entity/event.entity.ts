@@ -23,9 +23,6 @@ export class Event {
   endDate: Date;
 
   @Column()
-  locationId: string;
-
-  @Column()
   ownerId: string;
 
   @Column()
@@ -46,8 +43,11 @@ export class Event {
   @Column({ default: false })
   isVerified: boolean;
 
-  @ManyToOne(() => Location, (location) => location.events)
-  location: Location;
+  @Column()
+  location: string;
+
+  // @ManyToOne(() => Location, (location) => location.events)
+  // location: Location;
 
   @ManyToOne(() => TypeEvent, (type) => type.events)
   type: TypeEvent;

@@ -20,6 +20,31 @@ export class RegistrationService {
     private readonly ticketService: TicketService,
   ) {}
 
+  async getRegistrationsByUserId(
+    userId: string,
+  ): Promise<RegistrationResponse> {
+    try {
+      const registrations = await this.registrationRepository.find({
+        where: { userId },
+      });
+      if (!registrations) {
+        return new RegistrationResponse(false, 'Registrations not found', null);
+      }
+
+      return new RegistrationResponse(
+        true,
+        'Registrations found',
+        registrations,
+      );
+    } catch (error) {
+      return new RegistrationResponse(
+        false,
+        error.message || 'Failed to fetch registrations',
+        null,
+      );
+    }
+  }
+
   async createRegistration(
     data: RegistrationRequestCreate,
   ): Promise<RegistrationResponse> {

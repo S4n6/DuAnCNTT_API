@@ -16,7 +16,7 @@ export class RequestCreateEventDto {
 
   @IsString()
   @IsNotEmpty()
-  locationId: string;
+  location: string;
 
   @IsString()
   @IsNotEmpty()

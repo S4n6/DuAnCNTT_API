@@ -72,6 +72,22 @@ export class EventService {
     });
   }
 
+  async getOwnEvents(
+    userId: string,
+    page: number,
+    limit: number,
+  ): Promise<EventResponseDto> {
+    const [events, total] = await this.eventRepository.findAndCount({
+      where: { ownerId: userId },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+    if (!events.length) {
+      return new EventResponseDto(false, 'No events found', { events: null });
+    }
+    return new EventResponseDto(true, 'Events found', { events, page, total });
+  }
+
   async createEvent(event: RequestCreateEventDto): Promise<EventResponseDto> {
     try {
       const newEvent: Event = await this.eventRepository.save(event);
