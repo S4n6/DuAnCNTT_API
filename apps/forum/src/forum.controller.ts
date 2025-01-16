@@ -30,6 +30,7 @@ export class ForumController {
     @Body('content') content: string,
     @Body('authorId') authorId: string,
   ): Promise<any> {
+    console.log('reply', commentId, content, authorId);
     return this.forumService.addReply(commentId, { content, authorId });
   }
 

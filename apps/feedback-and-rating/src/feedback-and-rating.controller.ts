@@ -29,11 +29,11 @@ export class FeedbackAndRatingController {
   async createRating(@Body() rating: RatingRequest): Promise<IRatingResponse> {
     const response = await this.feedbackAndRatingService.ratingEvent(rating);
     console.log(response);
-    // if (response.success) {
-    //   const updatedRating =
-    //     await this.feedbackAndRatingService.getRatingByEventId(rating.eventId);
-    //   this.feedbackAndRatingGateway.server.emit('ratingUpdate', updatedRating);
-    // }
+    if (response.success) {
+      const updatedRating =
+        await this.feedbackAndRatingService.getRatingByEventId(rating.eventId);
+      this.feedbackAndRatingGateway.server.emit('ratingUpdate', updatedRating);
+    }
     return response;
   }
 }

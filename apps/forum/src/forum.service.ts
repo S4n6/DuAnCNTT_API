@@ -82,7 +82,13 @@ export class ForumService {
       .find({ postId })
       .skip(skip)
       .limit(limit)
-      .populate('replies')
+      .populate({
+        path: 'replies',
+        populate: {
+          path: 'replies',
+          model: 'Comment',
+        },
+      })
       .exec();
     const total = await this.commentModel.countDocuments({ postId }).exec();
     return new CommentResponse(true, 'Comments fetched successfully', {
