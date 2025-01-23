@@ -17,17 +17,22 @@ export class DocumentService {
   ) {}
 
   async getDocumentsByEventId(eventId: string) {
-    return {
-      id: 1,
-      name: 'Document 1',
-      eventId: eventId,
-    };
+    try {
+      const documents = await this.documentModel.find({ eventId });
+      return {
+        success: true,
+        message: 'Documents found',
+        data: documents,
+      };
+    } catch (error) {
+      throw new Error(`Failed to get documents: ${error.message}`);
+    }
   }
 
   async uploadDocument(files: Array<Express.Multer.File>, eventId: string) {
     const uploadedDocuments = [];
     const keyApi =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJaTVQ1cU1UOFdxMHZhaXVSTDVwbCIsImVtYWlsIjoibGVodXluaHBoYXQyODA4QGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczNjc4ODQzNCwiZXhwIjoxNzM2NzkyMDM0fQ.Lmle1NkZX-ePQ4k0Be1hQj8FpjgON3u5Ae9ECZXvdRc';
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJaTVQ1cU1UOFdxMHZhaXVSTDVwbCIsImVtYWlsIjoibGVodXluaHBoYXQyODA4QGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczNzY2MjMzMSwiZXhwIjoxNzM3NjY1OTMxfQ.mruCUB1c_zTp4T7zEIhIBpHR23j7lgaweFdhihEqVKs';
     try {
       for (const file of files) {
         const formData = new FormData();
@@ -56,9 +61,26 @@ export class DocumentService {
         uploadedDocuments.push(savedDocument);
       }
 
-      return uploadedDocuments;
+      return {
+        success: true,
+        message: 'Documents uploaded successfully',
+        data: uploadedDocuments,
+      };
     } catch (error) {
       throw new Error(`Failed to upload documents: ${error.message}`);
+    }
+  }
+
+  async deleteDocuments(documentIds: string[]) {
+    try {
+      await this.documentModel.deleteMany({ _id: { $in: documentIds } });
+      return {
+        success: true,
+        message: 'Documents deleted successfully',
+        data: documentIds,
+      };
+    } catch (error) {
+      throw new Error(`Failed to delete documents: ${error.message}`);
     }
   }
 }

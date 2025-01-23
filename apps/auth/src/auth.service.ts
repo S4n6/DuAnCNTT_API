@@ -108,9 +108,9 @@ export class AuthService implements OnModuleInit {
   async validateOAuthLogin(user: any): Promise<string> {
     const payload = {
       email: user?.user?.email,
-      firstName: user?.user?.firstName,
-      lastName: user?.user?.lastName,
-      picture: user?.user?.picture,
+      fullName: user?.user?.firstName + ' ' + user?.user?.lastName,
+      avatar: user?.user?.picture,
+      role: 'student',
     };
 
     return this.jwtService.sign(payload);

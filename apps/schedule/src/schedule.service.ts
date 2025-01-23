@@ -11,10 +11,10 @@ export class ScheduleService {
     @InjectModel('Schedule') private readonly scheduleModel: Model<Schedule>,
   ) {}
 
-  async getSchedule(eventId: string): Promise<IScheduleResponse> {
+  async getSchedules(eventId: string): Promise<IScheduleResponse> {
     try {
-      const schedule = await this.scheduleModel.findOne({ eventId });
-      return new ScheduleResponse(true, 'Schedule found', schedule);
+      const schedules = await this.scheduleModel.find({ eventId });
+      return new ScheduleResponse(true, 'Schedule found', schedules);
     } catch (e) {
       return new ScheduleResponse(false, e.message, null);
     }
@@ -42,10 +42,10 @@ export class ScheduleService {
     }
   }
 
-  async deleteSchedule(eventId: string): Promise<IScheduleResponse> {
+  async deleteSchedule(ids: string[]): Promise<IScheduleResponse> {
     try {
-      await this.scheduleModel.deleteOne({ eventId });
-      return new ScheduleResponse(true, 'Schedule deleted');
+      await this.scheduleModel.deleteMany({ _id: { $in: ids } });
+      return new ScheduleResponse(true, 'Schedule deleted', null);
     } catch (e) {
       return new ScheduleResponse(false, e.message);
     }

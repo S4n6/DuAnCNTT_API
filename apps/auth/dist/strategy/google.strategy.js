@@ -44,6 +44,7 @@ let GoogleStrategy = class GoogleStrategy extends (0, passport_1.PassportStrateg
                 picture: photos[0].value,
                 accessToken,
             };
+            console.log('user', user);
             const payload = {
                 user,
                 accessToken,

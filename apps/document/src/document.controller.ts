@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -14,12 +15,13 @@ import { DocumentService } from './document.service';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 
-@Controller('/api/document')
+@Controller('/api/document/')
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
   @Get(':eventId')
-  async getDocumentByEventId(eventId: string) {
+  async getDocumentByEventId(@Param('eventId') eventId: string) {
+    console.log('eventId::', eventId);
     return this.documentService.getDocumentsByEventId(eventId);
   }
 
@@ -31,6 +33,14 @@ export class DocumentController {
   ) {
     console.log('files', files);
     const result = await this.documentService.uploadDocument(files, eventId);
+    return result;
+  }
+  
+  @Delete(':documentIds')
+  async deleteDocuments(@Param('documentIds') documentIds: string) {
+    const documentIdsArray = documentIds.split(',');
+    console.log('documentIds', documentIdsArray);
+    const result = await this.documentService.deleteDocuments(documentIdsArray);
     return result;
   }
 }

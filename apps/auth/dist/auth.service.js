@@ -151,9 +151,9 @@ let AuthService = class AuthService {
             var _a, _b, _c, _d;
             const payload = {
                 email: (_a = user === null || user === void 0 ? void 0 : user.user) === null || _a === void 0 ? void 0 : _a.email,
-                firstName: (_b = user === null || user === void 0 ? void 0 : user.user) === null || _b === void 0 ? void 0 : _b.firstName,
-                lastName: (_c = user === null || user === void 0 ? void 0 : user.user) === null || _c === void 0 ? void 0 : _c.lastName,
-                picture: (_d = user === null || user === void 0 ? void 0 : user.user) === null || _d === void 0 ? void 0 : _d.picture,
+                fullName: ((_b = user === null || user === void 0 ? void 0 : user.user) === null || _b === void 0 ? void 0 : _b.firstName) + ' ' + ((_c = user === null || user === void 0 ? void 0 : user.user) === null || _c === void 0 ? void 0 : _c.lastName),
+                avatar: (_d = user === null || user === void 0 ? void 0 : user.user) === null || _d === void 0 ? void 0 : _d.picture,
+                role: 'student',
             };
             return this.jwtService.sign(payload);
         });

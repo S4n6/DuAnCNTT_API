@@ -14,6 +14,7 @@ import { Response } from 'express';
 import { LoginRequestDto } from './auth.request';
 import { UserDto } from './user.dto';
 import { jwtConstants } from './constants';
+
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('/api/auth/')
@@ -49,14 +50,16 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async googleAuth(@Req() req) {}
+  async googleAuth(@Req() req) {
+    console.log('googleAuth...', req);
+  }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const { user } = req;
     const access_token = await this.authService.validateOAuthLogin(user);
-    // return res.redirect(`http://localhost:3000?token=${access_token}`);
+    // return res.redirect(`http://localhost:8081?token=${access_token}`);
     return res.status(200).json({
       success: true,
       message: 'Login successfully',

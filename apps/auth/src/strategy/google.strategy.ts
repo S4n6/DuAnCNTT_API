@@ -29,11 +29,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       picture: photos[0].value,
       accessToken,
     };
+    console.log('user', user);
     const payload = {
       user,
       accessToken,
     };
-    
+
     done(null, payload);
   }
 }

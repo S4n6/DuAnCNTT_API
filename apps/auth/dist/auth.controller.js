@@ -51,7 +51,9 @@ let AuthController = class AuthController {
         });
     }
     googleAuth(req) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('googleAuth...', req);
+        });
     }
     googleAuthRedirect(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

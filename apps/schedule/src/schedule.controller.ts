@@ -11,13 +11,16 @@ import { ScheduleService } from './schedule.service';
 import { IScheduleResponse } from './schedule.response';
 import { ScheduleRequest } from './schedule.request';
 
-@Controller('api/schedule')
+@Controller('api/schedule/')
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
-  @Get('/:eventId')
-  async getSchedule(@Param() eventId: string): Promise<IScheduleResponse> {
-    return this.scheduleService.getSchedule(eventId);
+  @Get(':eventId')
+  async getSchedule(
+    @Param() payload: { eventId: string },
+  ): Promise<IScheduleResponse> {
+    console.log('eventId::', payload.eventId);
+    return this.scheduleService.getSchedules(payload.eventId);
   }
 
   @Post()
@@ -35,10 +38,11 @@ export class ScheduleController {
     return this.scheduleService.updateSchedule(schedule);
   }
 
-  @Delete('/:eventId')
+  @Delete(':scheduleIds')
   async deleteSchedule(
-    @Param('eventId') eventId: string,
+    @Param('scheduleIds') scheduleIds: string,
   ): Promise<IScheduleResponse> {
-    return this.scheduleService.deleteSchedule(eventId);
+    const scheduleIdsArray = scheduleIds.split(',');
+    return this.scheduleService.deleteSchedule(scheduleIdsArray);
   }
 }
