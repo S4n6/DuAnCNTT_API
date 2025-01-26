@@ -8,10 +8,6 @@ import {
 } from 'class-validator';
 
 export class TicketRequestCreate {
-  @IsNumber()
-  @IsNotEmpty()
-  price: number;
-
   @IsUUID()
   @IsNotEmpty()
   eventId: string;
@@ -25,5 +21,5 @@ export class TicketRequestCreate {
   status: boolean;
 
   @IsOptional()
-  qrCode: Buffer;
+  type: string;
 }

@@ -7,10 +7,7 @@ export class Ticket {
   id: string;
 
   @Column()
-  price: number;
-
-  @Column()
-  type: string;
+  type?: string;
 
   @Column()
   eventId: string;
@@ -20,9 +17,6 @@ export class Ticket {
 
   @Column()
   userId: string;
-
-  @Column({ type: 'bytea', nullable: true })
-  qrCode: Buffer;
 
   @ManyToOne(() => Registration, (registration) => registration.tickets)
   registration: Registration;

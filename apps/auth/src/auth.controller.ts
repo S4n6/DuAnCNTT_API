@@ -14,7 +14,6 @@ import { Response } from 'express';
 import { LoginRequestDto } from './auth.request';
 import { UserDto } from './user.dto';
 import { jwtConstants } from './constants';
-
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('/api/auth/')
@@ -39,6 +38,7 @@ export class AuthController {
         data: {},
       });
     }
+
     return res.status(200).json({
       success: true,
       message: 'Login successfully',

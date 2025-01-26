@@ -9,6 +9,7 @@ import { Ticket } from './entity/ticket.entity';
 import { postgresConfig } from './config/postgresql.config';
 import { TicketService } from './ticket/ticket.service';
 import { TicketController } from './ticket/ticket.controller';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { TicketController } from './ticket/ticket.controller';
     ]),
     TypeOrmModule.forRoot(postgresConfig),
     TypeOrmModule.forFeature([Registration, Ticket]),
+    HttpModule,
   ],
   controllers: [RegistrationController, TicketController],
   providers: [RegistrationService, TicketService],

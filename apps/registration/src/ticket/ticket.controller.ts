@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   Body,
+  Query,
 } from '@nestjs/common';
 import { TicketService } from './ticket.service';
 import { TicketResponse } from '../response/ticket.response';
@@ -16,13 +17,20 @@ export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
   @Get()
-  findAll(): Promise<TicketResponse> {
-    return this.ticketService.findAll();
+  findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<TicketResponse> {
+    return this.ticketService.findAll(page, limit);
   }
 
   @Get('userId/:userId')
-  findByUserId(@Param('userId') userId: string): Promise<TicketResponse> {
-    return this.ticketService.findByUserId(userId);
+  findByUserId(
+    @Param('userId') userId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<TicketResponse> {
+    return this.ticketService.findByUserId(userId, page, limit);
   }
 
   @Get(':id')

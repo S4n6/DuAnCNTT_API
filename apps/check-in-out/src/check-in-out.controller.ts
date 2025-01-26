@@ -12,14 +12,12 @@ export class CheckInOutController {
     private readonly checkInOutGateway: CheckInOutGateway,
   ) {}
 
-  @Post('qr/:type')
-  async qr(
-    @Param('type') type: string,
+  @Post('qr')
+  async createQr(
     @Res() res: Response,
     @Body() event: { eventId: string; userId: string },
   ) {
     const qrCodeDataURL = await this.checkInOutService.generateQRCode(
-      type,
       event.eventId,
       event.userId,
     );

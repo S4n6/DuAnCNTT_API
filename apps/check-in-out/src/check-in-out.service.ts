@@ -19,14 +19,11 @@ export class CheckInOutService {
   ) {}
 
   async generateQRCode(
-    type: string,
     eventId: string,
     userId: string,
   ): Promise<ICheckInOutResponse> {
     try {
-      const urlCheckIn = 'http://127.0.0.1:5500/UI/checkIn.html';
-      const urlCheckOut = 'http://127.0.0.1:5500/UI/checkOut.html';
-      const url = type === 'check-in' ? urlCheckIn : urlCheckOut;
+      const url = 'http://localhost:3004/api/check-in-out/check-in-by-qr-code';
       const qrCode = await QRCode.toDataURL(
         url + '?eventId=' + eventId + '&userId=' + userId,
       );

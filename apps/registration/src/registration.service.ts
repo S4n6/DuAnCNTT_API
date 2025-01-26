@@ -11,6 +11,7 @@ import { TicketService } from './ticket/ticket.service';
 import { TicketRequestCreate } from './request/ticket.request';
 import { TicketResponse } from './response/ticket.response';
 import { RegistrationResponse } from './response/registration.response';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class RegistrationService {
@@ -18,6 +19,7 @@ export class RegistrationService {
     @InjectRepository(Registration)
     private registrationRepository: Repository<Registration>,
     private readonly ticketService: TicketService,
+    private readonly httpService: HttpService,
   ) {}
 
   async getRegistrationsByUserId(
@@ -30,6 +32,10 @@ export class RegistrationService {
       if (!registrations) {
         return new RegistrationResponse(false, 'Registrations not found', null);
       }
+
+      const events = await this.httpService
+        .get('http://localhost:3000/api/events')
+        .toPromise();
 
       return new RegistrationResponse(
         true,
@@ -69,11 +75,10 @@ export class RegistrationService {
       }
 
       const ticketPayload: TicketRequestCreate = {
-        price: 100,
         eventId: data.eventId,
         userId: data.userId,
         status: true,
-        qrCode: null,
+        type: 'normal',
       };
 
       const ticket: TicketResponse =
@@ -82,12 +87,13 @@ export class RegistrationService {
         return new RegistrationResponse(false, ticket.message, null);
       }
 
+      console.log('ticket', ticket);
       const registration = this.registrationRepository.create({
         ...data,
         registrationStatus: true,
-        ticketId: Array.isArray(ticket.data)
-          ? ticket.data[0].id
-          : ticket.data.id,
+        ticketId: Array.isArray(ticket.data.tickets)
+          ? ticket.data.tickets[0].id
+          : ticket.data.tickets.id,
       });
 
       await this.registrationRepository.save(registration);

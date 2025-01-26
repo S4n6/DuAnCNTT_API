@@ -14,7 +14,6 @@ export class EventController {
     @Query('limit') limit: number = 10,
   ): Promise<EventResponseDto> {
     return await this.eventService.getAllEvents(page, limit);
-    
   }
 
   @Get('search')
@@ -51,8 +50,10 @@ export class EventController {
   }
 
   @Get(':id')
-  async getEventById(@Param() id: string): Promise<EventResponseDto> {
-    return await this.eventService.getEventById(id);
+  async getEventById(
+    @Param() payload: { id: string },
+  ): Promise<EventResponseDto> {
+    return await this.eventService.getEventById(payload.id);
   }
 
   @Post()
