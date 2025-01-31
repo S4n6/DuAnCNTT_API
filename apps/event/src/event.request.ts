@@ -1,4 +1,4 @@
-import { IsString, IsDate, IsNotEmpty } from 'class-validator';
+import { IsString, IsDate, IsNotEmpty, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class RequestCreateEventDto {
@@ -28,4 +28,7 @@ export class RequestCreateEventDto {
 
   @IsString({ each: true })
   images: string[];
+
+  @IsOptional()
+  isVerified?: boolean = false;
 }

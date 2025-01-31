@@ -23,6 +23,9 @@ export class User extends Document {
   @Prop()
   avatar?: string;
 
+  @Prop()
+  isActive?: boolean;
+
   @Prop({ type: [{ type: Types.ObjectId, ref: 'TokenDevice' }] })
   tokenDevices: TokenDevice[];
 }

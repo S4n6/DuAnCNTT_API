@@ -34,6 +34,9 @@ let UserController = class UserController {
     getAllUsers() {
         return this.userService.getAllUsers();
     }
+    searchUsers(name, email, isActive, page, limit) {
+        return this.userService.searchUsers(name, email, isActive, page, limit);
+    }
     getAllTokenDevices() {
         return this.userService.getAllTokenDevices();
     }
@@ -50,7 +53,8 @@ let UserController = class UserController {
     getUserByPhoneNumber(phoneNumber) {
         return this.userService.getUserByPhoneNumber(phoneNumber);
     }
-    getUserById(id) {
+    getUserById(id, token) {
+        console.log('get user by id:', id);
         return this.userService.getUserById(id);
     }
     createUserByEmail(user) {
@@ -99,6 +103,17 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getAllUsers", null);
 __decorate([
+    (0, common_1.Get)('search'),
+    __param(0, (0, common_1.Query)('name')),
+    __param(1, (0, common_1.Query)('email')),
+    __param(2, (0, common_1.Query)('isActive')),
+    __param(3, (0, common_1.Query)('page')),
+    __param(4, (0, common_1.Query)('limit')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Boolean, Number, Number]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "searchUsers", null);
+__decorate([
     (0, common_1.Get)('tokenDevice'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -133,8 +148,10 @@ __decorate([
 ], UserController.prototype, "getUserByPhoneNumber", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Query)('token')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUserById", null);
 __decorate([
@@ -152,7 +169,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "createTokenDevice", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
+    (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),

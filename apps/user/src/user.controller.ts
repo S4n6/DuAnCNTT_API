@@ -25,6 +25,17 @@ export class UserController {
     return this.userService.getAllUsers();
   }
 
+  @Get('search')
+  searchUsers(
+    @Query('name') name: string,
+    @Query('email') email: string,
+    @Query('isActive') isActive: boolean,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ): Promise<UserResponseDto> {
+    return this.userService.searchUsers(name, email, isActive, page, limit);
+  }
+
   @Get('tokenDevice')
   getAllTokenDevices(): Promise<object> {
     return this.userService.getAllTokenDevices();
@@ -54,7 +65,11 @@ export class UserController {
   }
 
   @Get(':id')
-  getUserById(id: ObjectId): Promise<UserResponseDto> {
+  getUserById(
+    @Param('id') id: ObjectId,
+    @Query('token') token: string,
+  ): Promise<UserResponseDto> {
+    console.log('get user by id:', id);
     return this.userService.getUserById(id);
   }
 
@@ -64,14 +79,6 @@ export class UserController {
     const userCreated = await this.userService.createUserByEmail(user);
     return userCreated;
   }
-
-  // @Post('createUserByPhoneNumber')
-  // async createUserByPhoneNumber(
-  //   @Body() user: UserDto,
-  // ): Promise<UserResponseDto> {
-  //   const userCreated = await this.userService.createUserByPhoneNumber(user);
-  //   return userCreated;
-  // }
 
   @Post('tokenDevice')
   async createTokenDevice(
@@ -84,7 +91,7 @@ export class UserController {
     return userCreated;
   }
 
-  @Patch(':id')
+  @Put(':id')
   async updateUser(
     @Body() user: UserDto,
     @Param('id') id: ObjectId,

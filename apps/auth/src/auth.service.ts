@@ -39,7 +39,7 @@ export class AuthService implements OnModuleInit {
       return null;
     }
     return {
-      user: user.data,
+      user: user.data.users,
       access_token,
     };
   }
@@ -93,16 +93,21 @@ export class AuthService implements OnModuleInit {
   ): Promise<any> {
     if (email) {
       const user = await this.userService
-        .validateUserByEmail({ email, password })
+        .validateUserByEmail({
+          email,
+          password,
+        })
         .toPromise();
+      console.log('user validata::', user);
       return user;
     }
-    if (phoneNumber) {
-      const user = await this.userService
-        .validateUserByPhoneNumber({ phoneNumber, password })
-        .toPromise();
-      return user;
-    }
+
+    // if (phoneNumber) {
+    //   const user = await this.userService
+    //     .validateUserByPhoneNumber({ phoneNumber, password })
+    //     .toPromise();
+    //   return user;
+    // }
   }
 
   async validateOAuthLogin(user: any): Promise<string> {

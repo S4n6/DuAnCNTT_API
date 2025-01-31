@@ -25,7 +25,6 @@ export class AuthController {
     @Res() res: Response,
     @Body() user: LoginRequestDto,
   ): Promise<any> {
-    console.log('login...', user);
     const access_token = await this.authService.login(
       user.email,
       user.phoneNumber,
@@ -38,7 +37,6 @@ export class AuthController {
         data: {},
       });
     }
-
     return res.status(200).json({
       success: true,
       message: 'Login successfully',
@@ -59,7 +57,6 @@ export class AuthController {
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const { user } = req;
     const access_token = await this.authService.validateOAuthLogin(user);
-    // return res.redirect(`http://localhost:8081?token=${access_token}`);
     return res.status(200).json({
       success: true,
       message: 'Login successfully',

@@ -36,9 +36,17 @@ export class UserResponseType {
 export class UserResponseDto {
   success: boolean;
   message: string;
-  data?: User | User[];
+  data?: {
+    users: User | User[];
+    page?: number;
+    total?: number;
+  };
 
-  constructor(success: boolean, message: string, data?: User | User[]) {
+  constructor(
+    success: boolean,
+    message: string,
+    data?: { users: User | User[]; page?: number; total?: number },
+  ) {
     this.success = success;
     this.message = message;
     this.data = data;

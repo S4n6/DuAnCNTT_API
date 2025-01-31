@@ -23,16 +23,71 @@ export class UserService {
     if (!users) {
       return new UserResponseDto(false, 'Users not found', null);
     }
-    return new UserResponseDto(true, 'Users found', users);
+    return new UserResponseDto(true, 'Users found', {
+      users,
+      total: users.length,
+    });
   }
 
-  async getUserByName(name: string): Promise<UserResponseDto> {
+  async getUserByName(
+    name: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<UserResponseDto> {
     console.log('name:', name);
-    const users = await this.userModel.find({ fullName: { $regex: name, $options: 'i' } });
+    const query = { fullName: { $regex: name, $options: 'i' } };
+    const users = await this.userModel
+      .find(query)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
     if (!users || users.length === 0) {
       return new UserResponseDto(false, 'User not found');
     }
-    return new UserResponseDto(true, 'User found', users);
+
+    const total = await this.userModel.countDocuments(query);
+
+    return new UserResponseDto(true, 'User found', {
+      users,
+      total,
+      page,
+    });
+  }
+
+  async searchUsers(
+    name?: string,
+    email?: string,
+    isActive?: boolean,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<UserResponseDto> {
+    const query: any = {};
+    if (name) {
+      query.fullName = { $regex: name, $options: 'i' };
+    }
+    if (email) {
+      query.email = email;
+    }
+    if (isActive) {
+      query.isActive = isActive;
+    }
+
+    const users = await this.userModel
+      .find(query)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    if (!users || users.length === 0) {
+      return new UserResponseDto(false, 'No users found');
+    }
+
+    const total = await this.userModel.countDocuments(query);
+
+    return new UserResponseDto(true, 'Users found', {
+      users,
+      total,
+      page,
+    });
   }
 
   async getAllTokenDevices(): Promise<UserResponseDto> {
@@ -65,7 +120,9 @@ export class UserService {
     if (!user) {
       return new UserResponseDto(false, 'User not found');
     }
-    return new UserResponseDto(true, 'User found', user);
+    return new UserResponseDto(true, 'User found', {
+      users: user,
+    });
   }
 
   async getUserByEmail(email: string): Promise<UserResponseDto> {
@@ -73,7 +130,9 @@ export class UserService {
     if (!user) {
       return new UserResponseDto(false, 'User not found');
     }
-    return new UserResponseDto(true, 'User found', user);
+    return new UserResponseDto(true, 'User found', {
+      users: user,
+    });
   }
 
   async createUserByPhoneNumber(user: UserDto): Promise<UserResponseDto> {
@@ -96,11 +155,9 @@ export class UserService {
       );
       const createdUser = new this.userModel(user);
       await createdUser.save();
-      return new UserResponseDto(
-        true,
-        'User created successfully',
-        createdUser,
-      );
+      return new UserResponseDto(true, 'User created successfully', {
+        users: createdUser,
+      });
     } catch (error) {
       console.error('Error creating user:', error);
       return new UserResponseDto(false, 'User creation failed');
@@ -133,11 +190,9 @@ export class UserService {
 
       Object.assign(existingUser, user);
       await existingUser.save();
-      return new UserResponseDto(
-        true,
-        'User updated successfully',
-        existingUser,
-      );
+      return new UserResponseDto(true, 'User updated successfully', {
+        users: existingUser,
+      });
     } catch (error) {
       console.error('Error updating user:', error);
       return new UserResponseDto(false, 'User update failed');
@@ -164,7 +219,9 @@ export class UserService {
     if (!user) {
       return new UserResponseDto(false, 'User not found');
     }
-    return new UserResponseDto(true, 'User found', user);
+    return new UserResponseDto(true, 'User found', {
+      users: user,
+    });
   }
 
   async createUserByEmail(user: UserDto): Promise<UserResponseDto> {
@@ -205,11 +262,9 @@ export class UserService {
       //   );
       // }
 
-      return new UserResponseDto(
-        true,
-        'User created successfully',
-        createdUser,
-      );
+      return new UserResponseDto(true, 'User created successfully', {
+        users: createdUser,
+      });
     } catch (error) {
       console.error('Error creating user:', error);
       return new UserResponseDto(
@@ -219,21 +274,31 @@ export class UserService {
     }
   }
 
-  async validateUserByEmail(data): Promise<UserResponseDto> {
+  async validateUserByEmail(data: {
+    username: string;
+    password: string;
+  }): Promise<UserResponseDto> {
     const secretHashPassword = USER_CONSTANTS.SECRET_HASH_PASSWORD;
     const user = await this.getUserByEmail(data.username);
     if (!user?.success) {
       return new UserResponseDto(false, 'User not found');
     }
-    const userData = user?.data as User;
+
+    const userData = user?.data?.users as unknown as User;
     const isPasswordValid = await bcrypt.compare(
       data.password + secretHashPassword,
       userData.password,
     );
+
     if (!isPasswordValid) {
-      return new UserResponseDto(false, 'Invalid password', userData);
+      return new UserResponseDto(false, 'Invalid password', {
+        users: null,
+      });
     }
-    return new UserResponseDto(true, 'User validated successfully', userData);
+
+    return new UserResponseDto(true, 'User validated successfully', {
+      users: userData,
+    });
   }
 
   async validateUserByPhoneNumber(data): Promise<UserResponseDto> {

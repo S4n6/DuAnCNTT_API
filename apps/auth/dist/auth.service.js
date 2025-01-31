@@ -85,7 +85,7 @@ let AuthService = class AuthService {
                 return null;
             }
             return {
-                user: user.data,
+                user: user.data.users,
                 access_token,
             };
         });
@@ -134,14 +134,12 @@ let AuthService = class AuthService {
         return __awaiter(this, void 0, void 0, function* () {
             if (email) {
                 const user = yield this.userService
-                    .validateUserByEmail({ email, password })
+                    .validateUserByEmail({
+                    email,
+                    password,
+                })
                     .toPromise();
-                return user;
-            }
-            if (phoneNumber) {
-                const user = yield this.userService
-                    .validateUserByPhoneNumber({ phoneNumber, password })
-                    .toPromise();
+                console.log('user validata::', user);
                 return user;
             }
         });

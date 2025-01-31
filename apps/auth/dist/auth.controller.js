@@ -34,7 +34,6 @@ let AuthController = class AuthController {
     }
     login(res, user) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('login...', user);
             const access_token = yield this.authService.login(user.email, user.phoneNumber, user.password);
             if (!access_token) {
                 return res.status(400).json({

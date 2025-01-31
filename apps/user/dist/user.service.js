@@ -76,17 +76,56 @@ let UserService = class UserService {
             if (!users) {
                 return new user_response_1.UserResponseDto(false, 'Users not found', null);
             }
-            return new user_response_1.UserResponseDto(true, 'Users found', users);
+            return new user_response_1.UserResponseDto(true, 'Users found', {
+                users,
+                total: users.length,
+            });
         });
     }
-    getUserByName(name) {
-        return __awaiter(this, void 0, void 0, function* () {
+    getUserByName(name_1) {
+        return __awaiter(this, arguments, void 0, function* (name, page = 1, limit = 10) {
             console.log('name:', name);
-            const users = yield this.userModel.find({ fullName: { $regex: name, $options: 'i' } });
+            const query = { fullName: { $regex: name, $options: 'i' } };
+            const users = yield this.userModel
+                .find(query)
+                .skip((page - 1) * limit)
+                .limit(limit);
             if (!users || users.length === 0) {
                 return new user_response_1.UserResponseDto(false, 'User not found');
             }
-            return new user_response_1.UserResponseDto(true, 'User found', users);
+            const total = yield this.userModel.countDocuments(query);
+            return new user_response_1.UserResponseDto(true, 'User found', {
+                users,
+                total,
+                page,
+            });
+        });
+    }
+    searchUsers(name_1, email_1, isActive_1) {
+        return __awaiter(this, arguments, void 0, function* (name, email, isActive, page = 1, limit = 10) {
+            const query = {};
+            if (name) {
+                query.fullName = { $regex: name, $options: 'i' };
+            }
+            if (email) {
+                query.email = email;
+            }
+            if (isActive) {
+                query.isActive = isActive;
+            }
+            const users = yield this.userModel
+                .find(query)
+                .skip((page - 1) * limit)
+                .limit(limit);
+            if (!users || users.length === 0) {
+                return new user_response_1.UserResponseDto(false, 'No users found');
+            }
+            const total = yield this.userModel.countDocuments(query);
+            return new user_response_1.UserResponseDto(true, 'Users found', {
+                users,
+                total,
+                page,
+            });
         });
     }
     getAllTokenDevices() {
@@ -121,7 +160,9 @@ let UserService = class UserService {
             if (!user) {
                 return new user_response_1.UserResponseDto(false, 'User not found');
             }
-            return new user_response_1.UserResponseDto(true, 'User found', user);
+            return new user_response_1.UserResponseDto(true, 'User found', {
+                users: user,
+            });
         });
     }
     getUserByEmail(email) {
@@ -130,7 +171,9 @@ let UserService = class UserService {
             if (!user) {
                 return new user_response_1.UserResponseDto(false, 'User not found');
             }
-            return new user_response_1.UserResponseDto(true, 'User found', user);
+            return new user_response_1.UserResponseDto(true, 'User found', {
+                users: user,
+            });
         });
     }
     createUserByPhoneNumber(user) {
@@ -148,7 +191,9 @@ let UserService = class UserService {
                 user.password = yield bcrypt.hash(user.password + secretHashPassword, salt);
                 const createdUser = new this.userModel(user);
                 yield createdUser.save();
-                return new user_response_1.UserResponseDto(true, 'User created successfully', createdUser);
+                return new user_response_1.UserResponseDto(true, 'User created successfully', {
+                    users: createdUser,
+                });
             }
             catch (error) {
                 console.error('Error creating user:', error);
@@ -181,7 +226,9 @@ let UserService = class UserService {
                 }
                 Object.assign(existingUser, user);
                 yield existingUser.save();
-                return new user_response_1.UserResponseDto(true, 'User updated successfully', existingUser);
+                return new user_response_1.UserResponseDto(true, 'User updated successfully', {
+                    users: existingUser,
+                });
             }
             catch (error) {
                 console.error('Error updating user:', error);
@@ -211,7 +258,9 @@ let UserService = class UserService {
             if (!user) {
                 return new user_response_1.UserResponseDto(false, 'User not found');
             }
-            return new user_response_1.UserResponseDto(true, 'User found', user);
+            return new user_response_1.UserResponseDto(true, 'User found', {
+                users: user,
+            });
         });
     }
     createUserByEmail(user) {
@@ -229,7 +278,9 @@ let UserService = class UserService {
                 user.password = yield bcrypt.hash(user.password + secretHashPassword, salt);
                 const createdUser = new this.userModel(user);
                 yield createdUser.save();
-                return new user_response_1.UserResponseDto(true, 'User created successfully', createdUser);
+                return new user_response_1.UserResponseDto(true, 'User created successfully', {
+                    users: createdUser,
+                });
             }
             catch (error) {
                 console.error('Error creating user:', error);
@@ -239,17 +290,22 @@ let UserService = class UserService {
     }
     validateUserByEmail(data) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const secretHashPassword = constant_1.USER_CONSTANTS.SECRET_HASH_PASSWORD;
             const user = yield this.getUserByEmail(data.username);
             if (!(user === null || user === void 0 ? void 0 : user.success)) {
                 return new user_response_1.UserResponseDto(false, 'User not found');
             }
-            const userData = user === null || user === void 0 ? void 0 : user.data;
+            const userData = (_a = user === null || user === void 0 ? void 0 : user.data) === null || _a === void 0 ? void 0 : _a.users;
             const isPasswordValid = yield bcrypt.compare(data.password + secretHashPassword, userData.password);
             if (!isPasswordValid) {
-                return new user_response_1.UserResponseDto(false, 'Invalid password', userData);
+                return new user_response_1.UserResponseDto(false, 'Invalid password', {
+                    users: null,
+                });
             }
-            return new user_response_1.UserResponseDto(true, 'User validated successfully', userData);
+            return new user_response_1.UserResponseDto(true, 'User validated successfully', {
+                users: userData,
+            });
         });
     }
     validateUserByPhoneNumber(data) {

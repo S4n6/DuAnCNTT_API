@@ -20,7 +20,13 @@ message RequestValidateUserByPhoneNumber {
 message UserResponse {
   string message = 1;
   bool success = 2;
-  UserData data = 3;
+  UserDataWrapper data = 3;
+}
+
+message UserDataWrapper {
+  UserData users = 1;
+  int32 page = 2;
+  int32 total = 3;
 }
 
 message UserData {
