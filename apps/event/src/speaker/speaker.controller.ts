@@ -20,9 +20,14 @@ export class SpeakerController {
   }
 
   @Get('eventId/:eventId')
-    async findAllByEventId(@Param('eventId') eventId: string): Promise<Speaker[]> {
-        return this.speakerService.findAllByEventId(eventId);
-    }
+  async findAllByEventId(@Param('eventId') eventId: string): Promise<Speaker[]> {
+      return this.speakerService.findAllByEventId(eventId);
+  }
+
+  @Get('userId/:userId')
+  async findAllByUserId(@Param('userId') userId: string): Promise<Speaker[]> {
+      return this.speakerService.findAllByUserId(userId);
+  }
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Speaker> {
@@ -34,9 +39,9 @@ export class SpeakerController {
     return this.speakerService.create(speaker);
   }
 
-  @Put('cancel')
-  async cancel(@Body() payload: {userId: string, eventId: string}): Promise<Speaker> {
-    return this.speakerService.cancel(payload);
+  @Put('reject')
+  async reject(@Body() payload: {userId: string, eventId: string}): Promise<Speaker> {
+    return this.speakerService.reject(payload);
   }
 
   @Put('accept')
@@ -50,6 +55,14 @@ export class SpeakerController {
     @Body() speaker: Speaker,
   ): Promise<Speaker> {
     return this.speakerService.update(id, speaker);
+  }
+
+  @Delete('eventId/:eventId/userId/:userId')
+  async removeByEventIdAndUserId(
+    @Param('eventId') eventId: string,
+    @Param('userId') userId: string,
+  ): Promise<void> {
+    return this.speakerService.removeByEventIdAndUserId(eventId, userId);
   }
 
   @Delete(':id')

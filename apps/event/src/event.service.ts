@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { EventResponseDto } from './event.response';
 import { Event } from './entity/event.entity';
 import { RequestCreateEventDto } from './event.request';
+import { console } from 'inspector';
 
 @Injectable()
 export class EventService {

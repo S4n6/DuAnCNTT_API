@@ -21,24 +21,53 @@ export class NotificationService {
     notification: NotificationRequestCreate,
   ): Promise<NotificationResponse> {
     try {
-      const docRef = await this.notificationCollection.add(notification);
+      const notificationCreate: NotificationDto = {
+        id: '',
+        title: notification.title,
+        message: notification.message,
+        userId: notification.userId,
+        createdAt: new Date(),
+        isRead: false,
+      };
+      const docRef = await this.notificationCollection.add(notificationCreate);
       return {
         success: true,
         message: 'Create notification successfully',
-        data: { id: docRef.id, ...notification },
+        data: {
+          notifications: {
+            id: docRef.id,
+            ...notification,
+            createdAt: notificationCreate.createdAt,
+          },
+          total: 1,
+          page: 1,
+        },
       };
     } catch (error) {
       return { success: false, message: error.message, data: null };
     }
   }
 
-  async getAllNotifications(): Promise<NotificationResponse> {
-    const snapshot = await this.notificationCollection.get();
+  async getAllNotifications(
+    page: number,
+    limit: number,
+  ): Promise<NotificationResponse> {
+    const offset = (page - 1) * limit;
+    const snapshot = await this.notificationCollection
+      .orderBy('createdAt', 'desc')
+      .offset(offset)
+      .limit(limit)
+      .get();
+
     if (snapshot.empty) {
       return {
         success: false,
         message: 'No notifications found',
-        data: [],
+        data: {
+          notifications: [],
+          total: 0,
+          page,
+        },
       };
     }
 
@@ -46,36 +75,85 @@ export class NotificationService {
     snapshot.forEach((doc) => {
       notifications.push({ id: doc.id, ...doc.data() });
     });
+
+    const totalSnapshot = await this.notificationCollection.get();
+    const total = totalSnapshot.size;
 
     return {
       success: true,
       message: 'Get all notifications successfully',
-      data: notifications,
+      data: {
+        notifications,
+        total,
+        page,
+      },
     };
   }
 
-  async getUserNotifications(userId: string): Promise<NotificationResponse> {
+  async getUserNotifications(
+    userId: string,
+    page: number,
+    limit: number,
+  ): Promise<NotificationResponse> {
+    const offset = (page - 1) * limit;
+
     const snapshot = await this.notificationCollection
       .where('userId', '==', userId)
+      .orderBy('createdAt', 'desc')
+      .offset(offset)
+      .limit(limit)
       .get();
+
     if (snapshot.empty) {
       return {
         success: false,
         message: 'No notifications found',
-        data: [],
+        data: {
+          notifications: [],
+          total: 0,
+          page,
+        },
       };
     }
 
     const notifications = [];
     snapshot.forEach((doc) => {
-      notifications.push({ id: doc.id, ...doc.data() });
+      notifications.push({
+        ...doc.data(),
+        id: doc.id,
+        createdAt: doc.data().createdAt.toDate(),
+      });
     });
 
-    return new NotificationResponse(
-      true,
-      'Get user notifications successfully',
-      notifications,
-    );
+    const totalSnapshot = await this.notificationCollection
+      .where('userId', '==', userId)
+      .get();
+    const total = totalSnapshot.size;
+
+    return {
+      success: true,
+      message: 'Get user notifications successfully',
+      data: {
+        notifications,
+        total,
+        page,
+      },
+    };
+  }
+
+  async getUnreadNotificationsNumber(userId: string): Promise<object> {
+    const snapshot = await this.notificationCollection
+      .where('userId', '==', userId)
+      .where('isRead', '==', false)
+      .get();
+
+    return {
+      success: true,
+      message: 'Get unread notifications number successfully',
+      data: {
+        unreadNumber: snapshot.size,
+      },
+    };
   }
 
   async sendNotificationToTokenDevice(
@@ -102,11 +180,11 @@ export class NotificationService {
       };
 
       await admin.messaging().send(payload);
-      return new NotificationResponse(
-        true,
-        'Notification sent successfully',
-        message.notification,
-      );
+      return new NotificationResponse(true, 'Notification sent successfully', {
+        notifications: message.notification,
+        total: 1,
+        page: 1,
+      });
     } catch (error) {
       return new NotificationResponse(false, error.message, null);
     }
@@ -124,11 +202,11 @@ export class NotificationService {
         },
         topic,
       });
-      return new NotificationResponse(
-        true,
-        'Notification sent successfully',
-        notification.notification,
-      );
+      return new NotificationResponse(true, 'Notification sent successfully', {
+        notifications: notification.notification,
+        total: 1,
+        page: 1,
+      });
     } catch (error) {
       return new NotificationResponse(false, error.message, null);
     }
@@ -137,11 +215,14 @@ export class NotificationService {
   async markAsRead(notificationId: string): Promise<NotificationResponse> {
     try {
       const docRef = this.notificationCollection.doc(notificationId);
-      await docRef.update({ read: true });
+      await docRef.update({ isRead: true });
       const updatedDoc = await docRef.get();
       return new NotificationResponse(true, 'Mark as read successfully', {
-        id: updatedDoc.id,
-        ...(updatedDoc.data() as NotificationDto),
+        notifications: [
+          { id: updatedDoc.id, ...(updatedDoc.data() as NotificationDto) },
+        ],
+        total: 1,
+        page: 1,
       });
     } catch (error) {
       return new NotificationResponse(false, error.message, null);

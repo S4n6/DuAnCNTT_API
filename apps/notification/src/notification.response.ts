@@ -3,12 +3,20 @@ import { NotificationDto } from './notification.dto';
 export class NotificationResponse {
   success: boolean;
   message: string;
-  data: NotificationDto | NotificationDto[];
+  data: {
+    notifications: NotificationDto | NotificationDto[];
+    total: number;
+    page: number;
+  };
 
   constructor(
     success: boolean,
     message: string,
-    data: NotificationDto | NotificationDto[],
+    data: {
+      notifications: NotificationDto | NotificationDto[];
+      total: number;
+      page: number;
+    },
   ) {
     this.success = success;
     this.message = message;

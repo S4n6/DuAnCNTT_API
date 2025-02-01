@@ -1,4 +1,10 @@
-import { IsString, IsDate, IsNotEmpty, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  IsNumber,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class RequestCreateEventDto {
@@ -17,6 +23,10 @@ export class RequestCreateEventDto {
   @IsString()
   @IsNotEmpty()
   location: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  price: number;
 
   @IsString()
   @IsNotEmpty()

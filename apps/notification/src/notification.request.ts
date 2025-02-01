@@ -26,7 +26,7 @@ export class NotificationRequestCreate {
 
   @IsBoolean()
   @Transform(({ value }) => value ?? false)
-  read: boolean;
+  isRead: boolean;
 }
 
 export class NotificationRequestSend {

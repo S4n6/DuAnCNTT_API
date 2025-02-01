@@ -22,6 +22,10 @@ export class SpeakerService {
     return this.speakerRepository.findOne({ where: { id } });
   }
 
+  async findAllByUserId(userId: string): Promise<Speaker[]> {
+    return this.speakerRepository.find({ where: { userId } });
+  }
+
   async create(speaker: Speaker): Promise<Speaker> {
     return this.speakerRepository.save(speaker);
   }
@@ -31,11 +35,11 @@ export class SpeakerService {
     return this.findOne(id);
   }
 
-  async cancel(payload: { userId: string; eventId: string }): Promise<Speaker> {
+  async reject(payload: { userId: string; eventId: string }): Promise<Speaker> {
     const speaker = await this.speakerRepository.findOne({
       where: { userId: payload.userId, eventId: payload.eventId },
     });
-    speaker.isAccepted = 'canceled';
+    speaker.isAccepted = 'rejected';
     return this.speakerRepository.save(speaker);
   }
 
@@ -49,5 +53,12 @@ export class SpeakerService {
 
   async remove(id: string): Promise<void> {
     await this.speakerRepository.delete(id);
+  }
+
+  async removeByEventIdAndUserId(
+    eventId: string,
+    userId: string,
+  ): Promise<void> {
+    await this.speakerRepository.delete({ eventId, userId });
   }
 }

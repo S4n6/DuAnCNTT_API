@@ -33,7 +33,6 @@ export class EventController {
       locationId,
       typeId,
     );
-
     if (response.data.events === null) {
       return res.status(404).send(response);
     }

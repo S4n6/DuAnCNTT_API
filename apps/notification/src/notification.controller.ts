@@ -1,4 +1,13 @@
-import { Controller, Post, Get, Param, Body, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Param,
+  Body,
+  Patch,
+  Query,
+  Put,
+} from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { NotificationResponse } from './notification.response';
 import {
@@ -12,21 +21,34 @@ export class NotificationController {
 
   @Post()
   async createNotification(
-    @Body('userId') notification: NotificationRequestCreate,
+    @Body() notification: NotificationRequestCreate,
   ): Promise<NotificationResponse> {
     return this.notificationService.createNotification(notification);
   }
 
   @Get()
-  async getAllNotifications(): Promise<NotificationResponse> {
-    return this.notificationService.getAllNotifications();
+  async getAllNotifications(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ): Promise<NotificationResponse> {
+    return this.notificationService.getAllNotifications(page, limit);
+  }
+
+  @Get('/unreadNumber/:userId')
+  async getUnreadNotificationsNumber(
+    @Param('userId') userId: string,
+  ): Promise<object> {
+    return this.notificationService.getUnreadNotificationsNumber(userId);
   }
 
   @Get(':userId')
   async getUserNotifications(
     @Param('userId') userId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
   ): Promise<NotificationResponse> {
-    return this.notificationService.getUserNotifications(userId);
+    console.log('userId', userId);
+    return this.notificationService.getUserNotifications(userId, page, limit);
   }
 
   @Post(':userId')
@@ -40,7 +62,7 @@ export class NotificationController {
     );
   }
 
-  @Patch(':notificationId/read')
+  @Put(':notificationId/read')
   async markAsRead(
     @Param('notificationId') notificationId: string,
   ): Promise<NotificationResponse> {

@@ -16,8 +16,8 @@ export class NotificationDto {
   userId?: string;
 
   @IsDate()
-  createAt: Date;
+  createdAt: Date;
 
   @IsBoolean()
-  read: boolean;
+  isRead: boolean;
 }

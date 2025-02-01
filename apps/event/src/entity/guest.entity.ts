@@ -9,13 +9,19 @@ export class Guest {
   userId: string;
 
   @Column()
-  fullName: string;
+  senderFullName: string;
 
   @Column()
-  avatar: string;
+  senderAvatar: string;
 
   @Column()
   eventId: string;
+
+  @Column()
+  eventName: string;
+
+  @Column()
+  senderId: string;
 
   @Column({ default: 'pending' })
   isAccepted: string;

@@ -18,6 +18,14 @@ export class GuestService {
     return this.guestRepository.findOne({ where: { id } });
   }
 
+  async findAllByEventId(eventId: string): Promise<Guest[]> {
+    return this.guestRepository.find({ where: { eventId } });
+  }
+
+  async findAllByUserId(userId: string): Promise<Guest[]> {
+    return this.guestRepository.find({ where: { userId } });
+  }
+
   async create(guest: Guest): Promise<Guest> {
     return this.guestRepository.save(guest);
   }
@@ -29,5 +37,12 @@ export class GuestService {
 
   async remove(id: string): Promise<void> {
     await this.guestRepository.delete(id);
+  }
+
+  async removeByEventIdAndUserId(
+    eventId: string,
+    userId: string,
+  ): Promise<void> {
+    await this.guestRepository.delete({ eventId, userId });
   }
 }

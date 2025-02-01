@@ -17,6 +17,16 @@ export class GuestController {
     return this.guestService.findOne(id);
   }
 
+  @Get('eventId/:eventId')
+  async findAllByEventId(@Param('eventId') eventId: string): Promise<Guest[]> {
+    return this.guestService.findAllByEventId(eventId);
+  }
+
+  @Get('userId/:userId')
+  async findAllByUserId(@Param('userId') userId: string): Promise<Guest[]> {
+    return this.guestService.findAllByUserId(userId);
+  }
+
   @Post()
   async create(@Body() guest: Guest): Promise<Guest> {
     return this.guestService.create(guest);
@@ -25,6 +35,14 @@ export class GuestController {
   @Put(':id')
   async update(@Param('id') id: string, @Body() guest: Guest): Promise<Guest> {
     return this.guestService.update(id, guest);
+  }
+
+  @Delete('eventId/:eventId/userId/:userId')
+  async removeByEventIdAndUserId(
+    @Param('eventId') eventId: string,
+    @Param('userId') userId: string,
+  ): Promise<void> {
+    return this.guestService.removeByEventIdAndUserId(eventId, userId);
   }
 
   @Delete(':id')
