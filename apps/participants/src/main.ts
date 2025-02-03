@@ -5,5 +5,6 @@ import { PARTICIPANT_CONSTANT } from './constant';
 async function bootstrap() {
   const app = await NestFactory.create(ParticipantsModule);
   await app.listen(PARTICIPANT_CONSTANT.PORT);
+  console.log(`Participants service is running on: ${await app.getUrl()}`);
 }
 bootstrap();

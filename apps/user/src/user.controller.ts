@@ -69,7 +69,6 @@ export class UserController {
     @Param('id') id: ObjectId,
     @Query('token') token: string,
   ): Promise<UserResponseDto> {
-    console.log('get user by id:', id);
     return this.userService.getUserById(id);
   }
 

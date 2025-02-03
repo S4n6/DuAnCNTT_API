@@ -54,7 +54,6 @@ let UserController = class UserController {
         return this.userService.getUserByPhoneNumber(phoneNumber);
     }
     getUserById(id, token) {
-        console.log('get user by id:', id);
         return this.userService.getUserById(id);
     }
     createUserByEmail(user) {
