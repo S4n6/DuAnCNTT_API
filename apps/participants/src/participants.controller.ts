@@ -27,9 +27,7 @@ export class ParticipantsController {
   }
 
   @Get('eventId/:eventId')
-  async findAllByEventId(
-    @Param('eventId') eventId: string,
-  ): Promise<ParticipantResponse> {
+  async findAllByEventId(@Param('eventId') eventId: string): Promise<object> {
     return this.participantsService.findAllByEventId(eventId);
   }
 
@@ -74,6 +72,7 @@ export class ParticipantsController {
   async cancel(
     @Body() payload: { userId: string; eventId: string },
   ): Promise<ParticipantResponse> {
+    console.log('cancel', payload);
     return this.participantsService.cancel(payload);
   }
 

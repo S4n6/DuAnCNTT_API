@@ -44,6 +44,34 @@ export class FeedbackAndRatingService {
     }
   }
 
+  async getRatingStatisticsByEventId(eventId: string): Promise<object> {
+    try {
+      const ratings = await this.ratingModel.find({ eventId }).exec();
+      const total = ratings.length;
+      const average = ratings.reduce(
+        (acc, rating: any) => acc + rating?.rating,
+        0,
+      );
+      console.log('average', average);
+      const averageRating = average / total;
+      const response = {
+        success: true,
+        message: 'Rating statistics fetched successfully',
+        data: {
+          average: averageRating,
+          total,
+        },
+      };
+      return response;
+    } catch (error) {
+      return new RatingResponse(
+        false,
+        error.message || 'Error fetching rating statistics',
+        null,
+      );
+    }
+  }
+
   async sendSurveyEmail(event: FeedbackRequest): Promise<IFeedbackResponse> {
     try {
       // call api email service and send link survey

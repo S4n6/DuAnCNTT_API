@@ -7,12 +7,6 @@ export class Participant extends Document {
   userId: string;
 
   @Prop({ type: String, required: true })
-  senderFullName: string;
-
-  @Prop({ type: String, required: true })
-  senderAvatar: string;
-
-  @Prop({ type: String, required: true })
   eventId: string;
 
   @Prop({ type: String, required: true })

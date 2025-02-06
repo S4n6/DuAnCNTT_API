@@ -37,9 +37,6 @@ let UserController = class UserController {
     searchUsers(name, email, isActive, page, limit) {
         return this.userService.searchUsers(name, email, isActive, page, limit);
     }
-    getAllTokenDevices() {
-        return this.userService.getAllTokenDevices();
-    }
     getTokenDevicesByUserId(userId) {
         return this.userService.getTokenDevicesByUserId(userId);
     }
@@ -112,12 +109,6 @@ __decorate([
     __metadata("design:paramtypes", [String, String, Boolean, Number, Number]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "searchUsers", null);
-__decorate([
-    (0, common_1.Get)('tokenDevice'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], UserController.prototype, "getAllTokenDevices", null);
 __decorate([
     (0, common_1.Get)('tokenDevice/:userId'),
     __param(0, (0, common_1.Param)('userId')),

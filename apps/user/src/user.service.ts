@@ -90,16 +90,6 @@ export class UserService {
     });
   }
 
-  async getAllTokenDevices(): Promise<UserResponseDto> {
-    try {
-      const tokenDevices = await this.tokenDeviceModel.find();
-      return new UserResponseDto(true, 'Token devices found', null);
-    } catch (error) {
-      console.error('Error fetching token devices:', error);
-      return new UserResponseDto(false, 'Failed to fetch token devices');
-    }
-  }
-
   async getTokenDevicesByUserId(userId: ObjectId): Promise<UserResponseDto> {
     try {
       const tokenDevices = await this.tokenDeviceModel

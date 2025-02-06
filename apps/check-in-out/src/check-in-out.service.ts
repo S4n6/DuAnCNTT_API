@@ -54,47 +54,18 @@ export class CheckInOutService {
 
   async getParticipantsCount(eventId: string): Promise<object> {
     const participants = await this.checkInOutModel.find({ eventId });
-    const numberCheckIn = participants.filter(
+    const checkInList = participants.filter(
       (p) => !p.checkOutTime && p.isCheckIn,
-    ).length;
-    const numberCheckOut = participants.filter((p) => p.checkOutTime).length;
+    );
+    const checkOutList = participants.filter((p) => p.checkOutTime);
+    const numberCheckIn = checkInList.length;
+    const numberCheckOut = checkOutList.length;
     return {
       checkIn: numberCheckIn,
       checkOut: numberCheckOut,
+      checkInList,
+      checkOutList,
     };
-  }
-
-  async checkInByQRCode(
-    eventId: string,
-    userId: string,
-  ): Promise<ICheckInOutResponse> {
-    try {
-      const checkInOut = new this.checkInOutModel({
-        eventId,
-        userId,
-        isCheckIn: true,
-        checkInTime: new Date(),
-      });
-      await checkInOut.save();
-      return new CheckInOutResponse(true, 'Check in successfully', null);
-    } catch (err) {
-      return new CheckInOutResponse(false, err.message, null);
-    }
-  }
-
-  async checkOutByQRCode(
-    eventId: string,
-    userId: string,
-  ): Promise<ICheckInOutResponse> {
-    try {
-      await this.checkInOutModel.updateOne(
-        { eventId, userId },
-        { checkOutTime: new Date() },
-      );
-      return new CheckInOutResponse(true, 'Check out successfully', null);
-    } catch (err) {
-      return new CheckInOutResponse(false, err.message, null);
-    }
   }
 
   async checkIn(payload: {

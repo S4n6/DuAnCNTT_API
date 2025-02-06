@@ -36,11 +36,6 @@ export class UserController {
     return this.userService.searchUsers(name, email, isActive, page, limit);
   }
 
-  @Get('tokenDevice')
-  getAllTokenDevices(): Promise<object> {
-    return this.userService.getAllTokenDevices();
-  }
-
   @Get('tokenDevice/:userId')
   getTokenDevicesByUserId(@Param('userId') userId: ObjectId): Promise<object> {
     return this.userService.getTokenDevicesByUserId(userId);
@@ -98,12 +93,6 @@ export class UserController {
     const userUpdated = await this.userService.updateUser(user, id);
     return userUpdated;
   }
-
-  // @Put('tokenDevice')
-  // async updateTokenDevice(@Body() user: UserDto): Promise<UserResponseDto> {
-  //   const userUpdated = await this.userService.updateTokenDevice(user);
-  //   return userUpdated;
-  // }
 
   @Delete(':id')
   async deleteUser(

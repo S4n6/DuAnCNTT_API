@@ -3,12 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Participant } from './schema/participant.schema';
 import { ParticipantResponse } from './dto/participant.response';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class ParticipantsService {
   constructor(
     @InjectModel(Participant.name)
     private readonly participantModel: Model<Participant>,
+    private readonly httpService: HttpService,
   ) {}
 
   async create(participant: Participant): Promise<ParticipantResponse> {
@@ -40,13 +42,47 @@ export class ParticipantsService {
     return response;
   }
 
-  async findAllByEventId(eventId: string): Promise<ParticipantResponse> {
+  async findAllByEventId(eventId: string): Promise<object> {
     const participants = await this.participantModel.find({ eventId }).exec();
-    const response: ParticipantResponse = {
+    const userIds = participants.map((participant) => participant.userId);
+    const senderIds = participants.map((participant) => participant.senderId);
+
+    const userResponses = await Promise.all(
+      userIds.map((userId) =>
+        this.httpService
+          .get(`http://localhost:3001/api/users/${userId}`)
+          .toPromise(),
+      ),
+    );
+
+    const senderResponses = await Promise.all(
+      senderIds.map((senderId) =>
+        this.httpService
+          .get(`http://localhost:3001/api/users/${senderId}`)
+          .toPromise(),
+      ),
+    );
+
+    console.log('userResponses', userResponses[0].data);
+    console.log('senderResponses', senderResponses[0].data);
+
+    const participantsWithUserInfo = participants.map((participant, index) => ({
+      ...participant.toObject(),
+      receiverInfo: {
+        fullName: userResponses[index].data.data.users.fullName,
+        avatar: userResponses[index].data.data.users.avatar,
+      },
+      senderInfo: {
+        fullName: senderResponses[index].data.data.users.fullName,
+        avatar: senderResponses[index].data.data.users.avatar,
+      },
+    }));
+
+    const response = {
       success: true,
       message: 'Participants retrieved successfully',
       data: {
-        participants,
+        participants: participantsWithUserInfo,
         page: 1,
         total: participants.length,
       },

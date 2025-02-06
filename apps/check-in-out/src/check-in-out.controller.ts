@@ -15,6 +15,13 @@ export class CheckInOutController {
     private readonly checkInOutGateway: CheckInOutGateway,
   ) {}
 
+  @Get('statistics/:eventId')
+  async getParticipantsCount(
+    @Param() payload: { eventId: string },
+  ): Promise<object> {
+    return await this.checkInOutService.getParticipantsCount(payload.eventId);
+  }
+
   @Post('qr')
   async getQr(
     @Body() payload: { eventId: string; userId: string; ownerId: string },
@@ -24,23 +31,10 @@ export class CheckInOutController {
       return new CheckInOutResponse(false, 'Invalid request', null);
     }
     const response = await this.checkInOutService.checkInOutByQrCode(payload);
+    if (response.success) {
+      await this.checkInOutGateway.updateParticipantsCount(payload.eventId);
+    }
     return response;
-  }
-
-  @Get('check-in-by-qr-code')
-  async checkInByQRCode(
-    @Query('eventId') eventId: string,
-    @Query('userId') userId: string,
-  ): Promise<ICheckInOutResponse> {
-    return this.checkInOutService.checkInByQRCode(eventId, userId);
-  }
-
-  @Get('check-out-by-qr-code')
-  async checkOutByQRCode(
-    @Query('eventId') eventId: string,
-    @Query('userId') userId: string,
-  ): Promise<ICheckInOutResponse> {
-    return this.checkInOutService.checkOutByQRCode(eventId, userId);
   }
 
   @Post('check-in')

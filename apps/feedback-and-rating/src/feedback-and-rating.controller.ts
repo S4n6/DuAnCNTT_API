@@ -14,8 +14,21 @@ export class FeedbackAndRatingController {
   ) {}
 
   @Get('rating/:eventId')
-  async getRatingByEventId(@Param() eventId: string): Promise<IRatingResponse> {
-    return await this.feedbackAndRatingService.getRatingByEventId(eventId);
+  async getRatingByEventId(
+    @Param() payload: { eventId: string },
+  ): Promise<IRatingResponse> {
+    return await this.feedbackAndRatingService.getRatingByEventId(
+      payload.eventId,
+    );
+  }
+
+  @Get('statistics/:eventId')
+  async getRatingStatisticsByEventId(
+    @Param() payload: { eventId: string },
+  ): Promise<object> {
+    return await this.feedbackAndRatingService.getRatingStatisticsByEventId(
+      payload.eventId,
+    );
   }
 
   @Post('survey')

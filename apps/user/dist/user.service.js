@@ -128,18 +128,6 @@ let UserService = class UserService {
             });
         });
     }
-    getAllTokenDevices() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const tokenDevices = yield this.tokenDeviceModel.find();
-                return new user_response_1.UserResponseDto(true, 'Token devices found', null);
-            }
-            catch (error) {
-                console.error('Error fetching token devices:', error);
-                return new user_response_1.UserResponseDto(false, 'Failed to fetch token devices');
-            }
-        });
-    }
     getTokenDevicesByUserId(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
