@@ -1,6 +1,9 @@
 import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
 import { CheckInOutService } from './check-in-out.service';
-import { ICheckInOutResponse } from './check-in-out.response';
+import {
+  CheckInOutResponse,
+  ICheckInOutResponse,
+} from './check-in-out.response';
 import { Response } from 'express';
 import { CheckInOutRequest } from './check-in-out.request';
 import { CheckInOutGateway } from './check-in-out.gateway';
@@ -13,19 +16,15 @@ export class CheckInOutController {
   ) {}
 
   @Post('qr')
-  async createQr(
-    @Res() res: Response,
-    @Body() event: { eventId: string; userId: string },
-  ) {
-    const qrCodeDataURL = await this.checkInOutService.generateQRCode(
-      event.eventId,
-      event.userId,
-    );
-    if (!qrCodeDataURL.success) {
-      return res.status(500).send(qrCodeDataURL.message);
+  async getQr(
+    @Body() payload: { eventId: string; userId: string; ownerId: string },
+  ): Promise<ICheckInOutResponse> {
+    console.log('getQr::', payload);
+    if (!payload.eventId || !payload.userId || !payload.ownerId) {
+      return new CheckInOutResponse(false, 'Invalid request', null);
     }
-    res.setHeader('Content-Type', 'image/png');
-    res.send(Buffer.from(qrCodeDataURL.data.split(',')[1], 'base64'));
+    const response = await this.checkInOutService.checkInOutByQrCode(payload);
+    return response;
   }
 
   @Get('check-in-by-qr-code')

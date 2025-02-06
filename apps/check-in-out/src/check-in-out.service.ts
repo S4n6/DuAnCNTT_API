@@ -18,16 +18,35 @@ export class CheckInOutService {
     private readonly httpService: HttpService,
   ) {}
 
-  async generateQRCode(
-    eventId: string,
-    userId: string,
-  ): Promise<ICheckInOutResponse> {
+  async checkInOutByQrCode(payload: {
+    eventId: string;
+    userId: string;
+    ownerId: string;
+  }): Promise<ICheckInOutResponse> {
     try {
-      const url = 'http://localhost:3004/api/check-in-out/check-in-by-qr-code';
-      const qrCode = await QRCode.toDataURL(
-        url + '?eventId=' + eventId + '&userId=' + userId,
-      );
-      return new CheckInOutResponse(true, 'QR Code generated', qrCode);
+      const existingCheckInOut = await this.checkInOutModel.findOne({
+        eventId: payload.eventId,
+        userId: payload.userId,
+        isCheckIn: true,
+      });
+
+      if (existingCheckInOut) {
+        await this.checkInOutModel.updateOne(
+          { eventId: payload.eventId, userId: payload.userId },
+          { checkOutTime: new Date(), isCheckIn: false },
+        );
+        return new CheckInOutResponse(true, 'Checked out successfully', null);
+      } else {
+        const checkInOut = new this.checkInOutModel({
+          eventId: payload.eventId,
+          userId: payload.userId,
+          isCheckIn: true,
+          checkInTime: new Date(),
+        });
+
+        await checkInOut.save();
+        return new CheckInOutResponse(true, 'Checked in successfully', null);
+      }
     } catch (err) {
       return new CheckInOutResponse(false, err.message, null);
     }

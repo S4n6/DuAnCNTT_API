@@ -34,7 +34,6 @@ export class RegistrationController {
   ): Promise<RegistrationResponse> {
     console.log('createRegistration::', data);
     return this.registrationService.createRegistration(data);
-    // return this.registrationService.createRegistration(data);
   }
 
   @Post('/cancel')

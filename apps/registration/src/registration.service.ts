@@ -7,9 +7,6 @@ import {
   RegistrationRequestCancel,
   RegistrationRequestCreate,
 } from './request/registration.request';
-import { TicketService } from './ticket/ticket.service';
-import { TicketRequestCreate } from './request/ticket.request';
-import { TicketResponse } from './response/ticket.response';
 import { RegistrationResponse } from './response/registration.response';
 import { HttpService } from '@nestjs/axios';
 
@@ -18,7 +15,6 @@ export class RegistrationService {
   constructor(
     @InjectRepository(Registration)
     private registrationRepository: Repository<Registration>,
-    private readonly ticketService: TicketService,
     private readonly httpService: HttpService,
   ) {}
 
@@ -33,14 +29,24 @@ export class RegistrationService {
         return new RegistrationResponse(false, 'Registrations not found', null);
       }
 
-      const events = await this.httpService
-        .get('http://localhost:3000/api/events')
+      const eventIds = registrations.map((reg) => reg.eventId);
+      const eventsResponse = await this.httpService
+        .post('http://localhost:3002/api/events/ids', { ids: eventIds })
         .toPromise();
+
+      const events = eventsResponse.data.data.events;
+
+      console.log('events', events);
+
+      const registrationsWithEvents = registrations.map((reg) => ({
+        ...reg,
+        event: events.find((event) => event.id === reg.eventId),
+      }));
 
       return new RegistrationResponse(
         true,
         'Registrations found',
-        registrations,
+        registrationsWithEvents,
       );
     } catch (error) {
       return new RegistrationResponse(
@@ -73,27 +79,10 @@ export class RegistrationService {
           isRegistered.data,
         );
       }
-
-      const ticketPayload: TicketRequestCreate = {
-        eventId: data.eventId,
-        userId: data.userId,
-        status: true,
-        type: 'normal',
-      };
-
-      const ticket: TicketResponse =
-        await this.ticketService.create(ticketPayload);
-      if (!ticket.success) {
-        return new RegistrationResponse(false, ticket.message, null);
-      }
-
-      console.log('ticket', ticket);
+     
       const registration = this.registrationRepository.create({
         ...data,
         registrationStatus: true,
-        ticketId: Array.isArray(ticket.data.tickets)
-          ? ticket.data.tickets[0].id
-          : ticket.data.tickets.id,
       });
 
       await this.registrationRepository.save(registration);
@@ -117,14 +106,6 @@ export class RegistrationService {
       });
       if (!registration) {
         return new RegistrationResponse(false, 'Registration not found', null);
-      }
-
-      const ticket: TicketResponse = await this.ticketService.update(
-        registration.ticketId,
-        { status: false },
-      );
-      if (!ticket.success) {
-        return new RegistrationResponse(false, ticket.message, null);
       }
 
       await this.registrationRepository.update(registration.id, {
@@ -170,15 +151,6 @@ export class RegistrationService {
 
       if (!registration) {
         return new RegistrationResponse(false, 'Registration not found', null);
-      }
-
-      const ticket: TicketResponse = await this.ticketService.update(
-        registration.ticketId,
-        { status: false },
-      );
-
-      if (!ticket.success) {
-        return new RegistrationResponse(false, ticket.message, null);
       }
 
       await this.registrationRepository.update(registration.id, {

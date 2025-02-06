@@ -28,6 +28,14 @@ export class EventService {
     });
   }
 
+  async getEventsByIds(ids: string[]): Promise<EventResponseDto> {
+    const events = await this.eventRepository.findByIds(ids);
+    if (!events.length) {
+      return new EventResponseDto(false, 'Events not found', { events: null });
+    }
+    return new EventResponseDto(true, 'Events found', { events });
+  }
+
   async searchEvents(
     name?: string,
     startDate?: Date,

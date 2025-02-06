@@ -5,10 +5,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { rabbitmqConfig } from './config/rabbitmq.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Registration } from './entity/registration.entity';
-import { Ticket } from './entity/ticket.entity';
 import { postgresConfig } from './config/postgresql.config';
-import { TicketService } from './ticket/ticket.service';
-import { TicketController } from './ticket/ticket.controller';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
@@ -21,10 +18,10 @@ import { HttpModule } from '@nestjs/axios';
       },
     ]),
     TypeOrmModule.forRoot(postgresConfig),
-    TypeOrmModule.forFeature([Registration, Ticket]),
+    TypeOrmModule.forFeature([Registration]),
     HttpModule,
   ],
-  controllers: [RegistrationController, TicketController],
-  providers: [RegistrationService, TicketService],
+  controllers: [RegistrationController],
+  providers: [RegistrationService],
 })
 export class RegistrationModule {}

@@ -11,8 +11,8 @@ export class Schedule {
   @Prop({ required: true })
   title: string;
 
-  @Prop({ required: true })
-  description: string;
+  @Prop()
+  description?: string;
 
   @Prop({ required: true })
   startTime: Date;

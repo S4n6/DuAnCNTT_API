@@ -55,6 +55,14 @@ export class EventController {
     return await this.eventService.getEventById(payload.id);
   }
 
+  @Post('ids')
+  async getEventsByIds(
+    @Body() payload: { ids: string[] },
+  ): Promise<EventResponseDto> {
+    console.log('getEventsByIds::', payload.ids);
+    return await this.eventService.getEventsByIds(payload.ids);
+  }
+
   @Post()
   async createEvent(
     @Body() createEventDto: RequestCreateEventDto,

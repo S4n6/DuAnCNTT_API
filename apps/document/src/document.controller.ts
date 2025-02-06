@@ -13,7 +13,6 @@ import {
 import { Express } from 'express';
 import { DocumentService } from './document.service';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 
 @Controller('/api/document/')
 export class DocumentController {
