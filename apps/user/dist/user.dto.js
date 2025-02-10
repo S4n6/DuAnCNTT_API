@@ -10,9 +10,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserDto = void 0;
-const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 class UserDto {
+    constructor() {
+        this.role = 'student';
+    }
 }
 exports.UserDto = UserDto;
 __decorate([
@@ -32,13 +34,12 @@ __decorate([
 ], UserDto.prototype, "phoneNumber", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UserDto.prototype, "password", void 0);
 __decorate([
-    (0, class_transformer_1.Transform)(({ value }) => (value === null || value === void 0 ? void 0 : value.trim()) || 'user'),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], UserDto.prototype, "role", void 0);
 __decorate([

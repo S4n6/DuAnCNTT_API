@@ -184,6 +184,47 @@ let AuthService = class AuthService {
             }
         });
     }
+    loginGgWithToken(token) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
+            try {
+                const decoded = this.jwtService.verify(token);
+                console.log('decoded', decoded);
+                if (decoded) {
+                    const user = {
+                        email: decoded.email,
+                        fullName: decoded.fullName,
+                        avatar: decoded.avatar,
+                        role: 'user',
+                    };
+                    const isUserExist = yield this.httpService
+                        .get(`http://localhost:3001/api/users/email/${user.email}`)
+                        .toPromise();
+                    if (!isUserExist.data.success) {
+                        const response = yield (0, rxjs_1.lastValueFrom)(this.httpService.post('http://localhost:3001/api/users/', user));
+                        const userCreated = response.data;
+                        if (userCreated.success) {
+                            const accessToken = yield this.createAccessToken(user);
+                            delete userCreated.data.users.password;
+                            return { user: userCreated.data.users, accessToken };
+                        }
+                        else {
+                            throw new Error('Error creating user');
+                        }
+                    }
+                    else {
+                        const accessToken = yield this.createAccessToken(user);
+                        delete isUserExist.data.data.users.password;
+                        console.log('accessToken', isUserExist.data);
+                        return { user: (_b = (_a = isUserExist.data) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.users, accessToken };
+                    }
+                }
+            }
+            catch (error) {
+                throw new Error('Token is invalid');
+            }
+        });
+    }
     createAccessToken(user) {
         return __awaiter(this, void 0, void 0, function* () {
             return this.jwtService.sign(user, {

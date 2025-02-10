@@ -14,8 +14,8 @@ export class User extends Document {
   @Prop({ unique: true })
   phoneNumber?: string;
 
-  @Prop({ required: true })
-  password: string;
+  @Prop()
+  password?: string;
 
   @Prop({ required: true })
   role: string;

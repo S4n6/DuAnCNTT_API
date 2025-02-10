@@ -10,18 +10,20 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Rating, RatingDocument } from './rating.schema';
 import { Model } from 'mongoose';
 import { FeedbackAndRatingGateway } from './feedback-and-rating.gateway';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class FeedbackAndRatingService {
   constructor(
     @InjectModel(Rating.name) private ratingModel: Model<RatingDocument>,
+    private readonly httpService: HttpService,
   ) {}
 
   async getRatingByEventId(
     eventId: string,
     page: number = 1,
     limit: number = 10,
-  ): Promise<IRatingResponse> {
+  ): Promise<object> {
     try {
       const skip = (page - 1) * limit;
       const ratings = await this.ratingModel
@@ -30,8 +32,22 @@ export class FeedbackAndRatingService {
         .limit(limit)
         .exec();
       const total = await this.ratingModel.countDocuments({ eventId }).exec();
+
+      const ratingsWithUserInfo = await Promise.all(
+        ratings.map(async (rating) => {
+          const userInfo = await this.httpService
+            .get(`http://localhost:3001/api/users/${rating.userId}`)
+            .toPromise();
+          return {
+            ...rating.toObject(),
+            userAvatar: userInfo.data.data.users.avatar,
+            userFullName: userInfo.data.data.users.fullName,
+          };
+        }),
+      );
+
       return new RatingResponse(true, 'Rating fetched successfully', {
-        ratings,
+        ratings: ratingsWithUserInfo,
         total,
         page,
       });

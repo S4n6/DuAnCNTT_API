@@ -101,13 +101,6 @@ export class AuthService implements OnModuleInit {
       console.log('user validata::', user);
       return user;
     }
-
-    // if (phoneNumber) {
-    //   const user = await this.userService
-    //     .validateUserByPhoneNumber({ phoneNumber, password })
-    //     .toPromise();
-    //   return user;
-    // }
   }
 
   async validateOAuthLogin(user: any): Promise<string> {
@@ -147,6 +140,45 @@ export class AuthService implements OnModuleInit {
         return new AuthResponseDto(false, 'Token is expired', {});
       }
       return new AuthResponseDto(false, 'Token is invalid', {});
+    }
+  }
+
+  async loginGgWithToken(token: string): Promise<object> {
+    try {
+      const decoded = this.jwtService.verify(token);
+      console.log('decoded', decoded);
+      if (decoded) {
+        const user = {
+          email: decoded.email,
+          fullName: decoded.fullName,
+          avatar: decoded.avatar,
+          role: 'user',
+        };
+        const isUserExist = await this.httpService
+          .get(`http://localhost:3001/api/users/email/${user.email}`)
+          .toPromise();
+
+        if (!isUserExist.data.success) {
+          const response = await lastValueFrom(
+            this.httpService.post('http://localhost:3001/api/users/', user),
+          );
+          const userCreated = response.data;
+          if (userCreated.success) {
+            const accessToken = await this.createAccessToken(user);
+            delete userCreated.data.users.password;
+            return { user: userCreated.data.users, accessToken };
+          } else {
+            throw new Error('Error creating user');
+          }
+        } else {
+          const accessToken = await this.createAccessToken(user);
+          delete isUserExist.data.data.users.password;
+          console.log('accessToken', isUserExist.data);
+          return { user: isUserExist.data?.data?.users, accessToken };
+        }
+      }
+    } catch (error) {
+      throw new Error('Token is invalid');
     }
   }
 

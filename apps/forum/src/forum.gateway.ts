@@ -22,7 +22,7 @@ export class ForumGateway {
     this.server.emit('postsFetched', posts);
   }
 
-  @SubscribeMessage('getComments')
+  @SubscribeMessage('getCommentByPostId')
   async handleGetComments(
     @MessageBody() data: { postId: string; page: number; limit: number },
   ): Promise<void> {

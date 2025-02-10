@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { EventModule } from './../src/event.module';
 import { EventService } from './../src/event.service';
 
@@ -21,7 +21,11 @@ describe('EventController (e2e)', () => {
     }),
     updateEvent: jest.fn().mockResolvedValue({
       success: true,
-      data: { id: '1', name: 'Updated Event 1', description: 'Updated Description 1' },
+      data: {
+        id: '1',
+        name: 'Updated Event 1',
+        description: 'Updated Description 1',
+      },
     }),
     deleteEvent: jest.fn().mockResolvedValue({
       success: true,

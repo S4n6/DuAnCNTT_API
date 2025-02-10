@@ -22,13 +22,12 @@ export class UserDto {
   phoneNumber?: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   password: string;
 
-  @Transform(({ value }) => value?.trim() || 'user')
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  role: string;
+  role: string = 'student';
 
   @IsString()
   @IsOptional()

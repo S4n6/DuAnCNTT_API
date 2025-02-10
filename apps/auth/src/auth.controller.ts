@@ -66,6 +66,25 @@ export class AuthController {
     });
   }
 
+  @Post('loginGgwithToken')
+  async verifyToken(@Res() res: Response, @Body() body: { token: string }) {
+    try {
+      console.log('body...', body);
+      const decoded = await this.authService.loginGgWithToken(body.token);
+      return res.status(200).json({
+        success: true,
+        message: 'Token is valid',
+        data: decoded,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token is invalid',
+        error: error.message,
+      });
+    }
+  }
+
   @Post('register')
   async register(@Res() res: Response, @Body() user: UserDto) {
     const result = await this.authService.register(user);

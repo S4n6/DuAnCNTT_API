@@ -13,8 +13,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Set the working directory to the auth service
-WORKDIR /usr/src/app/apps/auth
+# Set the working directory to the document service
+WORKDIR /usr/src/app/apps/document
 
 # Build the NestJS application
 RUN npm run build
@@ -37,8 +37,8 @@ COPY lib/common/user.proto ./lib/common/user.proto
 RUN npm install --only=production
 
 # Expose the ports the app runs on
-EXPOSE 3000
+EXPOSE 3010
 
 # Define the command to run the application
-CMD ["node", "dist/apps/auth/src/main.js"]
+CMD ["node", "dist/apps/document/src/main.js"]
 

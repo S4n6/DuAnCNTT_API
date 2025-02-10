@@ -16,6 +16,45 @@ export class ParticipantsService {
   async create(participant: Participant): Promise<ParticipantResponse> {
     const newParticipant = new this.participantModel(participant);
     const savedParticipant = await newParticipant.save();
+    const roles = {
+      speaker: 'diễn giả',
+      guest: 'khách mời',
+    };
+
+    const emailUser = await this.httpService
+      .get(`http://localhost:3001/api/users/${participant.userId}`)
+      .toPromise();
+
+    this.httpService
+      .post('http://localhost:3007/api/email/notify', {
+        email: {
+          to: emailUser.data?.data?.users?.email,
+          subject: 'Lời mời tham gia sự kiện',
+          text: `Xin chào ${emailUser.data?.data?.users?.fullName}, Bạn được mời tham gia sự kiện ${participant.eventName} với vai trò là ${roles[participant.role]}. 
+          Vui lòng truy cập vào hệ thống để xác nhận tham gia sự kiện.`,
+        },
+      })
+      .toPromise()
+      .catch((error) => {
+        console.error('Failed to send email notification', error);
+      });
+
+    const notificationPayload = {
+      userId: participant.userId,
+      message: `Xin chào ${emailUser.data?.data?.users?.fullName}, 
+      Bạn được mời tham gia sự kiện ${participant.eventName} với vai trò là ${roles[participant.role]}. 
+      Vui lòng truy cập vào hệ thống để xác nhận tham gia sự kiện.`,
+      title: 'Lời mời tham gia sự kiện',
+      isRead: false,
+    };
+
+    this.httpService
+      .post('http://localhost:3002/api/notifications', notificationPayload)
+      .toPromise()
+      .catch((error) => {
+        console.error('Failed to create notification', error);
+      });
+
     const response: ParticipantResponse = {
       success: true,
       message: 'Participant created successfully',
@@ -62,9 +101,6 @@ export class ParticipantsService {
           .toPromise(),
       ),
     );
-
-    console.log('userResponses', userResponses[0].data);
-    console.log('senderResponses', senderResponses[0].data);
 
     const participantsWithUserInfo = participants.map((participant, index) => ({
       ...participant.toObject(),

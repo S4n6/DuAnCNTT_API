@@ -67,6 +67,26 @@ let AuthController = class AuthController {
             });
         });
     }
+    verifyToken(res, body) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                console.log('body...', body);
+                const decoded = yield this.authService.loginGgWithToken(body.token);
+                return res.status(200).json({
+                    success: true,
+                    message: 'Token is valid',
+                    data: decoded,
+                });
+            }
+            catch (error) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Token is invalid',
+                    error: error.message,
+                });
+            }
+        });
+    }
     register(res, user) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this.authService.register(user);
@@ -148,6 +168,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "googleAuthRedirect", null);
+__decorate([
+    (0, common_1.Post)('loginGgwithToken'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "verifyToken", null);
 __decorate([
     (0, common_1.Post)('register'),
     __param(0, (0, common_1.Res)()),

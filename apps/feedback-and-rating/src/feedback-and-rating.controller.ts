@@ -16,7 +16,7 @@ export class FeedbackAndRatingController {
   @Get('rating/:eventId')
   async getRatingByEventId(
     @Param() payload: { eventId: string },
-  ): Promise<IRatingResponse> {
+  ): Promise<object> {
     return await this.feedbackAndRatingService.getRatingByEventId(
       payload.eventId,
     );
