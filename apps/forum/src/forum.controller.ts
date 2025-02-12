@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { ForumService } from './forum.service';
 import { IPostResponse } from './forum.response';
 
@@ -24,6 +24,14 @@ export class ForumController {
     return response;
   }
 
+  @Post('post/verify/:id')
+  async verifyPost(
+    @Param('id') postId: string,
+    @Body('isVerify') isVerify: boolean = true,
+  ): Promise<any> {
+    return this.forumService.verifyPost(postId, isVerify);
+  }
+
   @Post('reply/:id')
   async createReply(
     @Param('id') commentId: string,
@@ -45,10 +53,19 @@ export class ForumController {
 
   @Get('posts')
   async getPosts(
-    @Param('page') page: number = 1,
-    @Param('limit') limit: number = 10,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
   ): Promise<IPostResponse> {
     return this.forumService.getPosts(page, limit);
+  }
+
+  @Get('search')
+  async search(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('title') title: string,
+  ): Promise<IPostResponse> {
+    return this.forumService.search(page, limit, title);
   }
 
   @Get('post/:id/comments')

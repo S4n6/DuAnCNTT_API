@@ -61,10 +61,42 @@ export class ForumService {
     });
   }
 
+  async verifyPost(postId: string, isVerify: boolean): Promise<IPostResponse> {
+    const post = await this.postModel.findById(postId).exec();
+    post.isVerify = isVerify;
+    await post.save();
+    return new PostResponse(true, 'Post verified successfully', {
+      posts: [post],
+      total: 1,
+      page: 1,
+    });
+  }
+
   async getPosts(page: number = 1, limit: number = 10): Promise<IPostResponse> {
     const skip = (page - 1) * limit;
     const posts = await this.postModel.find().skip(skip).limit(limit).exec();
     const total = await this.postModel.countDocuments().exec();
+    return new PostResponse(true, 'Posts fetched successfully', {
+      posts,
+      total,
+      page,
+    });
+  }
+
+  async search(
+    page: number = 1,
+    limit: number = 10,
+    title: string,
+  ): Promise<IPostResponse> {
+    const skip = (page - 1) * limit;
+    const posts = await this.postModel
+      .find({ title: { $regex: title, $options: 'i' } })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+    const total = await this.postModel
+      .countDocuments({ title: { $regex: title, $options: 'i' } })
+      .exec();
     return new PostResponse(true, 'Posts fetched successfully', {
       posts,
       total,
