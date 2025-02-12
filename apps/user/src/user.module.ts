@@ -6,6 +6,7 @@ import { User, UserSchema } from './user.schema';
 import { HttpModule } from '@nestjs/axios';
 import { TokenDevice, TokenDeviceSchema } from './tokenDevice.schema';
 import { USER_CONSTANTS } from './constant';
+import { JwtStrategy } from 'lib/common/auth/jwt.strategy';
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { USER_CONSTANTS } from './constant';
     HttpModule,
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, JwtStrategy],
 })
 export class UserModule {}

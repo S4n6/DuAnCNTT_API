@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { GrpcMethod } from '@nestjs/microservices';
@@ -15,11 +16,15 @@ import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
 import { UserDto } from './user.dto';
 import { UserResponseDto } from './user.response';
 import { ObjectId } from 'mongoose';
+import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
+import { Public } from 'lib/common/decorators/public.decorator';
 
+@UseGuards(JwtAuthGuard)
 @Controller('/api/users/')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Public()
   @Get()
   getAllUsers(): Promise<UserResponseDto> {
     return this.userService.getAllUsers();
@@ -103,6 +108,7 @@ export class UserController {
     return userDeleted;
   }
 
+  @Public()
   @GrpcMethod('UserService', 'ValidateUserByEmail')
   async validateUserByEmail(
     data: { email: string; password: string },
@@ -111,15 +117,5 @@ export class UserController {
   ): Promise<UserResponseDto> {
     const user = { username: data.email, password: data.password };
     return this.userService.validateUserByEmail(user);
-  }
-
-  @GrpcMethod('UserService', 'ValidateUserByPhoneNumber')
-  async validateUserByPhoneNumber(
-    data: { phoneNumber: string; password: string },
-    metadata: Metadata,
-    call: ServerUnaryCall<UserDto, any>,
-  ): Promise<UserResponseDto> {
-    const user = { username: data.phoneNumber, password: data.password };
-    return this.userService.validateUserByPhoneNumber(user);
   }
 }

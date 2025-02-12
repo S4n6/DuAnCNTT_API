@@ -2,11 +2,15 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": false,
-    // "outDir": "../../dist/apps/user"
+    // "outDir": "../../dist/apps/user",
     "outDir": "./dist",
-    "rootDir": "./src",
-    "esModuleInterop": true
+    "rootDir": "../../",
+    "esModuleInterop": true,
+    "paths": {
+      "lib/common": ["../../lib/common/*"],
+      "@lib/common/*": ["../../lib/common/*"]
+    }
   },
-  "include": ["src/**/*"],
+  "include": ["../../lib/**/*", "src/**/*"],
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
 }

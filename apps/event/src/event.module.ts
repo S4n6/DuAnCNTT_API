@@ -8,33 +8,14 @@ import { TypeEventService } from './typeEvent/typeEvent.service';
 import { Event } from './entity/event.entity';
 import { TypeEvent } from './entity/typeEvent.entity';
 import { Location } from './entity/location.entity';
-import { LocationController } from './location/location.controller';
-import { LocationService } from './location/location.service';
-import { Guest } from './entity/guest.entity';
-import { Speaker } from './entity/speaker.entity';
-import { GuestController } from './guest/guest.controller';
-import { SpeakerController } from './speaker/speaker.controller';
-import { GuestService } from './guest/guest.service';
-import { SpeakerService } from './speaker/speaker.service';
+import { JwtStrategy } from 'lib/common/auth/jwt.strategy';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(ormPgConfig),
-    TypeOrmModule.forFeature([Event, TypeEvent, Location, Guest, Speaker]),
+    TypeOrmModule.forFeature([Event, TypeEvent]),
   ],
-  controllers: [
-    EventController,
-    TypeEventController,
-    LocationController,
-    GuestController,
-    SpeakerController,
-  ],
-  providers: [
-    EventService,
-    TypeEventService,
-    LocationService,
-    GuestService,
-    SpeakerService,
-  ],
+  controllers: [EventController, TypeEventController],
+  providers: [EventService, TypeEventService, JwtStrategy],
 })
 export class EventModule {}

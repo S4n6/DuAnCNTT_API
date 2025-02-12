@@ -13,9 +13,6 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Set the working directory to the event service
-WORKDIR /usr/src/app/apps/event
-
 # Build the NestJS application
 RUN npm run build
 
@@ -27,18 +24,13 @@ WORKDIR /usr/src/app
 # Copy the built application from the builder stage
 COPY --from=builder /usr/src/app/dist ./dist
 
-# Copy the package.json and package-lock.json files
-COPY ./package*.json ./
-
-# Copy the .proto file
-COPY lib/common/user.proto ./lib/common/user.proto
-
-# Install production dependencies
-RUN npm install --only=production
+# Copy the lib folder from the builder stage
+COPY --from=builder /usr/src/app/lib ./lib
 
 # Expose the ports the app runs on
 EXPOSE 3002
 
 # Define the command to run the application
-CMD ["node", "dist/apps/event/src/main.js"]
+CMD ["npm", "run", "start:dev event"]
+# CMD ["node", "dist/apps/event"]/src/main.js"]
 

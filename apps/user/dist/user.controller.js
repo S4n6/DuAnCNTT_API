@@ -27,6 +27,8 @@ const user_service_1 = require("./user.service");
 const microservices_1 = require("@nestjs/microservices");
 const grpc_js_1 = require("@grpc/grpc-js");
 const user_dto_1 = require("./user.dto");
+const jwt_auth_guard_1 = require("../../../lib/common/auth/jwt-auth.guard");
+const public_decorator_1 = require("../../../lib/common/decorators/public.decorator");
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -93,6 +95,7 @@ let UserController = class UserController {
 };
 exports.UserController = UserController;
 __decorate([
+    (0, public_decorator_1.Public)(),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -187,6 +190,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "validateUserByPhoneNumber", null);
 exports.UserController = UserController = __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('/api/users/'),
     __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserController);

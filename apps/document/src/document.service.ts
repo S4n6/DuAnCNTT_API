@@ -31,9 +31,17 @@ export class DocumentService {
 
   async uploadDocument(files: Array<Express.Multer.File>, eventId: string) {
     const uploadedDocuments = [];
-    const keyApi =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJaTVQ1cU1UOFdxMHZhaXVSTDVwbCIsImVtYWlsIjoibGVodXluaHBoYXQyODA4QGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczNzY2MjMzMSwiZXhwIjoxNzM3NjY1OTMxfQ.mruCUB1c_zTp4T7zEIhIBpHR23j7lgaweFdhihEqVKs';
     try {
+      const loginResponse = await lastValueFrom(
+        this.httpService.post(
+          'https://nha-trang-sea-food-be.vercel.app/users/login',
+          {
+            email: 'lehuynhphat2808@gmail.com',
+            password: '123456',
+          },
+        ),
+      );
+      const keyApi = loginResponse.data.accessToken;
       for (const file of files) {
         const formData = new FormData();
         const fileName = `${file.originalname}`;

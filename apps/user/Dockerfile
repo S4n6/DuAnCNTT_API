@@ -24,16 +24,13 @@ WORKDIR /usr/src/app
 # Copy the built application from the builder stage
 COPY --from=builder /usr/src/app/dist ./dist
 
-# Copy the package.json and package-lock.json files
-# COPY ./package*.json ./
-
-COPY . .
-
-# Install production dependencies
-RUN npm install --only=production && npm install --save-dev ts-jest jest @types/jest
+# Copy the lib folder from the builder stage
+COPY --from=builder /usr/src/app/lib ./lib
 
 # Expose the ports the app runs on
 EXPOSE 3001
 
 # Define the command to run the application
-CMD ["node", "dist/apps/user/src/main.js"]
+CMD ["npm", "run", "start:dev user"]
+# CMD ["node", "dist/apps/user/src/main.js"]
+
