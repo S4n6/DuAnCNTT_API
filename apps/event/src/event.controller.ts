@@ -11,12 +11,14 @@ import { EventResponseDto } from './event.response';
 import { Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { RequestCreateEventDto } from './event.request';
 import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
+import { Public } from 'lib/common/decorators/public.decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('/api/events/')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
+  @Public()
   @Get()
   async getAllEvents(
     @Query('page') page: number = 1,
