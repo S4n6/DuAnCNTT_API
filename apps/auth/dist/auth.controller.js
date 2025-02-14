@@ -23,200 +23,158 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
+const microservices_1 = require("@nestjs/microservices");
 const auth_service_1 = require("./auth.service");
 const auth_request_1 = require("./auth.request");
 const user_dto_1 = require("./user.dto");
 const constants_1 = require("./constants");
-const passport_1 = require("@nestjs/passport");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    login(res, user) {
+    login(user) {
         return __awaiter(this, void 0, void 0, function* () {
             const access_token = yield this.authService.login(user.email, user.phoneNumber, user.password);
             if (!access_token) {
-                return res.status(400).json({
+                return {
                     success: false,
                     message: 'Login failed',
                     data: {},
-                });
+                };
             }
-            return res.status(200).json({
+            return {
                 success: true,
                 message: 'Login successfully',
                 data: Object.assign({}, access_token),
-            });
+            };
         });
     }
-    googleAuth(req) {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log('googleAuth...', req);
-        });
-    }
-    googleAuthRedirect(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { user } = req;
-            const access_token = yield this.authService.validateOAuthLogin(user);
-            return res.status(200).json({
-                success: true,
-                message: 'Login successfully',
-                data: {
-                    access_token,
-                },
-            });
-        });
-    }
-    verifyToken(res, body) {
+    verifyToken(body) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log('body...', body);
                 const decoded = yield this.authService.loginGgWithToken(body.token);
-                return res.status(200).json({
+                return {
                     success: true,
                     message: 'Token is valid',
                     data: decoded,
-                });
+                };
             }
             catch (error) {
-                return res.status(400).json({
+                return {
                     success: false,
                     message: 'Token is invalid',
                     error: error.message,
-                });
+                };
             }
         });
     }
-    register(res, user) {
+    register(user) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this.authService.register(user);
-            return res.status(result.success ? 200 : 400).json(result);
+            return result;
         });
     }
-    createAccessToken(res, user) {
+    createAccessToken(user) {
         return __awaiter(this, void 0, void 0, function* () {
             const access_token = yield this.authService.createAccessToken(user);
-            return res.status(200).json({
+            return {
                 success: true,
                 message: 'Access token created successfully',
                 data: {
                     access_token,
                 },
-            });
+            };
         });
     }
-    verifyAccessToken(res, token) {
+    verifyAccessToken(token) {
         return __awaiter(this, void 0, void 0, function* () {
             const isVerified = yield this.authService.verifyAccessToken(token);
-            return res.status(200).json({
+            return {
                 success: isVerified,
                 message: isVerified ? 'Access token is valid' : 'Access token is invalid',
-            });
+            };
         });
     }
-    createRefreshToken(res, user) {
+    createRefreshToken(user) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const refresh_token = yield this.authService.createRefreshToken(user === null || user === void 0 ? void 0 : user.userId, constants_1.jwtConstants.JWT_EXPIRES_IN_REFRESH_TOKEN);
-                return res.status(200).json({
+                return {
                     success: true,
                     message: 'Refresh token created successfully',
                     data: {
                         refresh_token,
                     },
-                });
+                };
             }
             catch (error) {
-                return res.status(500).json({
+                return {
                     success: false,
                     message: 'Error creating refresh token',
                     error: error.message,
-                });
+                };
             }
         });
     }
-    validTokenSignUp(res, payload) {
+    validTokenSignUp(payload) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this.authService.validTokenSignUp(payload.token);
-            return res.status(result.success ? 200 : 400).json(result);
+            return result;
         });
     }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Post)('login'),
-    __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Body)()),
+    (0, microservices_1.MessagePattern)('auth.login'),
+    __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, auth_request_1.LoginRequestDto]),
+    __metadata("design:paramtypes", [auth_request_1.LoginRequestDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
-    (0, common_1.Get)('google'),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('google')),
-    __param(0, (0, common_1.Req)()),
+    (0, microservices_1.MessagePattern)('auth.loginGgwithToken'),
+    __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "googleAuth", null);
-__decorate([
-    (0, common_1.Get)('google/callback'),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('google')),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Res)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "googleAuthRedirect", null);
-__decorate([
-    (0, common_1.Post)('loginGgwithToken'),
-    __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "verifyToken", null);
 __decorate([
-    (0, common_1.Post)('register'),
-    __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Body)()),
+    (0, microservices_1.MessagePattern)('auth.register'),
+    __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, user_dto_1.UserDto]),
+    __metadata("design:paramtypes", [user_dto_1.UserDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "register", null);
 __decorate([
-    (0, common_1.Post)('createAccessToken'),
-    __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Body)()),
+    (0, microservices_1.MessagePattern)('auth.createAccessToken'),
+    __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, user_dto_1.UserDto]),
+    __metadata("design:paramtypes", [user_dto_1.UserDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "createAccessToken", null);
 __decorate([
-    (0, common_1.Get)('verifyAccessToken/:token'),
-    __param(0, (0, common_1.Res)()),
+    (0, microservices_1.MessagePattern)('auth.verifyAccessToken'),
+    __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "verifyAccessToken", null);
 __decorate([
-    (0, common_1.Post)('createRefreshToken'),
-    __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Body)()),
+    (0, microservices_1.MessagePattern)('auth.createRefreshToken'),
+    __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "createRefreshToken", null);
 __decorate([
-    (0, common_1.Get)('validTokenSignUp/:token'),
-    __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Param)()),
+    (0, microservices_1.MessagePattern)('auth.validTokenSignUp'),
+    __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "validTokenSignUp", null);
 exports.AuthController = AuthController = __decorate([
-    (0, common_1.Controller)('/api/auth/'),
+    (0, common_1.Controller)(),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map

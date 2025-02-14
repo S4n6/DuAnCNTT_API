@@ -38,6 +38,7 @@ exports.AuthModule = AuthModule = __decorate([
             }),
             microservices_1.ClientsModule.register([
                 Object.assign({ name: 'USER_PACKAGE' }, exports.grpcClientOptions),
+                Object.assign({ name: 'RABBITMQ_SERVICE' }, constants_1.RMQ_CONFIG),
             ]),
             mongoose_1.MongooseModule.forRoot(constants_1.AUTH_CONSTANTS.MONGO_URL),
             mongoose_1.MongooseModule.forFeature([{ name: token_schema_1.Token.name, schema: token_schema_1.TokenSchema }]),

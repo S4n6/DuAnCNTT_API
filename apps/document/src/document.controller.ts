@@ -1,42 +1,31 @@
 import {
-  Body,
   Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Query,
-  UploadedFile,
-  UploadedFiles,
-  UseInterceptors,
 } from '@nestjs/common';
-import { Express } from 'express';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { DocumentService } from './document.service';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
-@Controller('/api/document/')
+@Controller()
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
-  @Get(':eventId')
-  async getDocumentByEventId(@Param('eventId') eventId: string) {
+  @MessagePattern({ cmd: 'getDocumentByEventId' })
+  async getDocumentByEventId(@Payload() data: { eventId: string }) {
+    const { eventId } = data;
     console.log('eventId::', eventId);
     return this.documentService.getDocumentsByEventId(eventId);
   }
 
-  @Post(':eventId')
-  @UseInterceptors(FilesInterceptor('files'))
-  async uploadDocument(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @Param('eventId') eventId: string,
-  ) {
+  @MessagePattern({ cmd: 'uploadDocument' })
+  async uploadDocument(@Payload() data: { files: Array<Express.Multer.File>, eventId: string }) {
+    const { files, eventId } = data;
     console.log('files', files);
     const result = await this.documentService.uploadDocument(files, eventId);
     return result;
   }
   
-  @Delete(':documentIds')
-  async deleteDocuments(@Param('documentIds') documentIds: string) {
+  @MessagePattern({ cmd: 'deleteDocuments' })
+  async deleteDocuments(@Payload() data: { documentIds: string }) {
+    const { documentIds } = data;
     const documentIdsArray = documentIds.split(',');
     console.log('documentIds', documentIdsArray);
     const result = await this.documentService.deleteDocuments(documentIdsArray);

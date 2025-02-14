@@ -11,104 +11,95 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { GrpcMethod } from '@nestjs/microservices';
+import { GrpcMethod, MessagePattern } from '@nestjs/microservices';
 import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
 import { UserDto } from './user.dto';
 import { UserResponseDto } from './user.response';
 import { ObjectId } from 'mongoose';
-import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
-import { Public } from 'lib/common/decorators/public.decorator';
 
-@UseGuards(JwtAuthGuard)
 @Controller('/api/users/')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Public()
-  @Get()
+  @MessagePattern({ cmd: 'getAllUsers' })
   getAllUsers(): Promise<UserResponseDto> {
     return this.userService.getAllUsers();
   }
 
-  @Get('search')
-  searchUsers(
-    @Query('name') name: string,
-    @Query('email') email: string,
-    @Query('isActive') isActive: boolean,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-  ): Promise<UserResponseDto> {
+  @MessagePattern({ cmd: 'searchUsers' })
+  searchUsers(data: {
+    name: string;
+    email: string;
+    isActive: boolean;
+    page: number;
+    limit: number;
+  }): Promise<UserResponseDto> {
+    const { name, email, isActive, page, limit } = data;
     return this.userService.searchUsers(name, email, isActive, page, limit);
   }
 
-  @Get('tokenDevice/:userId')
-  getTokenDevicesByUserId(@Param('userId') userId: ObjectId): Promise<object> {
-    return this.userService.getTokenDevicesByUserId(userId);
+  @MessagePattern({ cmd: 'getTokenDevicesByUserId' })
+  getTokenDevicesByUserId(data: { userId: ObjectId }): Promise<object> {
+    return this.userService.getTokenDevicesByUserId(data.userId);
   }
 
-  @Get('name/:name')
-  getUserByName(@Param('name') name: string): Promise<UserResponseDto> {
-    return this.userService.getUserByName(name);
+  @MessagePattern({ cmd: 'getUserByName' })
+  getUserByName(data: { name: string }): Promise<UserResponseDto> {
+    return this.userService.getUserByName(data.name);
   }
 
-  @Get('email/:email')
-  getUserByEmail(
-    @Param() payload: { email: string },
-  ): Promise<UserResponseDto> {
-    console.log('get user by email:', payload);
-    return this.userService.getUserByEmail(payload.email);
+  @MessagePattern({ cmd: 'getUserByEmail' })
+  getUserByEmail(data: { email: string }): Promise<UserResponseDto> {
+    console.log('get user by email:', data);
+    return this.userService.getUserByEmail(data.email);
   }
 
-  @Get('phoneNumber')
-  getUserByPhoneNumber(phoneNumber: string): Promise<UserResponseDto> {
-    return this.userService.getUserByPhoneNumber(phoneNumber);
+  @MessagePattern({ cmd: 'getUserByPhoneNumber' })
+  getUserByPhoneNumber(data: {
+    phoneNumber: string;
+  }): Promise<UserResponseDto> {
+    return this.userService.getUserByPhoneNumber(data.phoneNumber);
   }
 
-  @Get(':id')
-  getUserById(
-    @Param('id') id: ObjectId,
-    @Query('token') token: string,
-  ): Promise<UserResponseDto> {
-    return this.userService.getUserById(id);
+  @MessagePattern({ cmd: 'getUserById' })
+  getUserById(data: { id: ObjectId; token: string }): Promise<UserResponseDto> {
+    return this.userService.getUserById(data.id);
   }
 
-  @Post()
-  async createUserByEmail(@Body() user: UserDto): Promise<UserResponseDto> {
-    console.log('create user by email:', user);
-    const userCreated = await this.userService.createUserByEmail(user);
+  @MessagePattern({ cmd: 'createUserByEmail' })
+  async createUserByEmail(data: UserDto): Promise<UserResponseDto> {
+    console.log('create user by email:', data);
+    const userCreated = await this.userService.createUserByEmail(data);
     return userCreated;
   }
 
-  @Post('tokenDevice')
-  async createTokenDevice(
-    @Body() payload: { userId: ObjectId; tokenDevice: string },
-  ): Promise<UserResponseDto> {
+  @MessagePattern({ cmd: 'createTokenDevice' })
+  async createTokenDevice(data: {
+    userId: ObjectId;
+    tokenDevice: string;
+  }): Promise<UserResponseDto> {
     const userCreated = await this.userService.createTokenDevice(
-      payload.userId,
-      payload.tokenDevice,
+      data.userId,
+      data.tokenDevice,
     );
     return userCreated;
   }
 
-  @Put(':id')
-  async updateUser(
-    @Body() user: UserDto,
-    @Param('id') id: ObjectId,
-  ): Promise<UserResponseDto> {
-    const userUpdated = await this.userService.updateUser(user, id);
+  @MessagePattern({ cmd: 'updateUser' })
+  async updateUser(data: {
+    user: UserDto;
+    id: ObjectId;
+  }): Promise<UserResponseDto> {
+    const userUpdated = await this.userService.updateUser(data.user, data.id);
     return userUpdated;
   }
 
-  @Delete(':id')
-  async deleteUser(
-    @Body() user: UserDto,
-    @Param('id') id: ObjectId,
-  ): Promise<UserResponseDto> {
-    const userDeleted = await this.userService.deleteUser(id);
+  @MessagePattern({ cmd: 'deleteUser' })
+  async deleteUser(data: { id: ObjectId }): Promise<UserResponseDto> {
+    const userDeleted = await this.userService.deleteUser(data.id);
     return userDeleted;
   }
 
-  @Public()
   @GrpcMethod('UserService', 'ValidateUserByEmail')
   async validateUserByEmail(
     data: { email: string; password: string },

@@ -5,7 +5,8 @@ import { HttpModule } from '@nestjs/axios';
 import { Mongoose } from 'mongoose';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DocumentEvent, DocumentEventSchema } from './document.schema';
-import { DOCUMENTS_CONSTANTS } from './constants';
+import { DOCUMENTS_CONSTANTS, RMQ_CONFIG } from './constants';
+import { ClientsModule } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -15,6 +16,12 @@ import { DOCUMENTS_CONSTANTS } from './constants';
       {
         name: DocumentEvent.name,
         schema: DocumentEventSchema,
+      },
+    ]),
+    ClientsModule.register([
+      {
+        name: 'RABBITMQ_SERVICE',
+        ...RMQ_CONFIG,
       },
     ]),
   ],

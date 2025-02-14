@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
-import { AUTH_CONSTANTS, jwtConstants } from './constants';
+import { AUTH_CONSTANTS, jwtConstants, RMQ_CONFIG } from './constants';
 import { PassportModule } from '@nestjs/passport';
 import { ClientOptions, ClientsModule, Transport } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -29,6 +29,10 @@ export const grpcClientOptions: ClientOptions = {
       {
         name: 'USER_PACKAGE',
         ...grpcClientOptions,
+      },
+      {
+        name: 'RABBITMQ_SERVICE',
+        ...RMQ_CONFIG,
       },
     ]),
     MongooseModule.forRoot(AUTH_CONSTANTS.MONGO_URL),

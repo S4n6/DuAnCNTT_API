@@ -1,30 +1,30 @@
-import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, UseGuards } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CheckInOutService } from './check-in-out.service';
 import {
   CheckInOutResponse,
   ICheckInOutResponse,
 } from './check-in-out.response';
-import { Response } from 'express';
-import { CheckInOutRequest } from './check-in-out.request';
 import { CheckInOutGateway } from './check-in-out.gateway';
+import { JwtStrategy } from 'lib/common/auth/jwt.strategy';
 
-@Controller('/api/check-in-out/')
+@Controller()
 export class CheckInOutController {
   constructor(
     private readonly checkInOutService: CheckInOutService,
     private readonly checkInOutGateway: CheckInOutGateway,
   ) {}
 
-  @Get('statistics/:eventId')
+  @MessagePattern('get_participants_count')
   async getParticipantsCount(
-    @Param() payload: { eventId: string },
+    @Payload() payload: { eventId: string },
   ): Promise<object> {
     return await this.checkInOutService.getParticipantsCount(payload.eventId);
   }
 
-  @Post('qr')
+  @MessagePattern('get_qr')
   async getQr(
-    @Body() payload: { eventId: string; userId: string; ownerId: string },
+    @Payload() payload: { eventId: string; userId: string; ownerId: string },
   ): Promise<ICheckInOutResponse> {
     console.log('getQr::', payload);
     if (!payload.eventId || !payload.userId || !payload.ownerId) {
@@ -37,9 +37,9 @@ export class CheckInOutController {
     return response;
   }
 
-  @Post('check-in')
+  @MessagePattern('check_in')
   async checkIn(
-    @Body() payload: { email: string; eventId: string },
+    @Payload() payload: { email: string; eventId: string },
   ): Promise<ICheckInOutResponse> {
     console.log('checkIn::', payload);
     const response = await this.checkInOutService.checkIn(payload);
@@ -49,9 +49,9 @@ export class CheckInOutController {
     return response;
   }
 
-  @Post('check-out')
+  @MessagePattern('check_out')
   async checkOut(
-    @Body() payload: { email: string; eventId: string },
+    @Payload() payload: { email: string; eventId: string },
   ): Promise<ICheckInOutResponse> {
     const response = await this.checkInOutService.checkOut(payload);
     if (response.success) {

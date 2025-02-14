@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { FeedbackAndRatingService } from './feedback-and-rating.service';
 import { IFeedbackResponse } from './response/feedback.response';
 import { IRatingResponse } from './response/rating.response';
@@ -6,40 +7,40 @@ import { FeedbackRequest } from './request/feedback.request';
 import { RatingRequest } from './request/rating.request';
 import { FeedbackAndRatingGateway } from './feedback-and-rating.gateway';
 
-@Controller('/api/feedbackAndRating/')
+@Controller()
 export class FeedbackAndRatingController {
   constructor(
     private readonly feedbackAndRatingService: FeedbackAndRatingService,
     private readonly feedbackAndRatingGateway: FeedbackAndRatingGateway,
   ) {}
 
-  @Get('rating/:eventId')
+  @MessagePattern('getRatingByEventId')
   async getRatingByEventId(
-    @Param() payload: { eventId: string },
+    @Payload() payload: { eventId: string },
   ): Promise<object> {
     return await this.feedbackAndRatingService.getRatingByEventId(
       payload.eventId,
     );
   }
 
-  @Get('statistics/:eventId')
+  @MessagePattern('getRatingStatisticsByEventId')
   async getRatingStatisticsByEventId(
-    @Param() payload: { eventId: string },
+    @Payload() payload: { eventId: string },
   ): Promise<object> {
     return await this.feedbackAndRatingService.getRatingStatisticsByEventId(
       payload.eventId,
     );
   }
 
-  @Post('survey')
+  @MessagePattern('createSurvey')
   async createSurvey(
-    @Body() survey: FeedbackRequest,
+    @Payload() survey: FeedbackRequest,
   ): Promise<IFeedbackResponse> {
     return await this.feedbackAndRatingService.sendSurveyEmail(survey);
   }
 
-  @Post('rating')
-  async createRating(@Body() rating: RatingRequest): Promise<IRatingResponse> {
+  @MessagePattern('createRating')
+  async createRating(@Payload() rating: RatingRequest): Promise<IRatingResponse> {
     const response = await this.feedbackAndRatingService.ratingEvent(rating);
     console.log(response);
     if (response.success) {

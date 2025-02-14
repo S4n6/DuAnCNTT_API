@@ -1,13 +1,14 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { EmailService } from './email.service';
 import { EmailRequestNotify } from './email.request';
 import { EmailResponse } from './email.response';
+import { MessagePattern } from '@nestjs/microservices';
 
-@Controller('/api/email/')
+@Controller()
 export class EmailController {
   constructor(private readonly emailService: EmailService) {}
 
-  @Post('notify')
+  @MessagePattern({ cmd: 'sendEmail' })
   async sendEmail(
     @Body() payload: { email: EmailRequestNotify },
   ): Promise<EmailResponse> {

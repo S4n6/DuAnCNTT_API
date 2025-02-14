@@ -33,22 +33,17 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AUTH_CONSTANTS = exports.jwtConstants = void 0;
+exports.EVENT_CONSTANTS = void 0;
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-exports.jwtConstants = {
-    JWT_SECRET: process.env.JWT_SECRET,
-    JWT_EXPIRES_IN_REFRESH_TOKEN: process.env.JWT_EXPIRES_IN_REFRESH_TOKEN,
-    JWT_EXPIRES_IN_ACCESS_TOKEN: process.env.JWT_EXPIRES_IN_ACCESS_TOKEN,
-    JWT_REFRESH_TOKEN_HASH_SECRET: process.env.JWT_REFRESH_TOKEN_HASH_SECRET,
-};
-exports.AUTH_CONSTANTS = {
-    PORT: process.env.AUTH_SERVICE_PORT,
-    GRPC_HOST_USER_SERVICE: process.env.GRPC_HOST_USER_SERVICE,
-    SECRET_HASH_PASSWORD: process.env.ENCODE_PASSWORD,
-    GG_CLIENT_ID: process.env.GG_CLIENT_ID,
-    GG_CLIENT_SECRET: process.env.GG_CLIENT_SECRET,
-    GG_CALLBACK_URL: process.env.GG_CALLBACK_URL,
-    MONGO_URL: process.env.MONGO_URL,
+exports.EVENT_CONSTANTS = {
+    POSTGRES_HOST: process.env.POSTGRES_HOST,
+    POSTGRES_PORT: process.env.POSTGRES_PORT,
+    POSTGRES_DATABASE: process.env.POSTGRES_DATABASE_EVENT,
+    POSTGRES_USERNAME: process.env.POSTGRES_USERNAME,
+    POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
+    POSTGRES_URL: process.env.POSTGRES_URL + process.env.POSTGRES_DATABASE_EVENT,
+    PORT: process.env.EVENT_SERVICE_PORT,
+    RABBITMQ_URL: process.env.RABBITMQ_URL,
 };
 //# sourceMappingURL=constants.js.map

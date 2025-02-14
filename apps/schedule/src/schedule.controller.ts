@@ -7,6 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
 import { ScheduleService } from './schedule.service';
 import { IScheduleResponse } from './schedule.response';
 import { ScheduleRequest } from './schedule.request';
@@ -15,32 +16,32 @@ import { ScheduleRequest } from './schedule.request';
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
-  @Get(':eventId')
+  @MessagePattern({ cmd: 'getSchedule' })
   async getSchedule(
-    @Param() payload: { eventId: string },
+    payload: { eventId: string },
   ): Promise<IScheduleResponse> {
     console.log('eventId::', payload.eventId);
     return this.scheduleService.getSchedules(payload.eventId);
   }
 
-  @Post()
+  @MessagePattern({ cmd: 'createSchedule' })
   async createSchedule(
-    @Body() schedule: ScheduleRequest,
+    schedule: ScheduleRequest,
   ): Promise<IScheduleResponse> {
     console.log('schedule::', schedule);
     return this.scheduleService.createSchedule(schedule);
   }
 
-  @Put('')
+  @MessagePattern({ cmd: 'updateSchedule' })
   async updateSchedule(
-    @Body() schedule: ScheduleRequest,
+    schedule: ScheduleRequest,
   ): Promise<IScheduleResponse> {
     return this.scheduleService.updateSchedule(schedule);
   }
 
-  @Delete(':scheduleIds')
+  @MessagePattern({ cmd: 'deleteSchedule' })
   async deleteSchedule(
-    @Param('scheduleIds') scheduleIds: string,
+    scheduleIds: string,
   ): Promise<IScheduleResponse> {
     const scheduleIdsArray = scheduleIds.split(',');
     return this.scheduleService.deleteSchedule(scheduleIdsArray);

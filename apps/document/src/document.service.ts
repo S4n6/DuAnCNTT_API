@@ -6,6 +6,7 @@ import FormData from 'form-data';
 import { InjectModel } from '@nestjs/mongoose';
 import { DocumentEvent } from './document.schema';
 import { Model } from 'mongoose';
+import { Readable } from 'stream';
 
 @Injectable()
 export class DocumentService {
@@ -43,9 +44,21 @@ export class DocumentService {
       );
       const keyApi = loginResponse.data.accessToken;
       for (const file of files) {
+        console.log('keyApi', file);
         const formData = new FormData();
         const fileName = `${file.originalname}`;
-        formData.append('image', file.buffer, fileName);
+        
+        const bufferData = Buffer.isBuffer(file.buffer)
+          ? file.buffer
+          : Buffer.from(file.buffer);
+        const stream = new Readable();
+        stream.push(bufferData);
+        stream.push(null); 
+
+        formData.append('image', stream, {
+          filename: fileName,
+          contentType: file.mimetype,
+        });
 
         const response = await lastValueFrom(
           this.httpService.post(

@@ -9,4 +9,5 @@ export const EVENT_CONSTANTS = {
   POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
   POSTGRES_URL: process.env.POSTGRES_URL + process.env.POSTGRES_DATABASE_EVENT,
   PORT: process.env.EVENT_SERVICE_PORT,
+  RABBITMQ_URL: process.env.RABBITMQ_URL,
 };

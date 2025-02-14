@@ -9,7 +9,8 @@ async function bootstrap() {
   const app = await NestFactory.create(RegistrationModule);
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(REGISTRATION_CONSTANT.PORT);
+  // await app.listen(REGISTRATION_CONSTANT.PORT);
+  // console.log(`Registration service is running on: ${await app.getUrl()}`);
 
   const microserviceOptions: MicroserviceOptions = {
     transport: Transport.RMQ,
@@ -22,6 +23,6 @@ async function bootstrap() {
 
   app.connectMicroservice(microserviceOptions);
   await microservice.listen();
-  console.log(`Registration service is running on: ${await app.getUrl()}`);
+  console.log('Registration service is listening for messages from RabbitMQ');
 }
 bootstrap();

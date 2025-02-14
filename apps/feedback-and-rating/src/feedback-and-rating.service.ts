@@ -9,7 +9,6 @@ import { IRatingResponse, RatingResponse } from './response/rating.response';
 import { InjectModel } from '@nestjs/mongoose';
 import { Rating, RatingDocument } from './rating.schema';
 import { Model } from 'mongoose';
-import { FeedbackAndRatingGateway } from './feedback-and-rating.gateway';
 import { HttpService } from '@nestjs/axios';
 
 @Injectable()

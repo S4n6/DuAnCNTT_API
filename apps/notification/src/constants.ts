@@ -1,3 +1,4 @@
+import { Transport } from '@nestjs/microservices';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -14,4 +15,15 @@ export const firebaseConfig = {
 
 export const NOTIFICATION_CONSTANTS = {
   PORT: process.env.NOTIFICATION_SERVICE_PORT,
+};
+
+export const RMQ_CONFIG = {
+  transport: Transport.RMQ as Transport.RMQ,
+  options: {
+    urls: [process.env.RABBITMQ_URL],
+    queue: 'notification_queue',
+    queueOptions: {
+      durable: false,
+    },
+  },
 };

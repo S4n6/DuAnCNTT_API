@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Query } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { RegistrationService } from './registration.service';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import {
@@ -7,38 +7,38 @@ import {
 } from './request/registration.request';
 import { RegistrationResponse } from './response/registration.response';
 
-@Controller('/api/registration/')
+@Controller()
 export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}
 
-  @Get('isRegistered')
+  @EventPattern('is_registered')
   async isRegistered(
-    @Query('eventId') eventId: string,
-    @Query('userId') userId: string,
+    @Payload() data: { eventId: string; userId: string },
   ): Promise<RegistrationResponse> {
+    const { eventId, userId } = data;
     console.log('isRegistered::', eventId, userId);
     return this.registrationService.checkRegistrationOfUser(userId, eventId);
   }
 
-  @Get(':userId')
+  @EventPattern('get_registrations')
   async getRegistrations(
-    @Query('userId') userId: string,
+    @Payload() data: { userId: string },
   ): Promise<RegistrationResponse> {
+    const { userId } = data;
     return this.registrationService.getRegistrationsByUserId(userId);
   }
 
-  // @EventPattern('registration_created')
-  @Post()
+  @EventPattern('create_registration')
   async createRegistration(
-    @Body() data: RegistrationRequestCreate,
+    @Payload() data: RegistrationRequestCreate,
   ): Promise<RegistrationResponse> {
     console.log('createRegistration::', data);
     return this.registrationService.createRegistration(data);
   }
 
-  @Post('/cancel')
+  @EventPattern('cancel_registration')
   async cancelRegistration(
-    @Body() data: RegistrationRequestCancel,
+    @Payload() data: RegistrationRequestCancel,
   ): Promise<RegistrationResponse> {
     return this.registrationService.cancelRegistration(data);
   }

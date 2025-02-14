@@ -20,7 +20,6 @@ services:
     build:
       context: .
       dockerfile: apps/user/Dockerfile
-      # target: development
     command: npm run start:dev user
     environment:
       - NODE_ENV=production

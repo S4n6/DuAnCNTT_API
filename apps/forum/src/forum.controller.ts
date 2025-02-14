@@ -1,19 +1,24 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ForumService } from './forum.service';
 import { IPostResponse } from './forum.response';
 
-@Controller('/api/forum/')
+@Controller()
 export class ForumController {
   constructor(private readonly forumService: ForumService) {}
 
-  @Post('post')
+  @MessagePattern({ cmd: 'createPost' })
   async createPost(
-    @Body('title') title: string,
-    @Body('content') content: string,
-    @Body('authorId') authorId: string,
-    @Body('avatar') avatar: string,
-    @Body('fullName') fullName: string,
+    @Payload()
+    data: {
+      title: string;
+      content: string;
+      authorId: string;
+      avatar: string;
+      fullName: string;
+    },
   ): Promise<IPostResponse> {
+    const { title, content, authorId, avatar, fullName } = data;
     const response = await this.forumService.createPost({
       title,
       content,
@@ -24,52 +29,50 @@ export class ForumController {
     return response;
   }
 
-  @Post('post/verify/:id')
+  @MessagePattern({ cmd: 'verifyPost' })
   async verifyPost(
-    @Param('id') postId: string,
-    @Body('isVerify') isVerify: boolean = true,
+    @Payload() data: { postId: string; isVerify: boolean },
   ): Promise<any> {
+    const { postId, isVerify } = data;
     return this.forumService.verifyPost(postId, isVerify);
   }
 
-  @Post('reply/:id')
+  @MessagePattern({ cmd: 'createReply' })
   async createReply(
-    @Param('id') commentId: string,
-    @Body('content') content: string,
-    @Body('authorId') authorId: string,
+    @Payload() data: { commentId: string; content: string; authorId: string },
   ): Promise<any> {
+    const { commentId, content, authorId } = data;
     console.log('reply', commentId, content, authorId);
     return this.forumService.addReply(commentId, { content, authorId });
   }
 
-  @Post('post/:id/comment')
+  @MessagePattern({ cmd: 'createComment' })
   async createComment(
-    @Param('id') postId: string,
-    @Body('content') content: string,
-    @Body('authorId') authorId: string,
+    @Payload() data: { postId: string; content: string; authorId: string },
   ): Promise<any> {
+    const { postId, content, authorId } = data;
     return this.forumService.createComment(postId, { content, authorId });
   }
 
-  @Get('posts')
+  @MessagePattern({ cmd: 'getPosts' })
   async getPosts(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
+    @Payload() data: { page: number; limit: number },
   ): Promise<IPostResponse> {
+    const { page, limit } = data;
     return this.forumService.getPosts(page, limit);
   }
 
-  @Get('search')
+  @MessagePattern({ cmd: 'search' })
   async search(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
-    @Query('title') title: string,
+    @Payload() data: { page: number; limit: number; title: string },
   ): Promise<IPostResponse> {
+    const { page, limit, title } = data;
     return this.forumService.search(page, limit, title);
   }
 
-  @Get('post/:id/comments')
-  async getComments(@Param('id') postId: string): Promise<any> {
+  @MessagePattern({ cmd: 'getComments' })
+  async getComments(@Payload() data: { postId: string }): Promise<any> {
+    const { postId } = data;
     return this.forumService.getComments(postId, 1, 10);
   }
 }

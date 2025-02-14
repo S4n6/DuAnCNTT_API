@@ -1,96 +1,87 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Res,
-  Response,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { EventService } from './event.service';
 import { EventResponseDto } from './event.response';
-import { Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { RequestCreateEventDto } from './event.request';
-import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 import { Public } from 'lib/common/decorators/public.decorator';
 
-@UseGuards(JwtAuthGuard)
-@Controller('/api/events/')
+@Controller()
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
-  @Public()
-  @Get()
+  @MessagePattern({ cmd: 'get_all_events' })
   async getAllEvents(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
+    @Payload() data: { page: number; limit: number },
   ): Promise<EventResponseDto> {
+    console.log('getAllEvents::', data);
+    const { page = 1, limit = 10 } = data;
     return await this.eventService.getAllEvents(page, limit);
   }
 
-  @Get('search')
+  @MessagePattern({ cmd: 'search_events' })
   async searchEvents(
-    @Response() res,
-    @Query('name') name?: string,
-    @Query('startDate') startDate?: Date,
-    @Query('endDate') endDate?: Date,
-    @Query('locationId') locationId?: string,
-    @Query('typeId') typeId?: string,
+    @Payload()
+    data: {
+      name?: string;
+      startDate?: Date;
+      endDate?: Date;
+      locationId?: string;
+      typeId?: string;
+    },
   ): Promise<EventResponseDto> {
+    const { name, startDate, endDate, locationId, typeId } = data;
     console.log('searchEvents::', name, startDate, endDate, locationId, typeId);
-    const response = await this.eventService.searchEvents(
+    return await this.eventService.searchEvents(
       name,
       startDate,
       endDate,
       locationId,
       typeId,
     );
-    if (response.data.events === null) {
-      return res.status(404).send(response);
-    }
-    return res.status(200).send(response);
   }
 
-  @Get('own/:userId')
+  @MessagePattern({ cmd: 'get_own_events' })
   async getOwnEvents(
-    @Param('userId') userId: string,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
+    @Payload() data: { userId: string; page: number; limit: number },
   ): Promise<EventResponseDto> {
+    const { userId, page = 1, limit = 10 } = data;
     return await this.eventService.getOwnEvents(userId, page, limit);
   }
 
-  @Get(':id')
+  @MessagePattern({ cmd: 'get_event_by_id' })
   async getEventById(
-    @Param() payload: { id: string },
+    @Payload() data: { id: string },
   ): Promise<EventResponseDto> {
-    return await this.eventService.getEventById(payload.id);
+    return await this.eventService.getEventById(data.id);
   }
 
-  @Post('ids')
+  @MessagePattern({ cmd: 'get_events_by_ids' })
   async getEventsByIds(
-    @Body() payload: { ids: string[] },
+    @Payload() data: { ids: string[] },
   ): Promise<EventResponseDto> {
-    console.log('getEventsByIds::', payload.ids);
-    return await this.eventService.getEventsByIds(payload.ids);
+    console.log('getEventsByIds::', data.ids);
+    return await this.eventService.getEventsByIds(data.ids);
   }
 
-  @Post()
+  @MessagePattern({ cmd: 'create_event' })
   async createEvent(
-    @Body() createEventDto: RequestCreateEventDto,
+    @Payload() createEventDto: RequestCreateEventDto,
   ): Promise<EventResponseDto> {
     return await this.eventService.createEvent(createEventDto);
   }
 
-  @Put(':id')
+  @MessagePattern({ cmd: 'update_event' })
   async updateEvent(
-    @Param('id') id: string,
-    @Body() updateEventDto: RequestCreateEventDto,
+    @Payload() data: { id: string; updateEventDto: RequestCreateEventDto },
   ): Promise<EventResponseDto> {
+    const { id, updateEventDto } = data;
     return await this.eventService.updateEvent(id, updateEventDto);
   }
 
-  @Delete(':id')
-  async deleteEvent(@Param('id') id: string): Promise<EventResponseDto> {
-    return await this.eventService.deleteEvent(id);
+  @MessagePattern({ cmd: 'delete_event' })
+  async deleteEvent(
+    @Payload() data: { id: string },
+  ): Promise<EventResponseDto> {
+    return await this.eventService.deleteEvent(data.id);
   }
 }

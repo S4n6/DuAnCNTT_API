@@ -1,150 +1,109 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthService } from './auth.service';
 import { AuthResponseDto } from './auth.response';
-import { Response } from 'express';
 import { LoginRequestDto } from './auth.request';
 import { UserDto } from './user.dto';
 import { jwtConstants } from './constants';
-import { AuthGuard } from '@nestjs/passport';
 
-@Controller('/api/auth/')
+@Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
-  async login(
-    @Res() res: Response,
-    @Body() user: LoginRequestDto,
-  ): Promise<any> {
+  @MessagePattern('auth.login')
+  async login(@Payload() user: LoginRequestDto): Promise<any> {
     const access_token = await this.authService.login(
       user.email,
       user.phoneNumber,
       user.password,
     );
     if (!access_token) {
-      return res.status(400).json({
+      return {
         success: false,
         message: 'Login failed',
         data: {},
-      });
+      };
     }
-    return res.status(200).json({
+    return {
       success: true,
       message: 'Login successfully',
       data: {
         ...access_token,
       },
-    });
+    };
   }
 
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
-  async googleAuth(@Req() req) {
-    console.log('googleAuth...', req);
-  }
-
-  @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
-  async googleAuthRedirect(@Req() req, @Res() res: Response) {
-    const { user } = req;
-    const access_token = await this.authService.validateOAuthLogin(user);
-    return res.status(200).json({
-      success: true,
-      message: 'Login successfully',
-      data: {
-        access_token,
-      },
-    });
-  }
-
-  @Post('loginGgwithToken')
-  async verifyToken(@Res() res: Response, @Body() body: { token: string }) {
+  @MessagePattern('auth.loginGgwithToken')
+  async verifyToken(@Payload() body: { token: string }) {
     try {
-      console.log('body...', body);
       const decoded = await this.authService.loginGgWithToken(body.token);
-      return res.status(200).json({
+      return {
         success: true,
         message: 'Token is valid',
         data: decoded,
-      });
+      };
     } catch (error) {
-      return res.status(400).json({
+      return {
         success: false,
         message: 'Token is invalid',
         error: error.message,
-      });
+      };
     }
   }
 
-  @Post('register')
-  async register(@Res() res: Response, @Body() user: UserDto) {
+  @MessagePattern('auth.register')
+  async register(@Payload() user: UserDto) {
     const result = await this.authService.register(user);
-    return res.status(result.success ? 200 : 400).json(result);
+    return result;
   }
 
-  // API handle token
-  @Post('createAccessToken')
-  async createAccessToken(@Res() res: Response, @Body() user: UserDto) {
+  @MessagePattern('auth.createAccessToken')
+  async createAccessToken(@Payload() user: UserDto) {
     const access_token = await this.authService.createAccessToken(user);
-    return res.status(200).json({
+    return {
       success: true,
       message: 'Access token created successfully',
       data: {
         access_token,
       },
-    });
+    };
   }
 
-  @Get('verifyAccessToken/:token')
-  async verifyAccessToken(@Res() res: Response, token: string) {
+  @MessagePattern('auth.verifyAccessToken')
+  async verifyAccessToken(@Payload() token: string) {
     const isVerified = await this.authService.verifyAccessToken(token);
-    return res.status(200).json({
+    return {
       success: isVerified,
       message: isVerified ? 'Access token is valid' : 'Access token is invalid',
-    });
+    };
   }
 
-  @Post('createRefreshToken')
-  async createRefreshToken(
-    @Res() res: Response,
-    @Body() user: { userId: string },
-  ) {
+  @MessagePattern('auth.createRefreshToken')
+  async createRefreshToken(@Payload() user: { userId: string }) {
     try {
       const refresh_token = await this.authService.createRefreshToken(
         user?.userId,
         jwtConstants.JWT_EXPIRES_IN_REFRESH_TOKEN,
       );
-      return res.status(200).json({
+      return {
         success: true,
         message: 'Refresh token created successfully',
         data: {
           refresh_token,
         },
-      });
+      };
     } catch (error) {
-      return res.status(500).json({
+      return {
         success: false,
         message: 'Error creating refresh token',
         error: error.message,
-      });
+      };
     }
   }
 
-  @Get('validTokenSignUp/:token')
-  async validTokenSignUp(
-    @Res() res: Response,
-    @Param() payload: { token: string },
-  ) {
+  @MessagePattern('auth.validTokenSignUp')
+  async validTokenSignUp(@Payload() payload: { token: string }) {
     const result = await this.authService.validTokenSignUp(payload.token);
-    return res.status(result.success ? 200 : 400).json(result);
+    return result;
   }
 }

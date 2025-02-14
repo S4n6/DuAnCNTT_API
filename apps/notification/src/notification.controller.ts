@@ -1,13 +1,9 @@
 import {
   Controller,
-  Post,
-  Get,
-  Param,
   Body,
-  Patch,
-  Query,
-  Put,
+  Param,
 } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
 import { NotificationService } from './notification.service';
 import { NotificationResponse } from './notification.response';
 import {
@@ -15,56 +11,51 @@ import {
   NotificationRequestSend,
 } from './notification.request';
 
-@Controller('/api/notifications/')
+@Controller()
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
-  @Post()
+  @MessagePattern({ cmd: 'createNotification' })
   async createNotification(
-    @Body() notification: NotificationRequestCreate,
+    notification: NotificationRequestCreate,
   ): Promise<NotificationResponse> {
     return this.notificationService.createNotification(notification);
   }
 
-  @Get()
+  @MessagePattern({ cmd: 'getAllNotifications' })
   async getAllNotifications(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
+    data: { page: number, limit: number },
   ): Promise<NotificationResponse> {
+    const { page, limit } = data;
     return this.notificationService.getAllNotifications(page, limit);
   }
 
-  @Get('/unreadNumber/:userId')
+  @MessagePattern({ cmd: 'getUnreadNotificationsNumber' })
   async getUnreadNotificationsNumber(
-    @Param('userId') userId: string,
+    userId: string,
   ): Promise<object> {
     return this.notificationService.getUnreadNotificationsNumber(userId);
   }
 
-  @Get(':userId')
+  @MessagePattern({ cmd: 'getUserNotifications' })
   async getUserNotifications(
-    @Param('userId') userId: string,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
+    data: { userId: string, page: number, limit: number },
   ): Promise<NotificationResponse> {
-    console.log('userId', userId);
+    const { userId, page, limit } = data;
     return this.notificationService.getUserNotifications(userId, page, limit);
   }
 
-  @Post(':userId')
+  @MessagePattern({ cmd: 'sendNotificationToUser' })
   async sendNotificationToUser(
-    @Param('userId') userId: string,
-    @Body('message') message: NotificationRequestSend,
+    data: { userId: string, message: NotificationRequestSend },
   ): Promise<NotificationResponse> {
-    return this.notificationService.sendNotificationToTokenDevice(
-      userId,
-      message,
-    );
+    const { userId, message } = data;
+    return this.notificationService.sendNotificationToTokenDevice(userId, message);
   }
 
-  @Put(':notificationId/read')
+  @MessagePattern({ cmd: 'markAsRead' })
   async markAsRead(
-    @Param('notificationId') notificationId: string,
+    notificationId: string,
   ): Promise<NotificationResponse> {
     return this.notificationService.markAsRead(notificationId);
   }

@@ -5,8 +5,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './user.schema';
 import { HttpModule } from '@nestjs/axios';
 import { TokenDevice, TokenDeviceSchema } from './tokenDevice.schema';
-import { USER_CONSTANTS } from './constant';
+import { RMQ_CONFIG, USER_CONSTANTS } from './constant';
 import { JwtStrategy } from 'lib/common/auth/jwt.strategy';
+import { ClientsModule } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -16,6 +17,12 @@ import { JwtStrategy } from 'lib/common/auth/jwt.strategy';
       { name: TokenDevice.name, schema: TokenDeviceSchema },
     ]),
     HttpModule,
+    ClientsModule.register([
+      {
+        name: 'RABBITMQ_SERVICE',
+        ...RMQ_CONFIG,
+      },
+    ]),
   ],
   controllers: [UserController],
   providers: [UserService, JwtStrategy],

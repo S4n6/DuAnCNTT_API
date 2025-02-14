@@ -22,6 +22,6 @@ import { HttpModule } from '@nestjs/axios';
     HttpModule,
   ],
   controllers: [RegistrationController],
-  providers: [RegistrationService],
+  providers: [RegistrationService, HttpModule],
 })
 export class RegistrationModule {}

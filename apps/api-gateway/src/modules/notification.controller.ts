@@ -1,0 +1,66 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  Inject,
+  Param,
+} from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+
+@Controller('/api/notifications/')
+export class NotificationController {
+  constructor(
+    @Inject('NOTIFICATION_SERVICE')
+    private readonly notificationServiceClient: ClientProxy,
+  ) {}
+
+  @Post()
+  async createNotification(
+    @Body() notification: { title: string; message: string; userId: string },
+  ) {
+    return this.notificationServiceClient
+      .send({ cmd: 'createNotification' }, notification)
+      .toPromise();
+  }
+
+  @Get()
+  async getAllNotifications(@Query() data: { page: number; limit: number }) {
+    return this.notificationServiceClient
+      .send({ cmd: 'getAllNotifications' }, data)
+      .toPromise();
+  }
+
+  @Get('unread/:userId')
+  async getUnreadNotificationsNumber(@Param('userId') userId: string) {
+    return this.notificationServiceClient
+      .send({ cmd: 'getUnreadNotificationsNumber' }, { userId })
+      .toPromise();
+  }
+
+  @Get('user')
+  async getUserNotifications(
+    @Query() data: { userId: string; page: number; limit: number },
+  ) {
+    return this.notificationServiceClient
+      .send({ cmd: 'getUserNotifications' }, data)
+      .toPromise();
+  }
+
+  @Post('send')
+  async sendNotificationToUser(
+    @Body() data: { userId: string; message: { title: string; body: string } },
+  ) {
+    return this.notificationServiceClient
+      .send({ cmd: 'sendNotificationToUser' }, data)
+      .toPromise();
+  }
+
+  @Post('mark-as-read')
+  async markAsRead(@Body('notificationId') notificationId: string) {
+    return this.notificationServiceClient
+      .send({ cmd: 'markAsRead' }, { notificationId })
+      .toPromise();
+  }
+}
