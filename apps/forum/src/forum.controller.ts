@@ -64,10 +64,16 @@ export class ForumController {
 
   @MessagePattern({ cmd: 'search' })
   async search(
-    @Payload() data: { page: number; limit: number; title: string },
+    @Payload()
+    data: {
+      page: number;
+      date: Date;
+      limit: number;
+      title: { title: string };
+    },
   ): Promise<IPostResponse> {
-    const { page, limit, title } = data;
-    return this.forumService.search(page, limit, title);
+    const { page, limit, title, date } = data;
+    return this.forumService.search(page, limit, title.title, date);
   }
 
   @MessagePattern({ cmd: 'getComments' })

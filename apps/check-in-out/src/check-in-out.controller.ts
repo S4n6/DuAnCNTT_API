@@ -6,7 +6,6 @@ import {
   ICheckInOutResponse,
 } from './check-in-out.response';
 import { CheckInOutGateway } from './check-in-out.gateway';
-import { JwtStrategy } from 'lib/common/auth/jwt.strategy';
 
 @Controller()
 export class CheckInOutController {
@@ -15,14 +14,14 @@ export class CheckInOutController {
     private readonly checkInOutGateway: CheckInOutGateway,
   ) {}
 
-  @MessagePattern('get_participants_count')
+  @MessagePattern({ cmd: 'get_participants_count' })
   async getParticipantsCount(
     @Payload() payload: { eventId: string },
   ): Promise<object> {
     return await this.checkInOutService.getParticipantsCount(payload.eventId);
   }
 
-  @MessagePattern('get_qr')
+  @MessagePattern({ cmd: 'qr' })
   async getQr(
     @Payload() payload: { eventId: string; userId: string; ownerId: string },
   ): Promise<ICheckInOutResponse> {
@@ -37,7 +36,7 @@ export class CheckInOutController {
     return response;
   }
 
-  @MessagePattern('check_in')
+  @MessagePattern({ cmd: 'check_in' })
   async checkIn(
     @Payload() payload: { email: string; eventId: string },
   ): Promise<ICheckInOutResponse> {
@@ -49,7 +48,7 @@ export class CheckInOutController {
     return response;
   }
 
-  @MessagePattern('check_out')
+  @MessagePattern({ cmd: 'check_out' })
   async checkOut(
     @Payload() payload: { email: string; eventId: string },
   ): Promise<ICheckInOutResponse> {

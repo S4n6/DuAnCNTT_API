@@ -23,6 +23,7 @@ export class UserController {
 
   @MessagePattern({ cmd: 'getAllUsers' })
   getAllUsers(): Promise<UserResponseDto> {
+    console.log('get all users');
     return this.userService.getAllUsers();
   }
 
@@ -100,13 +101,20 @@ export class UserController {
     return userDeleted;
   }
 
-  @GrpcMethod('UserService', 'ValidateUserByEmail')
-  async validateUserByEmail(
-    data: { email: string; password: string },
-    metadata: Metadata,
-    call: ServerUnaryCall<UserDto, any>,
-  ): Promise<UserResponseDto> {
+  @MessagePattern({ cmd: 'validateUserByEmail' })
+  async validateUserByEmail(data: {
+    email: string;
+    password: string;
+  }): Promise<UserResponseDto> {
     const user = { username: data.email, password: data.password };
     return this.userService.validateUserByEmail(user);
+  }
+
+  @MessagePattern({ cmd: 'updateUserRole' })
+  async changeRole(data: {
+    id: ObjectId;
+    role: string;
+  }): Promise<UserResponseDto> {
+    return this.userService.changeRole(data.id, data.role);
   }
 }

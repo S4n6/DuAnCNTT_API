@@ -125,6 +125,29 @@ export class UserService {
     });
   }
 
+  async changeRole(id: ObjectId, role: string): Promise<UserResponseDto> {
+    try {
+      const user = await this.userModel.findById(id);
+      if (!user) {
+        return new UserResponseDto(false, 'User not found');
+      }
+
+      console.log('role:', role);
+      if (!Object.values(ROLE).includes(role)) {
+        return new UserResponseDto(false, 'Invalid role');
+      }
+
+      user.role = role;
+      await user.save();
+      return new UserResponseDto(true, 'Role changed successfully', {
+        users: user,
+      });
+    } catch (error) {
+      console.error('Error changing role:', error);
+      return new UserResponseDto(false, 'Role change failed');
+    }
+  }
+
   async createUserByPhoneNumber(user: UserDto): Promise<UserResponseDto> {
     try {
       const checkedUser = await this.getUserByPhoneNumber(user.phoneNumber);

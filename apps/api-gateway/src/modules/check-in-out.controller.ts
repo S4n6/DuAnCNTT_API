@@ -8,7 +8,7 @@ export class CheckInOutController {
     @Inject('CHECK_IN_OUT_SERVICE') private readonly client: ClientProxy,
   ) {}
 
-  @Get('participants-count/:eventId')
+  @Get('statistics/:eventId')
   async getParticipantsCount(
     @Param('eventId') eventId: string,
   ): Promise<object> {
@@ -21,7 +21,7 @@ export class CheckInOutController {
   async getQr(
     @Body() payload: { eventId: string; userId: string; ownerId: string },
   ): Promise<ICheckInOutResponse> {
-    return this.client.send({ cmd: 'get_qr' }, payload).toPromise();
+    return this.client.send({ cmd: 'qr' }, payload).toPromise();
   }
 
   @Post('check-in')

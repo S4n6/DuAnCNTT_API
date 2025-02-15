@@ -61,11 +61,9 @@ function bootstrap() {
     return __awaiter(this, void 0, void 0, function* () {
         const app = yield core_1.NestFactory.create(user_module_1.UserModule);
         app.useGlobalPipes(new common_1.ValidationPipe());
-        yield app.listen(constant_1.USER_CONSTANTS.PORT || 3001);
-        console.log(`User service is running on: ${yield app.getUrl()}`);
-        const microservice = yield core_1.NestFactory.createMicroservice(user_module_1.UserModule, grpcOptions);
-        microservice.useGlobalPipes(new common_1.ValidationPipe());
-        yield microservice.listen();
+        const microservice = app.connectMicroservice(constant_1.RMQ_CONFIG);
+        microservice.listen();
+        console.log('User service is listening for messages from RabbitMQ');
     });
 }
 bootstrap();

@@ -16,6 +16,7 @@ const axios_1 = require("@nestjs/axios");
 const tokenDevice_schema_1 = require("./tokenDevice.schema");
 const constant_1 = require("./constant");
 const jwt_strategy_1 = require("../../../lib/common/auth/jwt.strategy");
+const microservices_1 = require("@nestjs/microservices");
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
@@ -28,6 +29,9 @@ exports.UserModule = UserModule = __decorate([
                 { name: tokenDevice_schema_1.TokenDevice.name, schema: tokenDevice_schema_1.TokenDeviceSchema },
             ]),
             axios_1.HttpModule,
+            microservices_1.ClientsModule.register([
+                Object.assign({ name: 'RABBITMQ_SERVICE' }, constant_1.RMQ_CONFIG),
+            ]),
         ],
         controllers: [user_controller_1.UserController],
         providers: [user_service_1.UserService, jwt_strategy_1.JwtStrategy],

@@ -11,7 +11,7 @@ import { RegistrationResponse } from './response/registration.response';
 export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}
 
-  @EventPattern('is_registered')
+  @EventPattern({ cmd: 'is_registered' })
   async isRegistered(
     @Payload() data: { eventId: string; userId: string },
   ): Promise<RegistrationResponse> {
@@ -20,7 +20,7 @@ export class RegistrationController {
     return this.registrationService.checkRegistrationOfUser(userId, eventId);
   }
 
-  @EventPattern('get_registrations')
+  @EventPattern({ cmd: 'get_registrations' })
   async getRegistrations(
     @Payload() data: { userId: string },
   ): Promise<RegistrationResponse> {
@@ -28,7 +28,7 @@ export class RegistrationController {
     return this.registrationService.getRegistrationsByUserId(userId);
   }
 
-  @EventPattern('create_registration')
+  @EventPattern({ cmd: 'create_registration' })
   async createRegistration(
     @Payload() data: RegistrationRequestCreate,
   ): Promise<RegistrationResponse> {
@@ -36,7 +36,7 @@ export class RegistrationController {
     return this.registrationService.createRegistration(data);
   }
 
-  @EventPattern('cancel_registration')
+  @EventPattern({ cmd: 'cancel_registration' })
   async cancelRegistration(
     @Payload() data: RegistrationRequestCancel,
   ): Promise<RegistrationResponse> {

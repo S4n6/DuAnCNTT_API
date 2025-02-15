@@ -11,39 +11,38 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  async login(
-    @Body() loginRequestDto: LoginRequestDto,
-  ): Promise<AuthResponseDto> {
+  async login(@Body() loginRequestDto: LoginRequestDto): Promise<object> {
+    console.log('loginRequestDto', loginRequestDto);
     return this.authServiceClient
-      .send({ cmd: 'auth.login' }, loginRequestDto)
+      .send({ cmd: 'login' }, loginRequestDto)
       .toPromise();
   }
 
   @Post('loginGgwithToken')
   async verifyToken(@Body() body: { token: string }): Promise<AuthResponseDto> {
     return this.authServiceClient
-      .send({ cmd: 'auth.loginGgwithToken' }, body)
+      .send({ cmd: 'loginGgwithToken' }, body)
       .toPromise();
   }
 
   @Post('register')
   async register(@Body() userDto: UserDto): Promise<AuthResponseDto> {
     return this.authServiceClient
-      .send({ cmd: 'auth.register' }, userDto)
+      .send({ cmd: 'register' }, userDto)
       .toPromise();
   }
 
   @Post('createAccessToken')
   async createAccessToken(@Body() userDto: UserDto): Promise<AuthResponseDto> {
     return this.authServiceClient
-      .send({ cmd: 'auth.createAccessToken' }, userDto)
+      .send({ cmd: 'createAccessToken' }, userDto)
       .toPromise();
   }
 
   @Post('verifyAccessToken')
   async verifyAccessToken(@Body() token: string): Promise<AuthResponseDto> {
     return this.authServiceClient
-      .send({ cmd: 'auth.verifyAccessToken' }, token)
+      .send({ cmd: 'verifyAccessToken' }, token)
       .toPromise();
   }
 
@@ -52,7 +51,7 @@ export class AuthController {
     @Body() user: { userId: string },
   ): Promise<AuthResponseDto> {
     return this.authServiceClient
-      .send({ cmd: 'auth.createRefreshToken' }, user)
+      .send({ cmd: 'createRefreshToken' }, user)
       .toPromise();
   }
 
@@ -61,7 +60,7 @@ export class AuthController {
     @Body() payload: { token: string },
   ): Promise<AuthResponseDto> {
     return this.authServiceClient
-      .send({ cmd: 'auth.validTokenSignUp' }, payload)
+      .send({ cmd: 'validTokenSignUp' }, payload)
       .toPromise();
   }
 }

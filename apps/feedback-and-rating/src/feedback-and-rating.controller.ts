@@ -14,7 +14,7 @@ export class FeedbackAndRatingController {
     private readonly feedbackAndRatingGateway: FeedbackAndRatingGateway,
   ) {}
 
-  @MessagePattern('getRatingByEventId')
+  @MessagePattern({ cmd: 'getFeedbackByEventId' })
   async getRatingByEventId(
     @Payload() payload: { eventId: string },
   ): Promise<object> {
@@ -23,7 +23,7 @@ export class FeedbackAndRatingController {
     );
   }
 
-  @MessagePattern('getRatingStatisticsByEventId')
+  @MessagePattern({ cmd: 'getRatingStatisticsByEventId' })
   async getRatingStatisticsByEventId(
     @Payload() payload: { eventId: string },
   ): Promise<object> {
@@ -32,15 +32,17 @@ export class FeedbackAndRatingController {
     );
   }
 
-  @MessagePattern('createSurvey')
+  @MessagePattern({ cmd: 'createSurvey' })
   async createSurvey(
     @Payload() survey: FeedbackRequest,
   ): Promise<IFeedbackResponse> {
     return await this.feedbackAndRatingService.sendSurveyEmail(survey);
   }
 
-  @MessagePattern('createRating')
-  async createRating(@Payload() rating: RatingRequest): Promise<IRatingResponse> {
+  @MessagePattern({ cmd: 'createRating' })
+  async createRating(
+    @Payload() rating: RatingRequest,
+  ): Promise<IRatingResponse> {
     const response = await this.feedbackAndRatingService.ratingEvent(rating);
     console.log(response);
     if (response.success) {

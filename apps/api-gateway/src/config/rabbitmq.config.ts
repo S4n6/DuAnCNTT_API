@@ -19,7 +19,7 @@ export const createRmqConfig = (
 
 export const RMQ_CONFIG = [
   createRmqConfig('AUTH_SERVICE', 'auth_queue'),
-  createRmqConfig('USER_SERVICE', 'document_queue'),
+  createRmqConfig('USER_SERVICE', 'user_queue'),
   createRmqConfig('EVENT_SERVICE', 'event_queue'),
   createRmqConfig('NOTIFICATION_SERVICE', 'notification_queue'),
   createRmqConfig('DOCUMENT_SERVICE', 'document_queue'),

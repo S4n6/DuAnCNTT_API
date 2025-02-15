@@ -14,8 +14,16 @@ async function bootstrap() {
   // await app.listen(AUTH_CONSTANTS.PORT);
   // console.log(`Auth service is running on: ${await app.getUrl()}`);
 
-  const microservice = app.connectMicroservice<MicroserviceOptions>(RMQ_CONFIG);
-
+  const microservice = app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [AUTH_CONSTANTS.RABBITMQ_URL],
+      queue: 'auth_queue',
+      queueOptions: {
+        durable: false,
+      },
+    },
+  });
   await microservice.listen();
   console.log('Auth service is listening for messages from RabbitMQ');
 }

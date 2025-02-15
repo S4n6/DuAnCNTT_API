@@ -34,6 +34,7 @@ let AuthController = class AuthController {
     }
     login(user) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log('login', user);
             const access_token = yield this.authService.login(user.email, user.phoneNumber, user.password);
             if (!access_token) {
                 return {
@@ -125,49 +126,49 @@ let AuthController = class AuthController {
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, microservices_1.MessagePattern)('auth.login'),
+    (0, microservices_1.MessagePattern)({ cmd: 'login' }),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [auth_request_1.LoginRequestDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
-    (0, microservices_1.MessagePattern)('auth.loginGgwithToken'),
+    (0, microservices_1.MessagePattern)({ cmd: 'loginGgwithToken' }),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "verifyToken", null);
 __decorate([
-    (0, microservices_1.MessagePattern)('auth.register'),
+    (0, microservices_1.MessagePattern)({ cmd: 'register' }),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_dto_1.UserDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "register", null);
 __decorate([
-    (0, microservices_1.MessagePattern)('auth.createAccessToken'),
+    (0, microservices_1.MessagePattern)({ cmd: 'createAccessToken' }),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_dto_1.UserDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "createAccessToken", null);
 __decorate([
-    (0, microservices_1.MessagePattern)('auth.verifyAccessToken'),
+    (0, microservices_1.MessagePattern)({ cmd: 'verifyAccessToken' }),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "verifyAccessToken", null);
 __decorate([
-    (0, microservices_1.MessagePattern)('auth.createRefreshToken'),
+    (0, microservices_1.MessagePattern)({ cmd: 'createRefreshToken' }),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "createRefreshToken", null);
 __decorate([
-    (0, microservices_1.MessagePattern)('auth.validTokenSignUp'),
+    (0, microservices_1.MessagePattern)({ cmd: 'validTokenSignUp' }),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

@@ -10,8 +10,9 @@ import { jwtConstants } from './constants';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @MessagePattern('auth.login')
-  async login(@Payload() user: LoginRequestDto): Promise<any> {
+  @MessagePattern({ cmd: 'login' })
+  async login(@Payload() user: LoginRequestDto): Promise<object> {
+    console.log('login', user);
     const access_token = await this.authService.login(
       user.email,
       user.phoneNumber,
@@ -33,7 +34,7 @@ export class AuthController {
     };
   }
 
-  @MessagePattern('auth.loginGgwithToken')
+  @MessagePattern({ cmd: 'loginGgwithToken' })
   async verifyToken(@Payload() body: { token: string }) {
     try {
       const decoded = await this.authService.loginGgWithToken(body.token);
@@ -51,13 +52,13 @@ export class AuthController {
     }
   }
 
-  @MessagePattern('auth.register')
+  @MessagePattern({ cmd: 'register' })
   async register(@Payload() user: UserDto) {
     const result = await this.authService.register(user);
     return result;
   }
 
-  @MessagePattern('auth.createAccessToken')
+  @MessagePattern({ cmd: 'createAccessToken' })
   async createAccessToken(@Payload() user: UserDto) {
     const access_token = await this.authService.createAccessToken(user);
     return {
@@ -69,7 +70,7 @@ export class AuthController {
     };
   }
 
-  @MessagePattern('auth.verifyAccessToken')
+  @MessagePattern({ cmd: 'verifyAccessToken' })
   async verifyAccessToken(@Payload() token: string) {
     const isVerified = await this.authService.verifyAccessToken(token);
     return {
@@ -78,7 +79,7 @@ export class AuthController {
     };
   }
 
-  @MessagePattern('auth.createRefreshToken')
+  @MessagePattern({ cmd: 'createRefreshToken' })
   async createRefreshToken(@Payload() user: { userId: string }) {
     try {
       const refresh_token = await this.authService.createRefreshToken(
@@ -101,7 +102,7 @@ export class AuthController {
     }
   }
 
-  @MessagePattern('auth.validTokenSignUp')
+  @MessagePattern({ cmd: 'validTokenSignUp' })
   async validTokenSignUp(@Payload() payload: { token: string }) {
     const result = await this.authService.validTokenSignUp(payload.token);
     return result;

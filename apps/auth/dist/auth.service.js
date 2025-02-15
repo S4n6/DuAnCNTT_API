@@ -66,20 +66,19 @@ const axios_1 = require("@nestjs/axios");
 const auth_response_1 = require("./auth.response");
 const crypto_util_1 = require("./crypto.util");
 const rxjs_1 = require("rxjs");
+const microservices_1 = require("@nestjs/microservices");
 let AuthService = class AuthService {
-    constructor(jwtService, client, tokenModel, httpService) {
+    constructor(jwtService, tokenModel, httpService, userServiceClient) {
         this.jwtService = jwtService;
-        this.client = client;
         this.tokenModel = tokenModel;
         this.httpService = httpService;
+        this.userServiceClient = userServiceClient;
     }
-    onModuleInit() {
-        this.userService = this.client.getService('UserService');
-    }
+    onModuleInit() { }
     login(email, phoneNumber, password) {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = { email, phoneNumber, password };
-            const user = yield this.validateUser(email, phoneNumber, password);
+            const user = yield this.userServiceClient.send({ cmd: 'validateUserByEmail' }, { email, password }).toPromise();
             const access_token = yield this.jwtService.sign(payload);
             if (!user.success) {
                 return null;
@@ -295,9 +294,11 @@ let AuthService = class AuthService {
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __param(1, (0, common_1.Inject)('USER_PACKAGE')),
-    __param(2, (0, mongoose_1.InjectModel)(token_schema_1.Token.name)),
-    __metadata("design:paramtypes", [jwt_1.JwtService, Object, mongoose_2.Model,
-        axios_1.HttpService])
+    __param(1, (0, mongoose_1.InjectModel)(token_schema_1.Token.name)),
+    __param(3, (0, common_1.Inject)('USER_SERVICE')),
+    __metadata("design:paramtypes", [jwt_1.JwtService,
+        mongoose_2.Model,
+        axios_1.HttpService,
+        microservices_1.ClientProxy])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

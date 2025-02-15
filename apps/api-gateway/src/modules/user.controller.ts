@@ -22,6 +22,7 @@ export class UserController {
 
   @Get()
   async getAllUsers(): Promise<UserResponseDto> {
+    console.log('getAllUsers');
     return this.userServiceClient.send({ cmd: 'getAllUsers' }, {}).toPromise();
   }
 
@@ -51,6 +52,17 @@ export class UserController {
   async getUserByName(@Param('name') name: string): Promise<UserResponseDto> {
     return this.userServiceClient
       .send({ cmd: 'getUserByName' }, { name })
+      .toPromise();
+  }
+
+  @Put('role/:id')
+  async updateUserRole(
+    @Param('id') id: ObjectId,
+    @Body() body: { role: string },
+  ): Promise<UserResponseDto> {
+    console.log('updateUserRole', id, body.role);
+    return this.userServiceClient
+      .send({ cmd: 'updateUserRole' }, { role: body.role, id })
       .toPromise();
   }
 

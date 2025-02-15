@@ -8,9 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -25,161 +22,152 @@ exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
 const microservices_1 = require("@nestjs/microservices");
-const grpc_js_1 = require("@grpc/grpc-js");
 const user_dto_1 = require("./user.dto");
-const jwt_auth_guard_1 = require("../../../lib/common/auth/jwt-auth.guard");
-const public_decorator_1 = require("../../../lib/common/decorators/public.decorator");
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
     }
     getAllUsers() {
+        console.log('get all users');
         return this.userService.getAllUsers();
     }
-    searchUsers(name, email, isActive, page, limit) {
+    searchUsers(data) {
+        const { name, email, isActive, page, limit } = data;
         return this.userService.searchUsers(name, email, isActive, page, limit);
     }
-    getTokenDevicesByUserId(userId) {
-        return this.userService.getTokenDevicesByUserId(userId);
+    getTokenDevicesByUserId(data) {
+        return this.userService.getTokenDevicesByUserId(data.userId);
     }
-    getUserByName(name) {
-        return this.userService.getUserByName(name);
+    getUserByName(data) {
+        return this.userService.getUserByName(data.name);
     }
-    getUserByEmail(payload) {
-        console.log('get user by email:', payload);
-        return this.userService.getUserByEmail(payload.email);
+    getUserByEmail(data) {
+        console.log('get user by email:', data);
+        return this.userService.getUserByEmail(data.email);
     }
-    getUserByPhoneNumber(phoneNumber) {
-        return this.userService.getUserByPhoneNumber(phoneNumber);
+    getUserByPhoneNumber(data) {
+        return this.userService.getUserByPhoneNumber(data.phoneNumber);
     }
-    getUserById(id, token) {
-        return this.userService.getUserById(id);
+    getUserById(data) {
+        return this.userService.getUserById(data.id);
     }
-    createUserByEmail(user) {
+    createUserByEmail(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('create user by email:', user);
-            const userCreated = yield this.userService.createUserByEmail(user);
+            console.log('create user by email:', data);
+            const userCreated = yield this.userService.createUserByEmail(data);
             return userCreated;
         });
     }
-    createTokenDevice(payload) {
+    createTokenDevice(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userCreated = yield this.userService.createTokenDevice(payload.userId, payload.tokenDevice);
+            const userCreated = yield this.userService.createTokenDevice(data.userId, data.tokenDevice);
             return userCreated;
         });
     }
-    updateUser(user, id) {
+    updateUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userUpdated = yield this.userService.updateUser(user, id);
+            const userUpdated = yield this.userService.updateUser(data.user, data.id);
             return userUpdated;
         });
     }
-    deleteUser(user, id) {
+    deleteUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userDeleted = yield this.userService.deleteUser(id);
+            const userDeleted = yield this.userService.deleteUser(data.id);
             return userDeleted;
         });
     }
-    validateUserByEmail(data, metadata, call) {
+    validateUserByEmail(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = { username: data.email, password: data.password };
             return this.userService.validateUserByEmail(user);
         });
     }
+    changeRole(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.userService.changeRole(data.id, data.role);
+        });
+    }
 };
 exports.UserController = UserController;
 __decorate([
-    (0, public_decorator_1.Public)(),
-    (0, common_1.Get)(),
+    (0, microservices_1.MessagePattern)({ cmd: 'getAllUsers' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getAllUsers", null);
 __decorate([
-    (0, common_1.Get)('search'),
-    __param(0, (0, common_1.Query)('name')),
-    __param(1, (0, common_1.Query)('email')),
-    __param(2, (0, common_1.Query)('isActive')),
-    __param(3, (0, common_1.Query)('page')),
-    __param(4, (0, common_1.Query)('limit')),
+    (0, microservices_1.MessagePattern)({ cmd: 'searchUsers' }),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Boolean, Number, Number]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "searchUsers", null);
 __decorate([
-    (0, common_1.Get)('tokenDevice/:userId'),
-    __param(0, (0, common_1.Param)('userId')),
+    (0, microservices_1.MessagePattern)({ cmd: 'getTokenDevicesByUserId' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getTokenDevicesByUserId", null);
 __decorate([
-    (0, common_1.Get)('name/:name'),
-    __param(0, (0, common_1.Param)('name')),
+    (0, microservices_1.MessagePattern)({ cmd: 'getUserByName' }),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUserByName", null);
 __decorate([
-    (0, common_1.Get)('email/:email'),
-    __param(0, (0, common_1.Param)()),
+    (0, microservices_1.MessagePattern)({ cmd: 'getUserByEmail' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUserByEmail", null);
 __decorate([
-    (0, common_1.Get)('phoneNumber'),
+    (0, microservices_1.MessagePattern)({ cmd: 'getUserByPhoneNumber' }),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUserByPhoneNumber", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Query)('token')),
+    (0, microservices_1.MessagePattern)({ cmd: 'getUserById' }),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUserById", null);
 __decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
+    (0, microservices_1.MessagePattern)({ cmd: 'createUserByEmail' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_dto_1.UserDto]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "createUserByEmail", null);
 __decorate([
-    (0, common_1.Post)('tokenDevice'),
-    __param(0, (0, common_1.Body)()),
+    (0, microservices_1.MessagePattern)({ cmd: 'createTokenDevice' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "createTokenDevice", null);
 __decorate([
-    (0, common_1.Put)(':id'),
-    __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Param)('id')),
+    (0, microservices_1.MessagePattern)({ cmd: 'updateUser' }),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [user_dto_1.UserDto, Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "updateUser", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Param)('id')),
+    (0, microservices_1.MessagePattern)({ cmd: 'deleteUser' }),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [user_dto_1.UserDto, Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "deleteUser", null);
 __decorate([
-    (0, public_decorator_1.Public)(),
-    (0, microservices_1.GrpcMethod)('UserService', 'ValidateUserByEmail'),
+    (0, microservices_1.MessagePattern)({ cmd: 'validateUserByEmail' }),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, grpc_js_1.Metadata, Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "validateUserByEmail", null);
+__decorate([
+    (0, microservices_1.MessagePattern)({ cmd: 'updateUserRole' }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "changeRole", null);
 exports.UserController = UserController = __decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('/api/users/'),
     __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserController);

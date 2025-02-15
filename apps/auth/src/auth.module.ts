@@ -10,15 +10,6 @@ import { Token, TokenSchema } from './token.schema';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { HttpModule } from '@nestjs/axios';
 
-export const grpcClientOptions: ClientOptions = {
-  transport: Transport.GRPC,
-  options: {
-    package: 'user',
-    protoPath: 'lib/common/user.proto',
-    url: AUTH_CONSTANTS.GRPC_HOST_USER_SERVICE,
-  },
-};
-
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'google' }),
@@ -27,12 +18,15 @@ export const grpcClientOptions: ClientOptions = {
     }),
     ClientsModule.register([
       {
-        name: 'USER_PACKAGE',
-        ...grpcClientOptions,
-      },
-      {
-        name: 'RABBITMQ_SERVICE',
-        ...RMQ_CONFIG,
+        name: 'USER_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: [AUTH_CONSTANTS.RABBITMQ_URL],
+          queue: 'user_queue',
+          queueOptions: {
+            durable: false,
+          },
+        },
       },
     ]),
     MongooseModule.forRoot(AUTH_CONSTANTS.MONGO_URL),

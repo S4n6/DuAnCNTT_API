@@ -7,6 +7,9 @@ import { RMQ_CONFIG } from './config/rabbitmq.config';
 import { DocumentController } from './modules/document.controller';
 import { ParticipantsController } from './modules/participants.controller';
 import { EmailController } from './modules/email.controller';
+import { UserController } from './modules/user.controller';
+import { AuthController } from './modules/auth.controller';
+import { ForumController } from './modules/forum.controller';
 
 @Module({
   imports: [ClientsModule.register(RMQ_CONFIG)],
@@ -16,6 +19,9 @@ import { EmailController } from './modules/email.controller';
     DocumentController,
     ParticipantsController,
     EmailController,
+    UserController,
+    AuthController,
+    ForumController,
   ],
   providers: [ApiGatewayService],
 })

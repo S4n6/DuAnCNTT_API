@@ -164,6 +164,29 @@ let UserService = class UserService {
             });
         });
     }
+    changeRole(id, role) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield this.userModel.findById(id);
+                if (!user) {
+                    return new user_response_1.UserResponseDto(false, 'User not found');
+                }
+                console.log('role:', role);
+                if (!Object.values(constant_1.ROLE).includes(role)) {
+                    return new user_response_1.UserResponseDto(false, 'Invalid role');
+                }
+                user.role = role;
+                yield user.save();
+                return new user_response_1.UserResponseDto(true, 'Role changed successfully', {
+                    users: user,
+                });
+            }
+            catch (error) {
+                console.error('Error changing role:', error);
+                return new user_response_1.UserResponseDto(false, 'Role change failed');
+            }
+        });
+    }
     createUserByPhoneNumber(user) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

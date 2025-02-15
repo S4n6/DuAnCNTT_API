@@ -1,6 +1,5 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Client, ClientGrpc } from '@nestjs/microservices';
 import { UserService } from './user.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Token } from './token.schema';
@@ -12,20 +11,19 @@ import { HttpService } from '@nestjs/axios';
 import { AuthResponseDto } from './auth.response';
 import { decrypt, encrypt } from './crypto.util';
 import { lastValueFrom } from 'rxjs';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
   private userService: UserService;
   constructor(
     private readonly jwtService: JwtService,
-    @Inject('USER_PACKAGE') private client: ClientGrpc,
     @InjectModel(Token.name) private tokenModel: Model<Token>,
     private readonly httpService: HttpService,
+    @Inject('USER_SERVICE') private readonly userServiceClient: ClientProxy,
   ) {}
 
-  onModuleInit() {
-    this.userService = this.client.getService<UserService>('UserService');
-  }
+  onModuleInit() {}
 
   async login(
     email: string,
@@ -33,7 +31,7 @@ export class AuthService implements OnModuleInit {
     password: string,
   ): Promise<object> {
     const payload = { email, phoneNumber, password };
-    const user = await this.validateUser(email, phoneNumber, password);
+    const user = await this.userServiceClient.send({ cmd: 'validateUserByEmail' }, { email, password }).toPromise();
     const access_token = await this.jwtService.sign(payload);
     if (!user.success) {
       return null;

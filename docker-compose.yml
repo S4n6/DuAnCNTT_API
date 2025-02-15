@@ -47,113 +47,113 @@ services:
     volumes:
       - .:/usr/src/app
 
-  # notification:
-  #   build:
-  #     context: .
-  #     dockerfile: apps/notification/Dockerfile
-  #     target: development
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - '3003:3003'
-  #   volumes:
-  #     - .:/usr/src/app
+  notification:
+    build:
+      context: .
+      dockerfile: apps/notification/Dockerfile
+      target: development
+    env_file:
+      - .env
+    ports:
+      - '3003:3003'
+    volumes:
+      - .:/usr/src/app
 
-  # check-in-out:
-  #   build:
-  #     context: .
-  #     dockerfile: apps/check-in-out/Dockerfile
-  #     target: development
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - '3004:3004'
-  #   volumes:
-  #     - .:/usr/src/app
+  check-in-out:
+    build:
+      context: .
+      dockerfile: apps/check-in-out/Dockerfile
+      target: development
+    env_file:
+      - .env
+    ports:
+      - '3004:3004'
+    volumes:
+      - .:/usr/src/app
 
-  # participants:
-  #   build:
-  #     context: .
-  #     dockerfile: apps/participants/Dockerfile
-  #     target: development
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - '3005:3005'
-  #   volumes:
-  #     - .:/usr/src/app
+  participants:
+    build:
+      context: .
+      dockerfile: apps/participants/Dockerfile
+      target: development
+    env_file:
+      - .env
+    ports:
+      - '3005:3005'
+    volumes:
+      - .:/usr/src/app
 
-  # registration:
-  #   build:
-  #     context: .
-  #     dockerfile: apps/registration/Dockerfile
-  #     target: development
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - '3006:3006'
-  #   volumes:
-  #     - .:/usr/src/app
+  registration:
+    build:
+      context: .
+      dockerfile: apps/registration/Dockerfile
+      target: development
+    env_file:
+      - .env
+    ports:
+      - '3006:3006'
+    volumes:
+      - .:/usr/src/app
 
-  # email:
-  #   build:
-  #     context: .
-  #     dockerfile: apps/email/Dockerfile
-  #     target: development
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - '3007:3007'
-  #   volumes:
-  #     - .:/usr/src/app
+  email:
+    build:
+      context: .
+      dockerfile: apps/email/Dockerfile
+      target: development
+    env_file:
+      - .env
+    ports:
+      - '3007:3007'
+    volumes:
+      - .:/usr/src/app
 
-  # feedback-and-rating:
-  #   build:
-  #     context: .
-  #     dockerfile: apps/feedback-and-rating/Dockerfile
-  #     target: development
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - '3008:3008'
-  #   volumes:
-  #     - .:/usr/src/app
+  feedback-and-rating:
+    build:
+      context: .
+      dockerfile: apps/feedback-and-rating/Dockerfile
+      target: development
+    env_file:
+      - .env
+    ports:
+      - '3008:3008'
+    volumes:
+      - .:/usr/src/app
 
-  # schedule:
-  #   build:
-  #     context: .
-  #     dockerfile: apps/schedule:/Dockerfile
-  #     target: development
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - '3009:3009'
-  #   volumes:
-  #     - .:/usr/src/app
+  schedule:
+    build:
+      context: .
+      dockerfile: apps/schedule:/Dockerfile
+      target: development
+    env_file:
+      - .env
+    ports:
+      - '3009:3009'
+    volumes:
+      - .:/usr/src/app
 
-  # document:
-  #   build:
-  #     context: .
-  #     dockerfile: apps/document:/Dockerfile
-  #     target: development
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - '3010:3010'
-  #   volumes:
-  #     - .:/usr/src/app
+  document:
+    build:
+      context: .
+      dockerfile: apps/document:/Dockerfile
+      target: development
+    env_file:
+      - .env
+    ports:
+      - '3010:3010'
+    volumes:
+      - .:/usr/src/app
 
-  # forum:
-  #   build:
-  #     context: .
-  #     dockerfile: apps/forum:/Dockerfile
-  #     target: development
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - '3011:3011'
-  #   volumes:
-  #     - .:/usr/src/app
+  forum:
+    build:
+      context: .
+      dockerfile: apps/forum:/Dockerfile
+      target: development
+    env_file:
+      - .env
+    ports:
+      - '3011:3011'
+    volumes:
+      - .:/usr/src/app
 
 networks:
   backend:

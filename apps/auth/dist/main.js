@@ -47,13 +47,23 @@ const auth_module_1 = require("./auth.module");
 const dotenv = __importStar(require("dotenv"));
 const common_1 = require("@nestjs/common");
 const constants_1 = require("./constants");
+const microservices_1 = require("@nestjs/microservices");
 dotenv.config();
 function bootstrap() {
     return __awaiter(this, void 0, void 0, function* () {
         const app = yield core_1.NestFactory.create(auth_module_1.AuthModule);
         app.useGlobalPipes(new common_1.ValidationPipe());
         app.enableCors({ origin: '*' });
-        const microservice = app.connectMicroservice(constants_1.RMQ_CONFIG);
+        const microservice = app.connectMicroservice({
+            transport: microservices_1.Transport.RMQ,
+            options: {
+                urls: [constants_1.AUTH_CONSTANTS.RABBITMQ_URL],
+                queue: 'auth_queue',
+                queueOptions: {
+                    durable: false,
+                },
+            },
+        });
         yield microservice.listen();
         console.log('Auth service is listening for messages from RabbitMQ');
     });

@@ -33,7 +33,8 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.USER_CONSTANTS = exports.ROLE = void 0;
+exports.RMQ_CONFIG = exports.USER_CONSTANTS = exports.ROLE = void 0;
+const microservices_1 = require("@nestjs/microservices");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 exports.ROLE = {
@@ -48,5 +49,15 @@ exports.USER_CONSTANTS = {
     MONGO_URL: process.env.MONGO_URL,
     HOST_AUTH_SERVICE: process.env.HOST_AUTH_SERVICE,
     PORT: process.env.USER_SERVICE_PORT,
+};
+exports.RMQ_CONFIG = {
+    transport: microservices_1.Transport.RMQ,
+    options: {
+        urls: [process.env.RABBITMQ_URL],
+        queue: 'user_queue',
+        queueOptions: {
+            durable: false,
+        },
+    },
 };
 //# sourceMappingURL=constant.js.map

@@ -6,6 +6,7 @@ import {
   Query,
   Inject,
   Param,
+  Put,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
@@ -57,8 +58,8 @@ export class NotificationController {
       .toPromise();
   }
 
-  @Post('mark-as-read')
-  async markAsRead(@Body('notificationId') notificationId: string) {
+  @Put(':notificationId/read')
+  async markAsRead(@Param('notificationId') notificationId: string) {
     return this.notificationServiceClient
       .send({ cmd: 'markAsRead' }, { notificationId })
       .toPromise();

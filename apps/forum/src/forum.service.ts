@@ -87,16 +87,26 @@ export class ForumService {
     page: number = 1,
     limit: number = 10,
     title: string,
+    date?: Date,
   ): Promise<IPostResponse> {
+    console.log('search', title, date);
     const skip = (page - 1) * limit;
+    const query: any = { title: { $regex: title, $options: 'i' } };
+
+    if (date) {
+      const startOfDay = new Date(date);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999);
+      query.createdAt = { $gte: startOfDay, $lte: endOfDay };
+    }
+
     const posts = await this.postModel
-      .find({ title: { $regex: title, $options: 'i' } })
+      .find(query)
       .skip(skip)
       .limit(limit)
       .exec();
-    const total = await this.postModel
-      .countDocuments({ title: { $regex: title, $options: 'i' } })
-      .exec();
+    const total = await this.postModel.countDocuments(query).exec();
     return new PostResponse(true, 'Posts fetched successfully', {
       posts,
       total,
