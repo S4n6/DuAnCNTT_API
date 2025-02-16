@@ -10,19 +10,20 @@ import { EmailController } from './modules/email.controller';
 import { UserController } from './modules/user.controller';
 import { AuthController } from './modules/auth.controller';
 import { ForumController } from './modules/forum.controller';
+import { JwtStrategy } from 'lib/common/auth/jwt.strategy';
 
 @Module({
   imports: [ClientsModule.register(RMQ_CONFIG)],
   controllers: [
-    ApiGatewayController,
+    // ApiGatewayController,
     EventController,
-    DocumentController,
-    ParticipantsController,
-    EmailController,
-    UserController,
-    AuthController,
+    // DocumentController,
+    // ParticipantsController,
+    // EmailController,
+    // UserController,
+    // AuthController,
     ForumController,
   ],
-  providers: [ApiGatewayService],
+  providers: [ApiGatewayService, JwtStrategy],
 })
 export class ApiGatewayModule {}

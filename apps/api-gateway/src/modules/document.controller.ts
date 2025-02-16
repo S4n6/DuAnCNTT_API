@@ -9,10 +9,13 @@ import {
   Param,
   UseInterceptors,
   UploadedFiles,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('/api/document/')
 export class DocumentController {
   constructor(

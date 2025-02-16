@@ -8,8 +8,8 @@ async function bootstrap() {
   const app = await NestFactory.create(ParticipantsModule);
   app.enableCors({ origin: '*' });
   app.useGlobalPipes(new ValidationPipe());
-  // await app.listen(PARTICIPANT_CONSTANT.PORT);
-  // console.log(`Participants service is running on: ${await app.getUrl()}`);
+  await app.listen(PARTICIPANT_CONSTANT.PORT);
+  console.log(`Participants service is running on: ${await app.getUrl()}`);
 
   const microservice = app.connectMicroservice<MicroserviceOptions>(RMQ_CONFIG);
   await microservice.listen();

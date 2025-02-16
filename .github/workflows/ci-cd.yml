@@ -19,14 +19,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      # - name: Cache Docker layers
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: /tmp/.buildx-cache
-      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-buildx-
-
       - name: Create .env file
         run: |
           echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
@@ -87,9 +79,9 @@ jobs:
         run: |
           docker run -d --name user --network backend --env-file .env sang12/manage_event:user-service
 
-      - name: List folders in /usr/src/app
-        run: |
-          docker exec user ls -l /usr/src/app
+      # - name: List folders in /usr/src/app
+      #   run: |
+      #     docker exec user ls -l /usr/src/app
 
       # - name: Check logs
       #   run: |
@@ -98,7 +90,7 @@ jobs:
 
       - name: Run tests for user service
         run: |
-          docker exec user npx jest --config /usr/src/app/apps/user/test/jest-e2e.json
+          docker exec user npx jest --config /usr/src/app/apps/api-gateway/test/user.controller.spec.ts
 
       - name: Stop and remove user service container
         run: |

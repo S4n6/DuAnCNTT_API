@@ -10,11 +10,14 @@ import {
   Delete,
   Body,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { RequestCreateEventDto } from 'apps/event/src/event.request';
-import { EventResponseDto } from 'apps/event/src/event.response';
+import { RequestCreateEventDto } from '../../../event/src/event.request';
+import { EventResponseDto } from '../../../event/src/event.response';
+import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('/api/events/')
 export class EventController {
   constructor(

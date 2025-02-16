@@ -2,10 +2,14 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ForumService } from './forum.service';
 import { IPostResponse } from './forum.response';
+import { ForumGateway } from './forum.gateway';
 
 @Controller()
 export class ForumController {
-  constructor(private readonly forumService: ForumService) {}
+  constructor(
+    private readonly forumService: ForumService,
+    private readonly forumGateway: ForumGateway,
+  ) {}
 
   @MessagePattern({ cmd: 'createPost' })
   async createPost(
@@ -51,7 +55,15 @@ export class ForumController {
     @Payload() data: { postId: string; content: string; authorId: string },
   ): Promise<any> {
     const { postId, content, authorId } = data;
-    return this.forumService.createComment(postId, { content, authorId });
+    const response = await this.forumService.createComment(postId, {
+      content,
+      authorId,
+    });
+    if (response.success) {
+      const comments = await this.forumService.getComments(data.postId, 1, 10);
+      this.forumGateway.server.emit('commentsFetched', comments);
+    }
+    return response;
   }
 
   @MessagePattern({ cmd: 'getPosts' })

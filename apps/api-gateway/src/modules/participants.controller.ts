@@ -7,9 +7,13 @@ import {
   Query,
   Inject,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 
+
+@UseGuards(JwtAuthGuard)
 @Controller('/api/participants/')
 export class ParticipantsController {
   constructor(

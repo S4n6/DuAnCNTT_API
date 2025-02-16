@@ -31,6 +31,6 @@ COPY --from=builder /usr/src/app/lib ./lib
 EXPOSE 3002
 
 # Define the command to run the application
-CMD ["npm", "run", "start:dev event"]
-# CMD ["node", "dist/apps/event"]/src/main.js"]
+# CMD ["npm", "run", "start:dev event"]
+CMD ["node", "dist/apps/event/src/main.js"]
 

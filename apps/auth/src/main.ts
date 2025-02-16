@@ -11,8 +11,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({ origin: '*' });
-  // await app.listen(AUTH_CONSTANTS.PORT);
-  // console.log(`Auth service is running on: ${await app.getUrl()}`);
+  await app.listen(AUTH_CONSTANTS.PORT);
+  console.log(`Auth service is running on: ${await app.getUrl()}`);
 
   const microservice = app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,

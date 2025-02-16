@@ -8,12 +8,16 @@ import {
   Inject,
   Param,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserDto } from 'apps/user/src/user.dto';
 import { UserResponseDto } from 'apps/user/src/user.response';
+import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 import { ObjectId } from 'mongoose';
 
+
+@UseGuards(JwtAuthGuard)
 @Controller('/api/users/')
 export class UserController {
   constructor(

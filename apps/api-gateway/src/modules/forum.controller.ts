@@ -1,14 +1,25 @@
-import { Controller, Get, Post, Body, Query, Inject } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  Inject,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 import { title } from 'process';
 
+// @UseGuards(JwtAuthGuard)
 @Controller('/api/forum/')
 export class ForumController {
   constructor(
     @Inject('FORUM_SERVICE') private readonly forumServiceClient: ClientProxy,
   ) {}
 
-  @Post('createPost')
+  @Post('post')
   async createPost(
     @Body()
     data: {
@@ -31,25 +42,29 @@ export class ForumController {
       .toPromise();
   }
 
-  @Post('createReply')
+  @Post('reply/:commentId')
   async createReply(
-    @Body() data: { commentId: string; content: string; authorId: string },
+    @Body() body: { content: string; authorId: string },
+    @Param('commentId') commentId: string,
   ) {
+    const data = { ...body, commentId };
     return this.forumServiceClient
       .send({ cmd: 'createReply' }, data)
       .toPromise();
   }
 
-  @Post('createComment')
+  @Post('post/:postId/comment')
   async createComment(
-    @Body() data: { postId: string; content: string; authorId: string },
+    @Body() body: { content: string; authorId: string },
+    @Param('postId') postId: string,
   ) {
+    const data = { ...body, postId };
     return this.forumServiceClient
       .send({ cmd: 'createComment' }, data)
       .toPromise();
   }
 
-  @Get('getPosts')
+  @Get('posts')
   async getPosts(@Query() data: { page: number; limit: number }) {
     return this.forumServiceClient.send({ cmd: 'getPosts' }, data).toPromise();
   }

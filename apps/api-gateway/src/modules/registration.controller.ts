@@ -6,6 +6,7 @@ import {
   Query,
   Inject,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import {
@@ -13,7 +14,10 @@ import {
   RegistrationRequestCreate,
 } from 'apps/registration/src/request/registration.request';
 import { RegistrationResponse } from 'apps/registration/src/response/registration.response';
+import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 
+
+@UseGuards(JwtAuthGuard)
 @Controller('/api/registrations/')
 export class RegistrationController {
   constructor(

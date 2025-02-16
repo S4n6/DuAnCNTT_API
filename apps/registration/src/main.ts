@@ -9,8 +9,8 @@ async function bootstrap() {
   const app = await NestFactory.create(RegistrationModule);
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
-  // await app.listen(REGISTRATION_CONSTANT.PORT);
-  // console.log(`Registration service is running on: ${await app.getUrl()}`);
+  await app.listen(REGISTRATION_CONSTANT.PORT);
+  console.log(`Registration service is running on: ${await app.getUrl()}`);
 
   const microserviceOptions: MicroserviceOptions = {
     transport: Transport.RMQ,

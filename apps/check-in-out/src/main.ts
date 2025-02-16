@@ -8,8 +8,8 @@ async function bootstrap() {
   const app = await NestFactory.create(CheckInOutModule);
   app.enableCors({ origin: '*' });
   app.useGlobalPipes(new ValidationPipe());
-  // await app.listen(CHECK_IN_OUT_CONSTANTS.PORT);
-  // console.log(`Check-in-out service is running on: ${await app.getUrl()}`);
+  await app.listen(CHECK_IN_OUT_CONSTANTS.PORT);
+  console.log(`Check-in-out service is running on: ${await app.getUrl()}`);
 
   const microservice = app.connectMicroservice<MicroserviceOptions>(RMQ_CONFIG);
   microservice.listen();

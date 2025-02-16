@@ -7,8 +7,8 @@ import { MicroserviceOptions } from '@nestjs/microservices';
 async function bootstrap() {
   const app = await NestFactory.create(ScheduleModule);
   app.useGlobalPipes(new ValidationPipe());
-  // await app.listen(SCHEDULE_CONSTANTS.PORT);
-  // console.log(`Schedule service is running on: ${await app.getUrl()}`);
+  await app.listen(SCHEDULE_CONSTANTS.PORT);
+  console.log(`Schedule service is running on: ${await app.getUrl()}`);
 
   const microservice = app.connectMicroservice<MicroserviceOptions>(RMQ_CONFIG);
   await microservice.listen();

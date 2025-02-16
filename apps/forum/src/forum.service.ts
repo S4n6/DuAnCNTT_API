@@ -74,7 +74,12 @@ export class ForumService {
 
   async getPosts(page: number = 1, limit: number = 10): Promise<IPostResponse> {
     const skip = (page - 1) * limit;
-    const posts = await this.postModel.find().skip(skip).limit(limit).exec();
+    const posts = await this.postModel
+      .find()
+      .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+      .skip(skip)
+      .limit(limit)
+      .exec();
     const total = await this.postModel.countDocuments().exec();
     return new PostResponse(true, 'Posts fetched successfully', {
       posts,

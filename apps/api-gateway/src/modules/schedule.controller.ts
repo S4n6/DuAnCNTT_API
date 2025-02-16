@@ -7,11 +7,15 @@ import {
   Query,
   Inject,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ScheduleRequest } from 'apps/schedule/src/schedule.request';
 import { IScheduleResponse } from 'apps/schedule/src/schedule.response';
+import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 
+
+@UseGuards(JwtAuthGuard)
 @Controller('/api/schedule/')
 export class ScheduleController {
   constructor(

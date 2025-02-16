@@ -1,7 +1,9 @@
-import { Controller, Post, Body, Get, Param, Inject } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Inject, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ICheckInOutResponse } from 'apps/check-in-out/src/check-in-out.response';
+import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('/api/check-in-out/')
 export class CheckInOutController {
   constructor(

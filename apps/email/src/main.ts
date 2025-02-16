@@ -5,8 +5,8 @@ import { MicroserviceOptions } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(EmailModule);
-  // await app.listen(EMAIL_CONSTANT.PORT);
-  // console.log(`Email service is running on: ${await app.getUrl()}`);
+  await app.listen(EMAIL_CONSTANT.PORT);
+  console.log(`Email service is running on: ${await app.getUrl()}`);
 
   const microservice = app.connectMicroservice<MicroserviceOptions>(RMQ_CONFIG);
   microservice.listen();
