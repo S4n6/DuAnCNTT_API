@@ -25,6 +25,7 @@ export class RegistrationController {
     @Payload() data: { userId: string },
   ): Promise<RegistrationResponse> {
     const { userId } = data;
+    console.log('getRegistrations::', userId);
     return this.registrationService.getRegistrationsByUserId(userId);
   }
 

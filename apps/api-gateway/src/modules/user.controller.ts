@@ -16,7 +16,6 @@ import { UserResponseDto } from 'apps/user/src/user.response';
 import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 import { ObjectId } from 'mongoose';
 
-
 @UseGuards(JwtAuthGuard)
 @Controller('/api/users/')
 export class UserController {

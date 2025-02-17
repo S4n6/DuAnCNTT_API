@@ -11,6 +11,10 @@ import { UserController } from './modules/user.controller';
 import { AuthController } from './modules/auth.controller';
 import { ForumController } from './modules/forum.controller';
 import { JwtStrategy } from 'lib/common/auth/jwt.strategy';
+import { RegistrationController } from './modules/registration.controller';
+import { NotificationController } from './modules/notification.controller';
+import { FeedbackAndRatingController } from './modules/feedback-and-rating.controller';
+import { CheckInOutController } from './modules/check-in-out.controller';
 
 @Module({
   imports: [ClientsModule.register(RMQ_CONFIG)],
@@ -23,6 +27,10 @@ import { JwtStrategy } from 'lib/common/auth/jwt.strategy';
     UserController,
     AuthController,
     ForumController,
+    RegistrationController,
+    NotificationController,
+    FeedbackAndRatingController,
+    CheckInOutController,
   ],
   providers: [ApiGatewayService, JwtStrategy],
 })

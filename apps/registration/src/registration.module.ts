@@ -12,9 +12,15 @@ import { HttpModule } from '@nestjs/axios';
   imports: [
     ClientsModule.register([
       {
-        name: 'REGISTRATION_SERVICE',
+        name: 'EVENT_SERVICE',
         transport: Transport.RMQ,
-        options: rabbitmqConfig.options,
+        options: {
+          urls: [process.env.RABBITMQ_URL],
+          queue: 'event_queue',
+          queueOptions: {
+            durable: false,
+          },
+        },
       },
     ]),
     TypeOrmModule.forRoot(postgresConfig),

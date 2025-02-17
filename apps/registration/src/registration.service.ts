@@ -16,6 +16,7 @@ export class RegistrationService {
     @InjectRepository(Registration)
     private registrationRepository: Repository<Registration>,
     private readonly httpService: HttpService,
+    @Inject('EVENT_SERVICE') private readonly eventService: ClientProxy,
   ) {}
 
   async getRegistrationsByUserId(
@@ -30,11 +31,12 @@ export class RegistrationService {
       }
 
       const eventIds = registrations.map((reg) => reg.eventId);
-      const eventsResponse = await this.httpService
-        .post('http://localhost:3002/api/events/ids', { ids: eventIds })
+      const eventsResponse = await this.eventService
+        .send({ cmd: 'get_events_by_ids' }, { ids: eventIds })
         .toPromise();
 
-      const events = eventsResponse.data.data.events;
+      console.log('eventsResponse', eventsResponse);
+      const events = eventsResponse.data.events;
 
       console.log('events', events);
 
@@ -79,7 +81,7 @@ export class RegistrationService {
           isRegistered.data,
         );
       }
-     
+
       const registration = this.registrationRepository.create({
         ...data,
         registrationStatus: true,

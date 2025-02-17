@@ -12,7 +12,6 @@ import {
 import { ClientProxy } from '@nestjs/microservices';
 import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 
-
 @UseGuards(JwtAuthGuard)
 @Controller('/api/feedback-and-rating/')
 export class FeedbackAndRatingController {
@@ -21,14 +20,14 @@ export class FeedbackAndRatingController {
     private readonly feedbackAndRatingServiceClient: ClientProxy,
   ) {}
 
-  @Get(':eventId')
+  @Get('rating/:eventId')
   async getFeedbackByEventId(@Param('eventId') eventId: string) {
     return this.feedbackAndRatingServiceClient
       .send({ cmd: 'getFeedbackByEventId' }, { eventId })
       .toPromise();
   }
 
-  @Post('submit')
+  @Post('rating')
   async submitFeedback(
     @Body()
     data: {
@@ -40,6 +39,13 @@ export class FeedbackAndRatingController {
   ) {
     return this.feedbackAndRatingServiceClient
       .send({ cmd: 'submitFeedback' }, data)
+      .toPromise();
+  }
+
+  @Get('statistics/:eventId')
+  async getFeedbackStatistics(@Param('eventId') eventId: string) {
+    return this.feedbackAndRatingServiceClient
+      .send({ cmd: 'getRatingStatisticsByEventId' }, { eventId })
       .toPromise();
   }
 

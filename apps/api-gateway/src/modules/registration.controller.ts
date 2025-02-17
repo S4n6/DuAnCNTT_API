@@ -16,9 +16,8 @@ import {
 import { RegistrationResponse } from 'apps/registration/src/response/registration.response';
 import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 
-
 @UseGuards(JwtAuthGuard)
-@Controller('/api/registrations/')
+@Controller('/api/registration/')
 export class RegistrationController {
   constructor(
     @Inject('REGISTRATION_SERVICE')
@@ -38,6 +37,7 @@ export class RegistrationController {
   async getRegistrations(
     @Param('userId') userId: string,
   ): Promise<RegistrationResponse> {
+    console.log('userId', userId);
     return this.registrationServiceClient
       .send({ cmd: 'get_registrations' }, { userId })
       .toPromise();

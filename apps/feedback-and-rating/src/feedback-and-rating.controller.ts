@@ -52,4 +52,13 @@ export class FeedbackAndRatingController {
     }
     return response;
   }
+
+  @MessagePattern({ cmd: 'getStatisticsByEventId' })
+  async getStatisticsByEventId(
+    @Payload() payload: { eventId: string },
+  ): Promise<object> {
+    return await this.feedbackAndRatingService.getRatingStatisticsByEventId(
+      payload.eventId,
+    );
+  }
 }

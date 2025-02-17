@@ -12,7 +12,6 @@ import {
 import { ClientProxy } from '@nestjs/microservices';
 import { JwtAuthGuard } from 'lib/common/auth/jwt-auth.guard';
 
-
 @UseGuards(JwtAuthGuard)
 @Controller('/api/notifications/')
 export class NotificationController {
@@ -44,10 +43,12 @@ export class NotificationController {
       .toPromise();
   }
 
-  @Get('user')
+  @Get(':userId')
   async getUserNotifications(
-    @Query() data: { userId: string; page: number; limit: number },
+    @Query() query: { page: number; limit: number },
+    @Param('userId') userId: string,
   ) {
+    const data = { ...query, userId };
     return this.notificationServiceClient
       .send({ cmd: 'getUserNotifications' }, data)
       .toPromise();

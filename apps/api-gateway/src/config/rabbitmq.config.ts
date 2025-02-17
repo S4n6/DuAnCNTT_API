@@ -29,4 +29,5 @@ export const RMQ_CONFIG = [
   createRmqConfig('FEEDBACK_AND_RATING_SERVICE', 'feedback_and_rating_queue'),
   createRmqConfig('SCHEDULE_SERVICE', 'schedule_queue'),
   createRmqConfig('FORUM_SERVICE', 'forum_queue'),
+  createRmqConfig('REGISTRATION_SERVICE', 'registration_queue'),
 ];
