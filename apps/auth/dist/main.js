@@ -54,6 +54,8 @@ function bootstrap() {
         const app = yield core_1.NestFactory.create(auth_module_1.AuthModule);
         app.useGlobalPipes(new common_1.ValidationPipe());
         app.enableCors({ origin: '*' });
+        yield app.listen(constants_1.AUTH_CONSTANTS.PORT);
+        console.log(`Auth service is running on: ${yield app.getUrl()}`);
         const microservice = app.connectMicroservice({
             transport: microservices_1.Transport.RMQ,
             options: {

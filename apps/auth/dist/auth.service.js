@@ -78,11 +78,14 @@ let AuthService = class AuthService {
     login(email, phoneNumber, password) {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = { email, phoneNumber, password };
-            const user = yield this.userServiceClient.send({ cmd: 'validateUserByEmail' }, { email, password }).toPromise();
-            const access_token = yield this.jwtService.sign(payload);
+            const user = yield this.userServiceClient
+                .send({ cmd: 'validateUserByEmail' }, { email, password })
+                .toPromise();
             if (!user.success) {
                 return null;
             }
+            delete user.data.users.password;
+            const access_token = yield this.jwtService.sign(user.data.users);
             return {
                 user: user.data.users,
                 access_token,

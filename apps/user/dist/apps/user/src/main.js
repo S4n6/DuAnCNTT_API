@@ -44,23 +44,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@nestjs/core");
 const user_module_1 = require("./user.module");
-const microservices_1 = require("@nestjs/microservices");
 const common_1 = require("@nestjs/common");
 const dotenv = __importStar(require("dotenv"));
 const constant_1 = require("./constant");
 dotenv.config();
-const grpcOptions = {
-    transport: microservices_1.Transport.GRPC,
-    options: {
-        package: 'user',
-        protoPath: 'lib/common/user.proto',
-        url: '0.0.0.0:5001',
-    },
-};
 function bootstrap() {
     return __awaiter(this, void 0, void 0, function* () {
         const app = yield core_1.NestFactory.create(user_module_1.UserModule);
         app.useGlobalPipes(new common_1.ValidationPipe());
+        yield app.listen(constant_1.USER_CONSTANTS.PORT || 3001);
+        console.log(`User service is running on: ${yield app.getUrl()}`);
         const microservice = app.connectMicroservice(constant_1.RMQ_CONFIG);
         microservice.listen();
         console.log('User service is listening for messages from RabbitMQ');

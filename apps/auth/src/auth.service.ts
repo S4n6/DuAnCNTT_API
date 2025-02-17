@@ -31,11 +31,14 @@ export class AuthService implements OnModuleInit {
     password: string,
   ): Promise<object> {
     const payload = { email, phoneNumber, password };
-    const user = await this.userServiceClient.send({ cmd: 'validateUserByEmail' }, { email, password }).toPromise();
-    const access_token = await this.jwtService.sign(payload);
+    const user = await this.userServiceClient
+      .send({ cmd: 'validateUserByEmail' }, { email, password })
+      .toPromise();
     if (!user.success) {
       return null;
     }
+    delete user.data.users.password;
+    const access_token = await this.jwtService.sign(user.data.users);
     return {
       user: user.data.users,
       access_token,
